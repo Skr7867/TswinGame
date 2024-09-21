@@ -132,7 +132,7 @@ class _WalletScreenNewState extends State<WalletScreenNew> {
 
                             },),
                             groups(Assets.iconsRechargeHistory,'Deposit\n history', () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context)=>const DepositHistory()));
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=> DepositHistory()));
                             },),
                             groups(Assets.iconsWithdrawHistory,'Withdrawal\n     history', () {
                               Navigator.push(context, MaterialPageRoute(builder: (context)=>const WithdrawHistory()));

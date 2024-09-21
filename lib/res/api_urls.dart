@@ -13,7 +13,6 @@ class ApiUrl {
   static const String allTranscation = "${configModel}transaction_history?userid=";
   static const String depositWithdrawlStatusList = "${configModel}Status_list";
   static const String depositHistory = "${configModel}deposit_history?user_id=";
-
   static const String withdrawHistory = "${configModel}withdraw_history?user_id=";
   static const String indianOnlinePayDeposit = "${configModel}userpayin";
   static const String indianPayDeposit = "${configModel}payin";

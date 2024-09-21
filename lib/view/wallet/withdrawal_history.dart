@@ -71,7 +71,7 @@ class _WithdrawHistoryState extends State<WithdrawHistory> with SingleTickerProv
           children: [
             Container(
               padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
-              height: 70,
+              height: height*0.1,
               width: width * 0.93,
               child: ListView.builder(
                   shrinkWrap: true,
@@ -108,6 +108,7 @@ class _WithdrawHistoryState extends State<WithdrawHistory> with SingleTickerProv
 
                             ),
                             textWidget(
+                              textAlign: TextAlign.center,
                               text: items[index].name,
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
@@ -649,7 +650,7 @@ class _WithdrawHistoryState extends State<WithdrawHistory> with SingleTickerProv
     String token = user.id.toString();
 
     final response = await http.get(
-      Uri.parse(ApiUrl.getwayList+token),
+      Uri.parse(ApiUrl.getwayList + token),
     );
     if (kDebugMode) {
       print(ApiUrl.getwayList+token);
@@ -660,6 +661,7 @@ class _WithdrawHistoryState extends State<WithdrawHistory> with SingleTickerProv
       setState(() {
 
         items = responseData.map((item) => GetwayModel.fromJson(item)).toList();
+
         // selectedIndex = items.isNotEmpty ? 0:-1; //
       });
       print(items);
@@ -678,6 +680,8 @@ class _WithdrawHistoryState extends State<WithdrawHistory> with SingleTickerProv
   }
 
 }
+
+
 
 
 

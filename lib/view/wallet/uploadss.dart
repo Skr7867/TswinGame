@@ -61,7 +61,7 @@ class _UploadScreenshotsState extends State<UploadScreenshots> {
             ),
             centerTitle: true,
             title: textWidget(
-              text: widget.type=="1"?"Offline Deposit":'USDT Deposit',
+              text: widget.type=="2"?'USDT Deposit':"Manual Deposit",
               fontWeight: FontWeight.w900,
               fontSize: 20,
               color: Colors.white,
@@ -72,7 +72,7 @@ class _UploadScreenshotsState extends State<UploadScreenshots> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const DepositHistory()));
+                          builder: (context) =>  DepositHistory(selectedIndex: widget.type,)));
                 },
                 child: Center(
                   child: Padding(
@@ -153,8 +153,12 @@ class _UploadScreenshotsState extends State<UploadScreenshots> {
                   padding: const EdgeInsets.fromLTRB(35, 10, 25, 0),
                   child: Row(
                     children: [
+                      widget.type=="2"?
                       Image.asset(
                         Assets.imagesUsdtIcon,
+                        height: 20,
+                      ): Image.asset(
+                        Assets.imagesFastpayImage,
                         height: 20,
                       ),
                       const SizedBox(width: 20),
@@ -162,7 +166,7 @@ class _UploadScreenshotsState extends State<UploadScreenshots> {
                       Align(
                         alignment: Alignment.topLeft,
                         child: textWidget(
-                            text: 'USDT Amount ${widget.cont},',
+                            text:('${widget.type == "2" ? 'USDT Deposit' : 'Manual Deposit'}, ${widget.cont}'),
                             fontWeight: FontWeight.w400,
                             fontSize: 12,
                             color: AppColors.primaryTextColor),
@@ -186,12 +190,12 @@ class _UploadScreenshotsState extends State<UploadScreenshots> {
                         height: height * 0.06,
                         width: width * 0.6,
                         child: Center(
-                          child: Text(
-                            '₹  ${widget.cont}',
-                            style: const TextStyle(
+                          child: textWidget(
+                            // text: ('${widget.type == "2" ? '\$' : '₹'}, ${widget.cont}'),
+                            text: widget.type == "2" ? '\$ ${widget.cont}' : '₹ ${widget.cont}',
                                 fontSize: 20,
                                 fontWeight: FontWeight.w900,
-                                color: Colors.white),
+                                color: Colors.white
                           ),
                         ),
                       ),
@@ -262,12 +266,8 @@ class _UploadScreenshotsState extends State<UploadScreenshots> {
                 ? Center(
               child: AppBtn(
                 onTap: () {
-                  // if(myData != "0"){
-                  //   Utils.flushBarErrorMessage("Please upload screenshot", context, Colors.white);
-                  // } else {
-                  //   usdtPay(widget.cont);
-                  // }
                   usdtPay(context,widget.cont);
+
                 },
                 width: width * 0.8,
                 title: "Confirm",
@@ -447,9 +447,12 @@ class _UploadScreenshotsState extends State<UploadScreenshots> {
         setState(() {
           loader = true;
         });
-        Navigator.push(context,MaterialPageRoute(builder: (context)=>const DepositHistory()));
+        Navigator.push(context,MaterialPageRoute(builder: (context)=> DepositHistory(
+          selectedIndex :widget.type.toString()
+        )));
         Utils.flushBarSuccessMessage(data["message"], context, Colors.white);
-      } else {
+      }
+      else {
         setState(() {
           loader = false;
         });

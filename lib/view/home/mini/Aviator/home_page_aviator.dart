@@ -1456,6 +1456,7 @@ class _GameAviatorState extends State<GameAviator>
                                   )),
                             ),
                             Container(
+                              padding: EdgeInsets.only(bottom: height*0.01),
                               width: width * 0.280,
                               child: TextFormField(
                                 controller: amount,
@@ -1951,8 +1952,9 @@ class _GameAviatorState extends State<GameAviator>
                                     height: height * 0.024,
                                   )),
                             ),
-                            SizedBox(
+                            Container(
                               // color: Colors.red,
+                              padding: EdgeInsets.only(bottom: height*0.01),
                               width: width * 0.280,
                               child: TextFormField(
                                 controller: amountTwo,

@@ -324,7 +324,7 @@ class _AccountPageNewState extends State<AccountPageNew> {
                             'Deposit        ',
                             'My Deposit\nHistory',
                             () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>const DepositHistory()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=> DepositHistory()));
 
                         }),
                         historyWidget(Assets.iconsWithdrawHistory,

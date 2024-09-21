@@ -72,6 +72,7 @@ class TrxScreenState extends State<TrxScreen>
     Winlist(9, "Trx Win Go", "10 Min", 600),
   ];
 
+  bool open = false;
   int countdownSeconds = 60;
   int gameseconds = 60;
   String gametitle = 'Win go';
@@ -128,7 +129,11 @@ class TrxScreenState extends State<TrxScreen>
 
   void updateUI(Timer timer) {
     setState(() {
-      if (countdownSeconds == 5) {
+      if (countdownSeconds == 6) {
+        if (open == true) {
+          print('countdowwnnn');
+          Navigator.pop(context);
+        }
       } else if (countdownSeconds == 0) {
         countdownSeconds = gameseconds;
 
@@ -158,17 +163,16 @@ class TrxScreenState extends State<TrxScreen>
         resizeToAvoidBottomInset: true,
         appBar: GradientAppBar(
           leading: const AppBackBtn(),
-          title: const Text("Tswin",style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 35,
-              color: Colors.white
-          ),),
+          title: const Text(
+            "Tswin",
+            style: TextStyle(
+                fontWeight: FontWeight.bold, fontSize: 35, color: Colors.white),
+          ),
           actions: [
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: InkWell(
                 onTap: () {
-
                   Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -206,16 +210,19 @@ class TrxScreenState extends State<TrxScreen>
                   const ConstantWallet(),
                   const SizedBox(height: 5),
                   Container(
-                    height: height*0.07,
-                    margin: const EdgeInsets.only(right: 10, left: 10,top: 5,bottom: 5),
-                    decoration: BoxDecoration( color:AppColors.white,borderRadius: BorderRadius.circular(20)),
+                    height: height * 0.07,
+                    margin: const EdgeInsets.only(
+                        right: 10, left: 10, top: 5, bottom: 5),
+                    decoration: BoxDecoration(
+                        color: AppColors.white,
+                        borderRadius: BorderRadius.circular(20)),
                     child: Row(
                       children: [
                         Image.asset(
                           Assets.iconsMicphone,
                           height: 30,
                         ),
-                        SizedBox(width: width*0.01),
+                        SizedBox(width: width * 0.01),
                         _rotate(),
                         Image.asset(
                           Assets.iconsNotification,
@@ -224,135 +231,136 @@ class TrxScreenState extends State<TrxScreen>
                       ],
                     ),
                   ),
-                  create == false?
-                  Container(
-                    height: height * 0.18,
-                    margin: const EdgeInsets.only(left: 10, right: 10),
-                    decoration: BoxDecoration(
-                      color: AppColors.white,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: List.generate(list.length, (index) {
-                        return GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              selectedCatIndex = index;
-                              subtitle = list[index].subtitle;
-                              gameseconds = list[index].time;
-                              gameid = list[index].gameid;
-                            });
-                            countdownTimer!.cancel();
-                            startCountdown();
-                            offsetResult = 0;
-                            gameHistoryResult();
-                            BettingHistory();
-                          },
-                          child: Container(
-                            height: height * 0.28,
-                            width: width * 0.23,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                  width: 1.5,
-                                  color: selectedCatIndex == index
-                                      ? Colors.grey.withOpacity(0.2)
-                                      : Colors.transparent),
-                              gradient: selectedCatIndex == index
-                                  ? AppColors.boxGradient
-                                  : const LinearGradient(
-                                colors: [
-                                  Colors.transparent,
-                                  Colors.transparent
-                                ],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                              ),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Column(
-                              children: [
-                                selectedCatIndex == index
-                                    ? Image.asset(Assets.iconsTimeColor,
-                                    height: 70)
-                                    : Image.asset(Assets.iconsTime, height: 70),
-                                textWidget(
-                                    text: list[index].title,
-                                    color: selectedCatIndex == index
-                                        ? AppColors.primaryTextColor
-                                        : AppColors.gradientFirstColor,
-                                    fontSize: 14),
-                                textWidget(
-                                    text: list[index].subtitle,
-                                    color: selectedCatIndex == index
-                                        ? AppColors.primaryTextColor
-                                        : AppColors.gradientFirstColor,
-                                    fontSize: 14),
-                              ],
-                            ),
+                  create == false
+                      ? Container(
+                          height: height * 0.18,
+                          margin: const EdgeInsets.only(left: 10, right: 10),
+                          decoration: BoxDecoration(
+                            color: AppColors.white,
+                            borderRadius: BorderRadius.circular(20),
                           ),
-                        );
-                      }),
-                    ),
-                  )
-                      :Container(
-                    height: height * 0.16,
-                    margin: const EdgeInsets.only(left: 10, right: 10),
-                    decoration: BoxDecoration(
-                      color: AppColors.white,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: List.generate(list.length, (index) {
-                        return GestureDetector(
-                          child: Container(
-                            height: height * 0.28,
-                            width: width * 0.23,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                  width: 1.5,
-                                  color: selectedCatIndex == index
-                                      ? Colors.grey.withOpacity(0.2)
-                                      : Colors.transparent),
-                              gradient: selectedCatIndex == index
-                                  ? AppColors.boxGradient
-                                  : const LinearGradient(
-                                colors: [
-                                  Colors.transparent,
-                                  Colors.transparent
-                                ],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                              ),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Column(
-                              children: [
-                                selectedCatIndex == index
-                                    ? Image.asset(Assets.iconsTimeColor,
-                                    height: 70)
-                                    : Image.asset(Assets.iconsTime, height: 70),
-                                textWidget(
-                                    text: list[index].title,
-                                    color: selectedCatIndex == index
-                                        ? AppColors.white
-                                        : AppColors.gradientFirstColor,
-                                    fontSize: 14),
-                                textWidget(
-                                    text: list[index].subtitle,
-                                    color: selectedCatIndex == index
-                                        ? AppColors.white
-                                        : AppColors.gradientFirstColor,
-                                    fontSize: 14),
-                              ],
-                            ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: List.generate(list.length, (index) {
+                              return GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    selectedCatIndex = index;
+                                    subtitle = list[index].subtitle;
+                                    gameseconds = list[index].time;
+                                    gameid = list[index].gameid;
+                                  });
+                                  countdownTimer!.cancel();
+                                  startCountdown();
+                                  offsetResult = 0;
+                                  gameHistoryResult();
+                                  BettingHistory();
+                                },
+                                child: Container(
+                                  height: height * 0.28,
+                                  width: width * 0.23,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        width: 1.5,
+                                        color: selectedCatIndex == index
+                                            ? Colors.grey.withOpacity(0.2)
+                                            : Colors.transparent),
+                                    gradient: selectedCatIndex == index
+                                        ? AppColors.boxGradient
+                                        : const LinearGradient(
+                                            colors: [
+                                              Colors.transparent,
+                                              Colors.transparent
+                                            ],
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                          ),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      selectedCatIndex == index
+                                          ? Image.asset(Assets.iconsTimeColor,
+                                              height: 70)
+                                          : Image.asset(Assets.iconsTime,
+                                              height: 70),
+                                      textWidget(
+                                          text: list[index].title,
+                                          color: selectedCatIndex == index
+                                              ? AppColors.primaryTextColor
+                                              : AppColors.gradientFirstColor,
+                                          fontSize: 14),
+                                      textWidget(
+                                          text: list[index].subtitle,
+                                          color: selectedCatIndex == index
+                                              ? AppColors.primaryTextColor
+                                              : AppColors.gradientFirstColor,
+                                          fontSize: 14),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }),
                           ),
-                        );
-                      }),
-                    ),
-                  ),
-
+                        )
+                      : Container(
+                          height: height * 0.16,
+                          margin: const EdgeInsets.only(left: 10, right: 10),
+                          decoration: BoxDecoration(
+                            color: AppColors.white,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: List.generate(list.length, (index) {
+                              return GestureDetector(
+                                child: Container(
+                                  height: height * 0.28,
+                                  width: width * 0.23,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        width: 1.5,
+                                        color: selectedCatIndex == index
+                                            ? Colors.grey.withOpacity(0.2)
+                                            : Colors.transparent),
+                                    gradient: selectedCatIndex == index
+                                        ? AppColors.boxGradient
+                                        : const LinearGradient(
+                                            colors: [
+                                              Colors.transparent,
+                                              Colors.transparent
+                                            ],
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                          ),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      selectedCatIndex == index
+                                          ? Image.asset(Assets.iconsTimeColor,
+                                              height: 70)
+                                          : Image.asset(Assets.iconsTime,
+                                              height: 70),
+                                      textWidget(
+                                          text: list[index].title,
+                                          color: selectedCatIndex == index
+                                              ? AppColors.white
+                                              : AppColors.gradientFirstColor,
+                                          fontSize: 14),
+                                      textWidget(
+                                          text: list[index].subtitle,
+                                          color: selectedCatIndex == index
+                                              ? AppColors.white
+                                              : AppColors.gradientFirstColor,
+                                          fontSize: 14),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }),
+                          ),
+                        ),
                   const SizedBox(
                     height: 15,
                   ),
@@ -384,8 +392,7 @@ class TrxScreenState extends State<TrxScreen>
                                         width: width * 0.17,
                                         decoration: BoxDecoration(
                                           border: Border.all(
-                                              color:
-                                                  AppColors.white),
+                                              color: AppColors.white),
 
                                           //  color: AppColors.gradientFirstColor,
                                           borderRadius:
@@ -395,8 +402,7 @@ class TrxScreenState extends State<TrxScreen>
                                           child: Text(
                                             'Period',
                                             style: TextStyle(
-                                                color:
-                                                    AppColors.white),
+                                                color: AppColors.white),
                                           ),
                                         )),
                                     const SizedBox(
@@ -407,7 +413,10 @@ class TrxScreenState extends State<TrxScreen>
                                         showDialog(
                                             barrierDismissible: false,
                                             context: context,
-                                            builder: (BuildContext context) => const HowToPlay(type: '9',));
+                                            builder: (BuildContext context) =>
+                                                 HowToPlay(
+                                                  type:  gameid.toString(),
+                                                ));
 
                                         // Navigator.push(context, MaterialPageRoute(builder: (context)=> HowtoplayScreen()));
                                       },
@@ -441,8 +450,8 @@ class TrxScreenState extends State<TrxScreen>
                                 ),
                                 Text(
                                   'Trx Win Go $subtitle',
-                                  style: const TextStyle(
-                                      color: AppColors.white),
+                                  style:
+                                      const TextStyle(color: AppColors.white),
                                 ),
                                 Center(
                                   child: Text(
@@ -498,65 +507,82 @@ class TrxScreenState extends State<TrxScreen>
                           ],
                         ),
                         SizedBox(height: height * 0.05),
-                        gameResult.isNotEmpty?
-                        Center(
-                          child: Container(
-                            height: height * 0.09,
-                            decoration: const BoxDecoration(
-
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
-                            child:ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: 1,
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (BuildContext context, int index) {
-                                String text = gameResult[index].hash.toString();
-                                List<String> characterList = text.split('');
-                                return Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: characterList.map((char) {
-                                    return Center(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(4.0),
-                                        child: Container(
-
-                                          height: height * 0.08,
-                                          width: height * 0.08,
-                                          decoration: gameResult[index].number.toString() == char
-                                              ? BoxDecoration(
-                                            image: DecorationImage(
-                                              image: AssetImage(
-                                                  betNumbers[int.parse(gameResult[index].number.toString())].photo
-                                              ),
-                                              fit: BoxFit.fill,
+                        gameResult.isNotEmpty
+                            ? Center(
+                                child: Container(
+                                  height: height * 0.09,
+                                  decoration: const BoxDecoration(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10))),
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: 1,
+                                    scrollDirection: Axis.horizontal,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      String text =
+                                          gameResult[index].hash.toString();
+                                      List<String> characterList =
+                                          text.split('');
+                                      return Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: characterList.map((char) {
+                                          return Center(
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(4.0),
+                                              child: Container(
+                                                  height: height * 0.08,
+                                                  width: height * 0.08,
+                                                  decoration: gameResult[index]
+                                                              .number
+                                                              .toString() ==
+                                                          char
+                                                      ? BoxDecoration(
+                                                          image:
+                                                              DecorationImage(
+                                                            image: AssetImage(
+                                                                betNumbers[int.parse(gameResult[
+                                                                            index]
+                                                                        .number
+                                                                        .toString())]
+                                                                    .photo),
+                                                            fit: BoxFit.fill,
+                                                          ),
+                                                        )
+                                                      : BoxDecoration(
+                                                          shape:
+                                                              BoxShape.circle,
+                                                          border: Border.all(
+                                                              color: AppColors
+                                                                  .primaryTextColor)),
+                                                  child: gameResult[index]
+                                                              .number
+                                                              .toString() !=
+                                                          char
+                                                      ? Center(
+                                                          child: textWidget(
+                                                            text: char
+                                                                .toUpperCase(),
+                                                            fontWeight:
+                                                                FontWeight.w900,
+                                                            color: Colors.white,
+                                                            fontSize: 20,
+                                                          ),
+                                                        )
+                                                      : null),
                                             ),
-                                          )
-                                              : BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            border: Border.all(color: AppColors.primaryTextColor)
-                                            ),
-
-                                          child:gameResult[index].number.toString() != char?
-                                          Center(
-                                            child: textWidget(
-                                              text: char.toUpperCase(),
-                                              fontWeight: FontWeight.w900,
-                                              color: Colors.white,
-                                              fontSize: 20,
-                                            ),
-                                          ):null
-                                        ),
-                                      ),
-                                    );
-                                  }).toList(),
-                                );
-                              },
-                            ),
-
-                          ),
-                        ):Container()
+                                          );
+                                        }).toList(),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              )
+                            : Container()
                       ],
                     ),
                   ),
@@ -582,18 +608,24 @@ class TrxScreenState extends State<TrxScreen>
                                           context: (context),
                                           builder: (context) {
                                             return CommonBottomSheet(
-                                                colors: const [
-                                                 Colors.green,
-                                                  Colors.green
-                                                ],
-                                                colorName: "Green",
-                                                predictionType: "10",
-                                                gameid: gameid, timer: countdownSeconds,
+                                              colors: const [
+                                                Colors.green,
+                                                Colors.green
+                                              ],
+                                              colorName: "Green",
+                                              predictionType: "10",
+                                              gameid: gameid,
+                                              timer: countdownSeconds,
                                             );
-                                          });
+                                          }).whenComplete(() {
+                                        setState(() {
+                                          open = false;
+                                        });
+                                      });
+                                      open = true;
                                       await Future.delayed(
-                                          const Duration(seconds: 5));
-                                      // BettingHistory();
+                                          const Duration(seconds: 4));
+                                      BettingHistory();
                                     },
                                     child: Container(
                                       alignment: Alignment.center,
@@ -612,7 +644,7 @@ class TrxScreenState extends State<TrxScreen>
                                     ),
                                   ),
                                   InkWell(
-                                    onTap: () {
+                                    onTap: () async {
                                       showModalBottomSheet(
                                           isScrollControlled: true,
                                           shape: const RoundedRectangleBorder(
@@ -629,9 +661,18 @@ class TrxScreenState extends State<TrxScreen>
                                               ],
                                               colorName: "Violet",
                                               predictionType: "20",
-                                              gameid: gameid, timer: countdownSeconds,
+                                              gameid: gameid,
+                                              timer: countdownSeconds,
                                             );
-                                          });
+                                          }).whenComplete(() {
+                                        setState(() {
+                                          open = false;
+                                        });
+                                      });
+                                      open = true;
+                                      await Future.delayed(
+                                          const Duration(seconds: 4));
+                                      BettingHistory();
                                     },
                                     child: Container(
                                       alignment: Alignment.center,
@@ -649,7 +690,7 @@ class TrxScreenState extends State<TrxScreen>
                                     ),
                                   ),
                                   InkWell(
-                                    onTap: () {
+                                    onTap: () async {
                                       showModalBottomSheet(
                                           isScrollControlled: true,
                                           shape: const RoundedRectangleBorder(
@@ -666,10 +707,18 @@ class TrxScreenState extends State<TrxScreen>
                                               ],
                                               colorName: "Red",
                                               predictionType: "30",
-                                              gameid: gameid, timer: countdownSeconds,
-
+                                              gameid: gameid,
+                                              timer: countdownSeconds,
                                             );
-                                          });
+                                          }).whenComplete(() {
+                                        setState(() {
+                                          open = false;
+                                        });
+                                      });
+                                      open = true;
+                                      await Future.delayed(
+                                          const Duration(seconds: 4));
+                                      BettingHistory();
                                     },
                                     child: Container(
                                       alignment: Alignment.center,
@@ -699,8 +748,7 @@ class TrxScreenState extends State<TrxScreen>
                                 padding: const EdgeInsets.symmetric(
                                     vertical: 10, horizontal: 10),
                                 decoration: const BoxDecoration(
-                                    color:
-                                        AppColors.gamecolor,
+                                    color: AppColors.gamecolor,
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(10))),
                                 child: GridView.builder(
@@ -716,7 +764,7 @@ class TrxScreenState extends State<TrxScreen>
                                   itemBuilder:
                                       (BuildContext context, int index) {
                                     return InkWell(
-                                      onTap: () {
+                                      onTap: () async {
                                         showModalBottomSheet(
                                             isScrollControlled: true,
                                             shape: const RoundedRectangleBorder(
@@ -728,8 +776,7 @@ class TrxScreenState extends State<TrxScreen>
                                             context: (context),
                                             builder: (context) {
                                               return CommonBottomSheet(
-                                                colors:  [
-
+                                                colors: [
                                                   betNumbers[index].colorone,
                                                   betNumbers[index].colortwo
                                                 ],
@@ -743,7 +790,15 @@ class TrxScreenState extends State<TrxScreen>
                                                 gameid: gameid,
                                                 timer: countdownSeconds,
                                               );
-                                            });
+                                            }).whenComplete(() {
+                                          setState(() {
+                                            open = false;
+                                          });
+                                        });
+                                        open = true;
+                                        await Future.delayed(
+                                            const Duration(seconds: 4));
+                                        BettingHistory();
                                       },
                                       child: Image(
                                         image: AssetImage(
@@ -761,7 +816,7 @@ class TrxScreenState extends State<TrxScreen>
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   InkWell(
-                                    onTap: () {
+                                    onTap: () async {
                                       showModalBottomSheet(
                                           isScrollControlled: true,
                                           shape: const RoundedRectangleBorder(
@@ -781,7 +836,15 @@ class TrxScreenState extends State<TrxScreen>
                                               gameid: gameid,
                                               timer: countdownSeconds,
                                             );
-                                          });
+                                          }).whenComplete(() {
+                                        setState(() {
+                                          open = false;
+                                        });
+                                      });
+                                      open = true;
+                                      await Future.delayed(
+                                          const Duration(seconds: 4));
+                                      BettingHistory();
                                     },
                                     child: Container(
                                       alignment: Alignment.center,
@@ -800,7 +863,7 @@ class TrxScreenState extends State<TrxScreen>
                                     ),
                                   ),
                                   InkWell(
-                                    onTap: () {
+                                    onTap: () async {
                                       showModalBottomSheet(
                                           isScrollControlled: true,
                                           shape: const RoundedRectangleBorder(
@@ -820,7 +883,15 @@ class TrxScreenState extends State<TrxScreen>
                                               gameid: gameid,
                                               timer: countdownSeconds,
                                             );
-                                          });
+                                          }).whenComplete(() {
+                                        setState(() {
+                                          open = false;
+                                        });
+                                      });
+                                      open = true;
+                                      await Future.delayed(
+                                          const Duration(seconds: 4));
+                                      BettingHistory();
                                     },
                                     child: Container(
                                       alignment: Alignment.center,
@@ -928,7 +999,9 @@ class TrxScreenState extends State<TrxScreen>
     if (response.statusCode == 200) {
       final List<dynamic> responseData = json.decode(response.body)['data'];
       setState(() {
-        gameResult = responseData.map((item) => ResultGameHistory.fromJson(item)).toList();
+        gameResult = responseData
+            .map((item) => ResultGameHistory.fromJson(item))
+            .toList();
         period = int.parse(responseData[0]['gamesno'].toString()) + 1;
       });
     } else if (response.statusCode == 400) {
@@ -950,10 +1023,12 @@ class TrxScreenState extends State<TrxScreen>
     UserModel user = await userProvider.getUser();
     String token = user.id.toString();
     final response = await http.get(
-      Uri.parse('${ApiUrl.betHistory}$token&game_id=$selectedIndex&limit=10&offset=$offsetResult'),
+      Uri.parse(
+          '${ApiUrl.betHistory}$token&game_id=$selectedIndex&limit=10&offset=$offsetResult'),
     );
     if (kDebugMode) {
-      print('${ApiUrl.betHistory}$token&game_id=$selectedIndex&limit=10&offset=0');
+      print(
+          '${ApiUrl.betHistory}$token&game_id=$selectedIndex&limit=10&offset=0');
       print('betHistory+token trx');
     }
 
@@ -967,8 +1042,10 @@ class TrxScreenState extends State<TrxScreen>
       final int totalBetsCount = Data['total_bets'];
 
       setState(() {
-        items = responseData.map((item) => BettingHistoryModel.fromJson(item)).toList();
-        totalBets=totalBetsCount;
+        items = responseData
+            .map((item) => BettingHistoryModel.fromJson(item))
+            .toList();
+        totalBets = totalBetsCount;
       });
     } else if (response.statusCode == 400) {
       if (kDebugMode) {
@@ -1104,20 +1181,16 @@ class TrxScreenState extends State<TrxScreen>
                         ),
                         Container(
                           width: width * 0.94,
-                          decoration: const BoxDecoration(
-                              color: AppColors.white),
+                          decoration:
+                              const BoxDecoration(color: AppColors.white),
                           child: ListView.builder(
                             physics: const NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
                             itemCount: gameResult.length,
                             itemBuilder: (context, index) {
                               List<Color> colors;
-
                               if (gameResult[index].number == 0) {
-                                colors = [
-                                 Colors.red,
-                                  Colors.purple
-                                ];
+                                colors = [Colors.red, Colors.purple];
                               } else if (gameResult[index].number == 5) {
                                 colors = [
                                   const Color(0xFF40ad72),
@@ -1132,8 +1205,8 @@ class TrxScreenState extends State<TrxScreen>
                                         const Color(0xFF40ad72),
                                       ]
                                     : [
-                                 Colors.red,
-                                  Colors.red,
+                                        Colors.red,
+                                        Colors.red,
                                       ];
                               }
 
@@ -1160,7 +1233,8 @@ class TrxScreenState extends State<TrxScreen>
                                         height: height * 0.09,
                                         width: width * 0.18,
                                         child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
                                             // InkWell(
                                             //     onTap: () {
@@ -1213,9 +1287,8 @@ class TrxScreenState extends State<TrxScreen>
                                         width: width * 0.13,
                                         child: textWidget(
                                           //hashh
-                                          text: gameResult[index]
-                                              .hash
-                                              .toString(),
+                                          text:
+                                              gameResult[index].hash.toString(),
                                           fontSize: 12,
                                           color: AppColors.primaryTextColor,
                                           fontWeight: FontWeight.w600,
@@ -1236,23 +1309,29 @@ class TrxScreenState extends State<TrxScreen>
                                                     margin:
                                                         const EdgeInsets.all(2),
                                                     alignment: Alignment.center,
-                                                    decoration:  const BoxDecoration(
-                                                      shape:BoxShape.circle,
-                                                        gradient: LinearGradient(
-                                                          colors: [Color(0xFF40ad72),
-                                                            Colors.purple],
-                                                        )
-                                                        ),
-                                                       child: Text(
-                                                        gameResult[index]
-                                                            .number.toString(),
-                                                         style: const TextStyle(fontSize: 12,
-                                                           color: Colors.white,
-                                                           fontWeight: FontWeight.w900,
-                                                         ),
-                                                       )
-
-                                                  )
+                                                    decoration:
+                                                        const BoxDecoration(
+                                                            shape:
+                                                                BoxShape.circle,
+                                                            gradient:
+                                                                LinearGradient(
+                                                              colors: [
+                                                                Color(
+                                                                    0xFF40ad72),
+                                                                Colors.purple
+                                                              ],
+                                                            )),
+                                                    child: Text(
+                                                      gameResult[index]
+                                                          .number
+                                                          .toString(),
+                                                      style: const TextStyle(
+                                                        fontSize: 12,
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.w900,
+                                                      ),
+                                                    ))
                                                 : gameResult[index].number == 0
                                                     ? Container(
                                                         height: 20,
@@ -1261,24 +1340,31 @@ class TrxScreenState extends State<TrxScreen>
                                                             .all(2),
                                                         alignment:
                                                             Alignment.center,
-                                                        decoration:  const BoxDecoration(
-                                                            shape:BoxShape.circle,
-                                                           gradient: LinearGradient(
-                                                              colors: [Colors.red,
-                                                                Colors.purple],
-                                                            )
-                                                            ),
-                                                child:Text(
-                                                  gameResult[index]
-                                                      .number
-                                                      .toString(),
-                                                  style: const TextStyle(
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.w900,
-                                                    color: Colors.white
-                                                  ),
-                                                )
-                                                      )
+                                                        decoration:
+                                                            const BoxDecoration(
+                                                                shape: BoxShape
+                                                                    .circle,
+                                                                gradient:
+                                                                    LinearGradient(
+                                                                  colors: [
+                                                                    Colors.red,
+                                                                    Colors
+                                                                        .purple
+                                                                  ],
+                                                                )),
+                                                        child: Text(
+                                                          gameResult[index]
+                                                              .number
+                                                              .toString(),
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize: 12,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w900,
+                                                                  color: Colors
+                                                                      .white),
+                                                        ))
                                                     : Container(
                                                         height: height * 0.055,
                                                         width: width * 0.065,
@@ -1311,7 +1397,8 @@ class TrxScreenState extends State<TrxScreen>
                                                               fontWeight:
                                                                   FontWeight
                                                                       .w700,
-                                                              color: Colors.white),
+                                                              color:
+                                                                  Colors.white),
                                                         )),
                                             GradientTextview(
                                               int.parse(gameResult[index]
@@ -1323,9 +1410,11 @@ class TrxScreenState extends State<TrxScreen>
                                               style: const TextStyle(
                                                   fontSize: 14,
                                                   fontWeight: FontWeight.w900),
-                                              gradient: gameResult[index].number < 5
+                                              gradient: gameResult[index]
+                                                          .number <
+                                                      5
                                                   ? AppColors.btnBlueGradient
-                                              : AppColors.btnYellowGradient,
+                                                  : AppColors.btnYellowGradient,
                                             ),
                                           ],
                                         ),
@@ -1346,15 +1435,17 @@ class TrxScreenState extends State<TrxScreen>
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             GestureDetector(
-                              onTap: (pageNumber > 1 && limitResult > 0) // Check that pageNumber is greater than 1 and limitResult is greater than 0
+                              onTap: (pageNumber > 1 &&
+                                      limitResult >
+                                          0) // Check that pageNumber is greater than 1 and limitResult is greater than 0
                                   ? () {
-                                setState(() {
-                                  pageNumber--;
-                                  limitResult -= 10;
-                                  offsetResult -= 10;
-                                });
-                                gameHistoryResult();
-                              }
+                                      setState(() {
+                                        pageNumber--;
+                                        limitResult -= 10;
+                                        offsetResult -= 10;
+                                      });
+                                      gameHistoryResult();
+                                    }
                                   : null, // Disable tap if the condition is not met
                               child: Container(
                                 height: height * 0.06,
@@ -1408,548 +1499,589 @@ class TrxScreenState extends State<TrxScreen>
                   : selectedTabIndex == 1
                       ? chartScreen()
                       : Column(
-                        children: [
-                          responseStatuscode == 400
-                              ? const Notfounddata()
-                              : items.isEmpty
-                                  ? const Center(child: CircularProgressIndicator())
-                                  : Container(
-                                      width: width,
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 15, horizontal: 15),
-                                      margin: const EdgeInsets.only(
-                                          left: 10, right: 10),
-                                      decoration: const BoxDecoration(
-
-                                          borderRadius: BorderRadius.only(
-                                              topRight: Radius.circular(10),
-                                              topLeft: Radius.circular(10))),
-                                      child: Column(
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.bottomRight,
-                                            child: InkWell(
-                                              onTap: () {
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            const TRXMyHistoryDetails()));
-                                              },
-                                              child: Container(
-                                                height: height * 0.06,
-                                                width: width * 0.25,
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(15),
-                                                    border: Border.all(
-                                                        color: AppColors
-                                                            .gradientFirstColor)),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.spaceEvenly,
-                                                  children: [
-                                                    const Text(
-                                                      'Detail',
-                                                      style: TextStyle(
+                          children: [
+                            responseStatuscode == 400
+                                ? const Notfounddata()
+                                : items.isEmpty
+                                    ? const Center(
+                                        child: CircularProgressIndicator())
+                                    : Container(
+                                        width: width,
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 15, horizontal: 15),
+                                        margin: const EdgeInsets.only(
+                                            left: 10, right: 10),
+                                        decoration: const BoxDecoration(
+                                            borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(10),
+                                                topLeft: Radius.circular(10))),
+                                        child: Column(
+                                          children: [
+                                            Align(
+                                              alignment: Alignment.bottomRight,
+                                              child: InkWell(
+                                                onTap: () {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              const TRXMyHistoryDetails()));
+                                                },
+                                                child: Container(
+                                                  height: height * 0.06,
+                                                  width: width * 0.25,
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              15),
+                                                      border: Border.all(
+                                                          color: AppColors
+                                                              .gradientFirstColor)),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceEvenly,
+                                                    children: [
+                                                      const Text(
+                                                        'Detail',
+                                                        style: TextStyle(
                                                           fontSize: 14,
                                                           fontWeight:
                                                               FontWeight.w700,
-                                                       ),
-                                                    ),
-                                                    SizedBox(
-                                                        height: height * 0.04,
-                                                        width: width * 0.09,
-                                                        child: const Image(
-                                                            image: AssetImage(Assets
-                                                                .iconsMoreBtn))),
-                                                  ],
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                          height: height * 0.04,
+                                                          width: width * 0.09,
+                                                          child: const Image(
+                                                              image: AssetImage(
+                                                                  Assets
+                                                                      .iconsMoreBtn))),
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                          ListView.builder(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 10),
-                                            physics:
-                                                const NeverScrollableScrollPhysics(),
-                                            shrinkWrap: true,
-                                            itemCount: items.length,
-                                            itemBuilder: (context, index) {
-                                              List<Color> colors;
+                                            ListView.builder(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 10),
+                                              physics:
+                                                  const NeverScrollableScrollPhysics(),
+                                              shrinkWrap: true,
+                                              itemCount: items.length,
+                                              itemBuilder: (context, index) {
+                                                List<Color> colors;
 
-                                              if (items[index].number == 0) {
-                                                colors = [
-                                                  Colors.red,
-                                                  Colors.purple,
-                                                ];
-                                              } else if (items[index].number == 5) {
-                                                colors = [
-                                                  const Color(0xFF40ad72),
-                                                  Colors.purple,
-                                                ];
-                                              } else if (items[index].number ==
-                                                  10) {
-                                                colors = [
-                                                  const Color(0xFF40ad72),
-                                                  const Color(0xFF40ad72),
-                                                ];
-                                              } else if (items[index].number ==
-                                                  20) {
-                                                colors = [
-                                                  Colors.purple,
-                                                  Colors.purple,
-                                                ];
-                                              } else if (items[index].number ==
-                                                  30) {
-                                                colors = [
-                                                  Colors.red,
-                                                  Colors.red,
-                                                ];
-                                              } else if (items[index].number ==
-                                                  40) {
-                                                colors = [
-                                                  AppColors.goldencolor,
-                                                  AppColors.goldencolor,
-                                                ];
-                                              } else if (items[index].number ==
-                                                  50) {
-                                                colors = [
-                                                  const Color(0xff6eb4ff),
-                                                  const Color(0xff6eb4ff)
-                                                ];
-                                              } else {
-                                                int number = int.parse(
-                                                    items[index].number.toString());
-                                                colors = number.isOdd
-                                                    ? [
-                                                        const Color(0xFF40ad72),
-                                                        const Color(0xFF40ad72),
-                                                      ]
-                                                    : [
-                                                       Colors.red,
-                                                  Colors.red,
-                                                      ];
-                                              }
+                                                if (items[index].number == 0) {
+                                                  colors = [
+                                                    Colors.red,
+                                                    Colors.purple,
+                                                  ];
+                                                } else if (items[index]
+                                                        .number ==
+                                                    5) {
+                                                  colors = [
+                                                    const Color(0xFF40ad72),
+                                                    Colors.purple,
+                                                  ];
+                                                } else if (items[index]
+                                                        .number ==
+                                                    10) {
+                                                  colors = [
+                                                    const Color(0xFF40ad72),
+                                                    const Color(0xFF40ad72),
+                                                  ];
+                                                } else if (items[index]
+                                                        .number ==
+                                                    20) {
+                                                  colors = [
+                                                    Colors.purple,
+                                                    Colors.purple,
+                                                  ];
+                                                } else if (items[index]
+                                                        .number ==
+                                                    30) {
+                                                  colors = [
+                                                    Colors.red,
+                                                    Colors.red,
+                                                  ];
+                                                } else if (items[index]
+                                                        .number ==
+                                                    40) {
+                                                  colors = [
+                                                    AppColors.goldencolor,
+                                                    AppColors.goldencolor,
+                                                  ];
+                                                } else if (items[index]
+                                                        .number ==
+                                                    50) {
+                                                  colors = [
+                                                    const Color(0xff6eb4ff),
+                                                    const Color(0xff6eb4ff)
+                                                  ];
+                                                } else {
+                                                  int number = int.parse(
+                                                      items[index]
+                                                          .number
+                                                          .toString());
+                                                  colors = number.isOdd
+                                                      ? [
+                                                          const Color(
+                                                              0xFF40ad72),
+                                                          const Color(
+                                                              0xFF40ad72),
+                                                        ]
+                                                      : [
+                                                          Colors.red,
+                                                          Colors.red,
+                                                        ];
+                                                }
 
-                                              return ExpansionTile(
-                                                leading: Container(
-                                                    height: height * 0.06,
-                                                    width: width * 0.12,
-                                                    decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                                10),
-                                                        // color: Colors.grey
-                                                        gradient: LinearGradient(
-                                                            stops: const [0.5, 0.5],
-                                                            colors: colors,
-                                                            begin:
-                                                                Alignment.topLeft,
-                                                            end: Alignment
-                                                                .bottomRight)),
-                                                    child: Center(
-                                                      child: Text(
-                                                        items[index].number == 40
-                                                            ? 'Big'
-                                                            : items[index].number ==
-                                                                    50
-                                                                ? 'Small'
-                                                                : items[index]
-                                                                            .number ==
-                                                                        10
-                                                                    ? 'G'
-                                                                    : items[index]
-                                                                                .number ==
-                                                                            20
-                                                                        ? 'V'
-                                                                        : items[index].number ==
-                                                                                30
-                                                                            ? 'R'
-                                                                            : items[index]
-                                                                                .number
-                                                                                .toString(),
-                                                        style: TextStyle(
-                                                            fontSize: items[index]
-                                                                        .number ==
-                                                                    40
-                                                                ? 10
-                                                                : items[index]
-                                                                            .number ==
-                                                                        50
-                                                                    ? 10
-                                                                    : 20,
-                                                            fontWeight:
-                                                                FontWeight.w800,
-                                                            color: Colors.black),
-                                                      ),
-                                                    )),
-                                                title: Text(
-                                                  items[index].gamesno.toString(),
-                                                  style: const TextStyle(
-                                                      fontSize: 14,
-                                                      fontWeight: FontWeight.w800,
-                                                      ),
-                                                ),
-                                                subtitle: Text(
-                                                    items[index]
-                                                        .createdAt
-                                                        .toString(),
-                                                    style: const TextStyle(
-                                                        fontSize: 10,
-                                                        fontWeight: FontWeight.w700,
-                                                        color: Colors.grey)),
-                                                trailing: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.end,
-                                                  children: [
-                                                    Container(
-                                                      height: height * 0.042,
-                                                      width: width * 0.2,
+                                                return ExpansionTile(
+                                                  leading: Container(
+                                                      height: height * 0.06,
+                                                      width: width * 0.12,
                                                       decoration: BoxDecoration(
                                                           borderRadius:
-                                                              BorderRadius.circular(
-                                                                  10),
-                                                          border: Border.all(
-                                                              color: items[index]
-                                                                          .status ==
-                                                                      0
-                                                                  ? Colors.black
-                                                                  : items[index]
-                                                                              .status ==
-                                                                          2
-                                                                      ? Colors.red
-                                                                      : Colors
-                                                                          .green)),
+                                                              BorderRadius
+                                                                  .circular(10),
+                                                          // color: Colors.grey
+                                                          gradient: LinearGradient(
+                                                              stops: const [
+                                                                0.5,
+                                                                0.5
+                                                              ],
+                                                              colors: colors,
+                                                              begin: Alignment
+                                                                  .topLeft,
+                                                              end: Alignment
+                                                                  .bottomRight)),
                                                       child: Center(
                                                         child: Text(
-                                                          items[index].status == 2
-                                                              ? 'Failed'
+                                                          items[index].number ==
+                                                                  40
+                                                              ? 'Big'
                                                               : items[index]
-                                                                          .status ==
-                                                                      0
-                                                                  ? 'Pending'
-                                                                  : 'Succeed',
-                                                          style: TextStyle(
-                                                              fontSize: 12,
-                                                              fontWeight:
-                                                                  FontWeight.w700,
-                                                              color: items[index]
-                                                                          .status ==
-                                                                      0
-                                                                  ? Colors.black
+                                                                          .number ==
+                                                                      50
+                                                                  ? 'Small'
                                                                   : items[index]
-                                                                              .status ==
-                                                                          2
-                                                                      ? Colors.red
-                                                                      : Colors
-                                                                          .green),
+                                                                              .number ==
+                                                                          10
+                                                                      ? 'G'
+                                                                      : items[index].number ==
+                                                                              20
+                                                                          ? 'V'
+                                                                          : items[index].number == 30
+                                                                              ? 'R'
+                                                                              : items[index].number.toString(),
+                                                          style: TextStyle(
+                                                              fontSize: items[index]
+                                                                          .number ==
+                                                                      40
+                                                                  ? 10
+                                                                  : items[index]
+                                                                              .number ==
+                                                                          50
+                                                                      ? 10
+                                                                      : 20,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w800,
+                                                              color:
+                                                                  Colors.black),
                                                         ),
-                                                      ),
+                                                      )),
+                                                  title: Text(
+                                                    items[index]
+                                                        .gamesno
+                                                        .toString(),
+                                                    style: const TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.w800,
                                                     ),
-                                                    Text(
-                                                      items[index].status == 0
-                                                          ? '--'
-                                                          : items[index].status == 2
-                                                              ? '- ₹${items[index].amount.toStringAsFixed(2)}'
-                                                              : '+ ₹${items[index].winAmount.toStringAsFixed(2)}',
-                                                      style: TextStyle(
-                                                          fontSize: 12,
+                                                  ),
+                                                  subtitle: Text(
+                                                      items[index]
+                                                          .createdAt
+                                                          .toString(),
+                                                      style: const TextStyle(
+                                                          fontSize: 10,
                                                           fontWeight:
                                                               FontWeight.w700,
-                                                          color: items[index]
-                                                                      .status ==
-                                                                  0
-                                                              ? Colors.black
-                                                              : items[index]
-                                                                          .status ==
-                                                                      2
-                                                                  ? Colors.red
-                                                                  : Colors.green),
-                                                    ),
-                                                  ],
-                                                ),
-                                                children: [
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.symmetric(
-                                                            horizontal: 16.0),
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment.start,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment.start,
-                                                      children: [
-                                                        const SizedBox(
-                                                          height: 15,
+                                                          color: Colors.grey)),
+                                                  trailing: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.end,
+                                                    children: [
+                                                      Container(
+                                                        height: height * 0.042,
+                                                        width: width * 0.2,
+                                                        decoration: BoxDecoration(
+                                                            borderRadius: BorderRadius.circular(10),
+                                                            border: Border.all(
+                                                                color: items[index].status == 0
+                                                                    ? Colors.black
+                                                                    : items[index].status == 2
+                                                                        ? Colors.red
+                                                                        : Colors.green)),
+                                                        child: Center(
+                                                          child: Text(
+                                                            items[index].status ==
+                                                                    2
+                                                                ? 'Failed'
+                                                                : items[index]
+                                                                            .status ==
+                                                                        0
+                                                                    ? 'Pending'
+                                                                    : 'Succeed',
+                                                            style: TextStyle(
+                                                                fontSize: 12,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w700,
+                                                                color: items[index]
+                                                                            .status ==
+                                                                        0
+                                                                    ? Colors
+                                                                        .black
+                                                                    : items[index].status ==
+                                                                            2
+                                                                        ? Colors
+                                                                            .red
+                                                                        : Colors
+                                                                            .green),
+                                                          ),
                                                         ),
-                                                        const Align(
-                                                            alignment:
-                                                                Alignment.topLeft,
-                                                            child: Text(
-                                                              'Details',
-                                                              style: TextStyle(
+                                                      ),
+                                                      Text(
+                                                        items[index].status == 0
+                                                            ? '--'
+                                                            : items[index]
+                                                                        .status ==
+                                                                    2
+                                                                ? '- ₹${items[index].amount.toStringAsFixed(2)}'
+                                                                : '+ ₹${items[index].winAmount.toStringAsFixed(2)}',
+                                                        style: TextStyle(
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                                FontWeight.w700,
+                                                            color: items[index]
+                                                                        .status ==
+                                                                    0
+                                                                ? Colors.black
+                                                                : items[index]
+                                                                            .status ==
+                                                                        2
+                                                                    ? Colors.red
+                                                                    : Colors
+                                                                        .green),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  children: [
+                                                    Padding(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          horizontal: 16.0),
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          const SizedBox(
+                                                            height: 15,
+                                                          ),
+                                                          const Align(
+                                                              alignment:
+                                                                  Alignment
+                                                                      .topLeft,
+                                                              child: Text(
+                                                                'Details',
+                                                                style:
+                                                                    TextStyle(
                                                                   fontSize: 15,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w900,
-                                                                  ),
-                                                            )),
-                                                        const SizedBox(height: 8.0),
-                                                        Container(
-                                                          height: height * 0.08,
-                                                          width: width,
-                                                          decoration: BoxDecoration(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(10),
-                                                              color: AppColors
-                                                                  .FirstColor),
-                                                          child: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .all(8.0),
-                                                            child: Column(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .start,
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                const Text(
-                                                                  'order number',
-                                                                  style: TextStyle(
-                                                                      fontSize: 12,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w700,
-                                                                      color: Colors
-                                                                          .white),
                                                                 ),
-                                                                const SizedBox(
-                                                                    height: 4.0),
-                                                                Text(
-                                                                  items[index]
-                                                                      .orderId
-                                                                      .toString(),
-                                                                  style: const TextStyle(
-                                                                      fontSize: 12,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w700,
-                                                                      color: Colors
-                                                                          .white),
-                                                                )
-                                                              ],
+                                                              )),
+                                                          const SizedBox(
+                                                              height: 8.0),
+                                                          Container(
+                                                            height:
+                                                                height * 0.08,
+                                                            width: width,
+                                                            decoration: BoxDecoration(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10),
+                                                                color: AppColors
+                                                                    .FirstColor),
+                                                            child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(8.0),
+                                                              child: Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .start,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  const Text(
+                                                                    'order number',
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            12,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .w700,
+                                                                        color: Colors
+                                                                            .white),
+                                                                  ),
+                                                                  const SizedBox(
+                                                                      height:
+                                                                          4.0),
+                                                                  Text(
+                                                                    items[index]
+                                                                        .orderId
+                                                                        .toString(),
+                                                                    style: const TextStyle(
+                                                                        fontSize:
+                                                                            12,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .w700,
+                                                                        color: Colors
+                                                                            .white),
+                                                                  )
+                                                                ],
+                                                              ),
                                                             ),
                                                           ),
-                                                        ),
-                                                        historyDetails(
-                                                            'Period',
-                                                            items[index]
-                                                                .gamesno
-                                                                .toString(),
-                                                            Colors.white),
-                                                        historyDetails(
-                                                            'Purchase amount',
-                                                            items[index]
-                                                                .amount
-                                                                .toString(),
-                                                            Colors.white),
-                                                        historyDetails(
-                                                            'Amount after tax',
-                                                            items[index]
-                                                                .tradeAmount
-                                                                .toString(),
-                                                            Colors.red),
-                                                        historyDetails(
-                                                            'Tax',
-                                                            items[index]
-                                                                .commission
-                                                                .toString(),
-                                                            Colors.white),
-                                                        historyWinDetails(
-                                                            'Result',
-                                                            items[index].winNumber == null
-                                                                ? '--'
-                                                                : '${items[index].winNumber}, ',
-                                                            items[index].winNumber ==
-                                                                    5
-                                                                ? 'Green violet,'
-                                                                : items[index]
-                                                                            .winNumber ==
-                                                                        0
-                                                                    ? 'Red Violet,'
-                                                                    : items[index]
-                                                                                .winNumber ==
-                                                                            null
-                                                                        ? ''
-                                                                        : items[index]
-                                                                                .winNumber
-                                                                                .isOdd
-                                                                            ? 'green,'
-                                                                            : 'red,',
-                                                            items[index].winNumber ==
-                                                                    null
-                                                                ? ''
-                                                                : items[index]
-                                                                            .winNumber <
-                                                                        5
-                                                                    ? 'small'
-                                                                    : 'Big',
-                                                            Colors.white,
-                                                            items[index].winNumber ==
-                                                                    null
-                                                                ? Colors.orange
-                                                                : items[index]
-                                                                        .winNumber
-                                                                        .isOdd
-                                                                    ? Colors.green
-                                                                    : Colors.orange,
-                                                            items[index].winNumber ==
-                                                                    null
-                                                                ? Colors.orange
-                                                                : items[index]
-                                                                            .winNumber <
-                                                                        5
-                                                                    ? Colors.yellow
-                                                                    : Colors.blue),
-                                                        historyDetails(
-                                                            'Select',
-                                                            items[index].number ==
-                                                                    50
-                                                                ? 'small'
-                                                                : items[index]
-                                                                            .number ==
-                                                                        40
-                                                                    ? 'big'
-                                                                    : items[index]
-                                                                                .number ==
-                                                                            10
-                                                                        ? 'Green'
-                                                                        : items[index].number ==
-                                                                                20
-                                                                            ? 'Violet'
-                                                                            : items[index].number ==
-                                                                                    30
-                                                                                ? 'Red'
-                                                                                : items[index].number.toString(),
-                                                            Colors.white),
-                                                        historyDetails(
-                                                            'Status',
-                                                            items[index].status == 0
-                                                                ? 'Unpaid'
-                                                                : items[index]
-                                                                            .status ==
-                                                                        2
-                                                                    ? 'Failed'
-                                                                    : 'Succeed',
-                                                            items[index].status == 0
-                                                                ? Colors.white
-                                                                : items[index]
-                                                                            .status ==
-                                                                        2
-                                                                    ? Colors.red
-                                                                    : Colors.green),
-                                                        historyDetails(
-                                                            'Win/Loss',
-                                                            items[index].status == 0
-                                                                ? '--'
-                                                                : '₹${items[index].winAmount.toStringAsFixed(2)}',
-                                                            items[index].status == 0
-                                                                ? Colors.white
-                                                                : items[index]
-                                                                            .status ==
-                                                                        2
-                                                                    ? Colors.red
-                                                                    : Colors.green),
-                                                        historyDetails(
-                                                            'Order time',
-                                                            items[index]
-                                                                .createdAt
-                                                                .toString(),
-                                                            Colors.white),
-                                                      ],
+                                                          historyDetails(
+                                                              'Period',
+                                                              items[index]
+                                                                  .gamesno
+                                                                  .toString(),
+                                                              Colors.white),
+                                                          historyDetails(
+                                                              'Purchase amount',
+                                                              items[index]
+                                                                  .amount
+                                                                  .toString(),
+                                                              Colors.white),
+                                                          historyDetails(
+                                                              'Amount after tax',
+                                                              items[index]
+                                                                  .tradeAmount
+                                                                  .toString(),
+                                                              Colors.red),
+                                                          historyDetails(
+                                                              'Tax',
+                                                              items[index]
+                                                                  .commission
+                                                                  .toString(),
+                                                              Colors.white),
+                                                          historyWinDetails(
+                                                              'Result',
+                                                              items[index].winNumber == null
+                                                                  ? '--'
+                                                                  : '${items[index].winNumber}, ',
+                                                              items[index].winNumber ==
+                                                                      5
+                                                                  ? 'Green violet,'
+                                                                  : items[index]
+                                                                              .winNumber ==
+                                                                          0
+                                                                      ? 'Red Violet,'
+                                                                      : items[index].winNumber ==
+                                                                              null
+                                                                          ? ''
+                                                                          : items[index]
+                                                                                  .winNumber
+                                                                                  .isOdd
+                                                                              ? 'green,'
+                                                                              : 'red,',
+                                                              items[index].winNumber ==
+                                                                      null
+                                                                  ? ''
+                                                                  : items[index]
+                                                                              .winNumber <
+                                                                          5
+                                                                      ? 'small'
+                                                                      : 'Big',
+                                                              Colors.white,
+                                                              items[index].winNumber ==
+                                                                      null
+                                                                  ? Colors
+                                                                      .orange
+                                                                  : items[index]
+                                                                          .winNumber
+                                                                          .isOdd
+                                                                      ? Colors
+                                                                          .green
+                                                                      : Colors
+                                                                          .orange,
+                                                              items[index].winNumber ==
+                                                                      null
+                                                                  ? Colors
+                                                                      .orange
+                                                                  : items[index]
+                                                                              .winNumber <
+                                                                          5
+                                                                      ? Colors
+                                                                          .yellow
+                                                                      : Colors
+                                                                          .blue),
+                                                          historyDetails(
+                                                              'Select',
+                                                              items[index].number ==
+                                                                      50
+                                                                  ? 'small'
+                                                                  : items[index]
+                                                                              .number ==
+                                                                          40
+                                                                      ? 'big'
+                                                                      : items[index].number ==
+                                                                              10
+                                                                          ? 'Green'
+                                                                          : items[index].number == 20
+                                                                              ? 'Violet'
+                                                                              : items[index].number == 30
+                                                                                  ? 'Red'
+                                                                                  : items[index].number.toString(),
+                                                              Colors.white),
+                                                          historyDetails(
+                                                              'Status',
+                                                              items[index].status ==
+                                                                      0
+                                                                  ? 'Unpaid'
+                                                                  : items[index]
+                                                                              .status ==
+                                                                          2
+                                                                      ? 'Failed'
+                                                                      : 'Succeed',
+                                                              items[index].status ==
+                                                                      0
+                                                                  ? Colors.white
+                                                                  : items[index]
+                                                                              .status ==
+                                                                          2
+                                                                      ? Colors
+                                                                          .red
+                                                                      : Colors
+                                                                          .green),
+                                                          historyDetails(
+                                                              'Win/Loss',
+                                                              items[index].status ==
+                                                                      0
+                                                                  ? '--'
+                                                                  : '₹${items[index].winAmount.toStringAsFixed(2)}',
+                                                              items[index].status ==
+                                                                      0
+                                                                  ? Colors.white
+                                                                  : items[index]
+                                                                              .status ==
+                                                                          2
+                                                                      ? Colors
+                                                                          .red
+                                                                      : Colors
+                                                                          .green),
+                                                          historyDetails(
+                                                              'Order time',
+                                                              items[index]
+                                                                  .createdAt
+                                                                  .toString(),
+                                                              Colors.white),
+                                                        ],
+                                                      ),
                                                     ),
-                                                  ),
-                                                ],
-                                              );
-                                            },
-                                          ),
-
-                                        ],
+                                                  ],
+                                                );
+                                              },
+                                            ),
+                                          ],
+                                        ),
                                       ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                GestureDetector(
+                                  onTap: pageNumber >
+                                          1 // Check to ensure the pageNumber is greater than 1
+                                      ? () {
+                                          setState(() {
+                                            pageNumber--;
+                                            limitResult -= 10;
+                                            offsetResult -= 10;
+                                          });
+                                          BettingHistory();
+                                        }
+                                      : null, // Disable tap if the condition is not met
+                                  child: Container(
+                                    height: height * 0.06,
+                                    width: width * 0.10,
+                                    decoration: BoxDecoration(
+                                      gradient: AppColors.loginSecondryGrad,
+                                      borderRadius: BorderRadius.circular(10),
                                     ),
-
-
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              GestureDetector(
-                                onTap: pageNumber > 1 // Check to ensure the pageNumber is greater than 1
-                                    ? () {
-                                  setState(() {
-                                    pageNumber--;
-                                    limitResult -= 10;
-                                    offsetResult -= 10;
-                                  });
-                                  BettingHistory();
-                                }
-                                    : null, // Disable tap if the condition is not met
-                                child: Container(
-                                  height: height * 0.06,
-                                  width: width * 0.10,
-                                  decoration: BoxDecoration(
-                                    gradient: AppColors.loginSecondryGrad,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: const Icon(
-                                    Icons.navigate_before,
-                                    color: Colors.white,
+                                    child: const Icon(
+                                      Icons.navigate_before,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(width: 16),
-                              textWidget(
-                                text: '$pageNumber/$numberPages',
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.primaryTextColor,
-                                maxLines: 1,
-                              ),
-                              const SizedBox(width: 16),
-                              GestureDetector(
-                                onTap: pageNumber < (int.parse(count) / itemsPerPage).ceil() // Check if there are more pages available
-                                    ? () {
-                                  setState(() {
-                                    pageNumber++;
-                                    limitResult += 10;
-                                    offsetResult += 10;
-                                  });
-                                  BettingHistory();
-                                }
-                                    : null, // Disable tap if the condition is not met
-                                child: Container(
-                                  height: height * 0.06,
-                                  width: width * 0.10,
-                                  decoration: BoxDecoration(
-                                    gradient: AppColors.loginSecondryGrad,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: const Icon(
-                                    Icons.navigate_next,
-                                    color: Colors.white,
+                                const SizedBox(width: 16),
+                                textWidget(
+                                  text: '$pageNumber/$numberPages',
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.primaryTextColor,
+                                  maxLines: 1,
+                                ),
+                                const SizedBox(width: 16),
+                                GestureDetector(
+                                  onTap: pageNumber <
+                                          (int.parse(count) / itemsPerPage)
+                                              .ceil() // Check if there are more pages available
+                                      ? () {
+                                          setState(() {
+                                            pageNumber++;
+                                            limitResult += 10;
+                                            offsetResult += 10;
+                                          });
+                                          BettingHistory();
+                                        }
+                                      : null, // Disable tap if the condition is not met
+                                  child: Container(
+                                    height: height * 0.06,
+                                    width: width * 0.10,
+                                    decoration: BoxDecoration(
+                                      gradient: AppColors.loginSecondryGrad,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: const Icon(
+                                      Icons.navigate_next,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-
-
-                            SizedBox(height: height*0.04,)
-                        ],
-                      )
+                              ],
+                            ),
+                            SizedBox(
+                              height: height * 0.04,
+                            )
+                          ],
+                        )
             ],
           )
         : Container();
@@ -1979,38 +2111,35 @@ class TrxScreenState extends State<TrxScreen>
       var number = data["number"];
       var result = data["result"];
       result == "lose"
-          ?   showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return LossPopupPage(
-            subtext: number.toString(),
-            subtext1: totalamount.toString(),
-            subtext2: win.toString(),
-            subtext3: gamesno.toString(),
-            subtext4: gameid.toString(),
-          ); // Call the Popup widget
-        },
-      )
-
-          :   showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return WinPopupPage(
-            subtext: number.toString(),
-            subtext1: totalamount.toString(),
-            subtext2: win.toString(),
-            subtext3: gamesno.toString(),
-            subtext4: gameid.toString(),
-          ); // Call the Popup widget
-        },
-      );
+          ? showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return LossPopupPage(
+                  subtext: number.toString(),
+                  subtext1: totalamount.toString(),
+                  subtext2: win.toString(),
+                  subtext3: gamesno.toString(),
+                  subtext4: gameid.toString(),
+                ); // Call the Popup widget
+              },
+            )
+          : showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return WinPopupPage(
+                  subtext: number.toString(),
+                  subtext1: totalamount.toString(),
+                  subtext2: win.toString(),
+                  subtext3: gamesno.toString(),
+                  subtext4: gameid.toString(),
+                ); // Call the Popup widget
+              },
+            );
     } else {
       context.read<ProfileProvider>().fetchProfileData();
-      setState(() {
-      });
+      setState(() {});
     }
   }
-
 
   ///chart page
   Widget chartScreen() {
@@ -2020,12 +2149,12 @@ class TrxScreenState extends State<TrxScreen>
         Container(
           padding: const EdgeInsets.symmetric(vertical: 15),
           margin: const EdgeInsets.only(left: 10, right: 10),
-          decoration:  const BoxDecoration(
-              gradient : AppColors.boxGradient,
+          decoration: const BoxDecoration(
+              gradient: AppColors.boxGradient,
               borderRadius: BorderRadius.only(
                   topRight: Radius.circular(10), topLeft: Radius.circular(10))),
           child: Row(
-            //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+             // mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
                 alignment: Alignment.center,
@@ -2060,37 +2189,40 @@ class TrxScreenState extends State<TrxScreen>
                 height: 30,
                 width: width * 0.97,
                 decoration: const BoxDecoration(color: AppColors.white),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    textWidget(
-                        text: gameResult[index].gamesno.toString(),
-                        color: Colors.black),
-                    Row(
-                        children: generateNumberWidgets(
-                            int.parse(gameResult[index].number.toString()))),
-                    Container(
-                      height: 20,
-                      width: 20,
-                      margin: const EdgeInsets.all(2),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        //border: Border.all(width: 1,color: ),
-                        shape: BoxShape.circle,
-                        gradient:
-                            int.parse(gameResult[index].number.toString()) < 5
-                                ? AppColors.boxGradient
-                                : AppColors.btnYellowGradient,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      textWidget(
+                          text: gameResult[index].gamesno.toString(),
+                          color: Colors.black),
+                      Row(
+                          children: generateNumberWidgets(
+                              int.parse(gameResult[index].number.toString()))),
+                      Container(
+                        height: 20,
+                        width: 20,
+                        margin: const EdgeInsets.all(2),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          //border: Border.all(width: 1,color: ),
+                          shape: BoxShape.circle,
+                          gradient:
+                              int.parse(gameResult[index].number.toString()) < 5
+                                  ? AppColors.boxGradient
+                                  : AppColors.btnYellowGradient,
+                        ),
+                        child: textWidget(
+                          text: int.parse(gameResult[index].number.toString()) < 5
+                              ? 'S'
+                              : 'B',
+                          color: AppColors.primaryTextColor,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                      child: textWidget(
-                        text: int.parse(gameResult[index].number.toString()) < 5
-                            ? 'S'
-                            : 'B',
-                        color: AppColors.primaryTextColor,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               );
             },
@@ -2103,15 +2235,17 @@ class TrxScreenState extends State<TrxScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             GestureDetector(
-              onTap: (pageNumber > 1 && limitResult > 0) // Check to ensure pageNumber > 1 and limitResult > 0
+              onTap: (pageNumber > 1 &&
+                      limitResult >
+                          0) // Check to ensure pageNumber > 1 and limitResult > 0
                   ? () {
-                setState(() {
-                  pageNumber--;
-                  limitResult -= 10;
-                  offsetResult -= 10;
-                });
-                gameHistoryResult();
-              }
+                      setState(() {
+                        pageNumber--;
+                        limitResult -= 10;
+                        offsetResult -= 10;
+                      });
+                      gameHistoryResult();
+                    }
                   : null, // Disable tap if condition is not met
               child: Container(
                 height: height * 0.06,
@@ -2377,8 +2511,7 @@ Widget buildTimeCard2({required String time, required String header}) => Column(
       children: [
         Container(
           padding: const EdgeInsets.all(8),
-          decoration:  const BoxDecoration(
-
+          decoration: const BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -2572,13 +2705,13 @@ List<Widget> generateNumberWidgets(int parse) {
       } else {
         colors = parse % 2 == 0
             ? [
-          const Color(0xFFfd565c),
-          const Color(0xFFfd565c),
-        ]
+                const Color(0xFFfd565c),
+                const Color(0xFFfd565c),
+              ]
             : [
-          const Color(0xFF40ad72),
-          const Color(0xFF40ad72),
-        ];
+                const Color(0xFF40ad72),
+                const Color(0xFF40ad72),
+              ];
       }
     }
 
@@ -2609,8 +2742,6 @@ List<Widget> generateNumberWidgets(int parse) {
   });
 }
 
-
-
 class GradientTextview extends StatelessWidget {
   const GradientTextview(
     this.text, {
@@ -2634,7 +2765,6 @@ class GradientTextview extends StatelessWidget {
     );
   }
 }
-
 
 class GameHistoryModel {
   final String period;

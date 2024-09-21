@@ -20,12 +20,16 @@ import 'package:tswin/utils/filter_date-formate.dart';
 import 'package:tswin/utils/routes/routes_name.dart';
 import '../../model/deposit_model.dart';
 
+int? selectedCatIndex;
+
 class DepositHistory extends StatefulWidget {
-  const DepositHistory({super.key});
+  String ? selectedIndex;
+   DepositHistory({super.key, this.selectedIndex});
 
   @override
   State<DepositHistory> createState() => _DepositHistoryState();
 }
+
 
 class _DepositHistoryState extends State<DepositHistory> with  SingleTickerProviderStateMixin {
 
@@ -35,7 +39,19 @@ class _DepositHistoryState extends State<DepositHistory> with  SingleTickerProvi
     getwaySelect();
     fetchTransactionTypes(context);
     super.initState();
-    selectedCatIndex = 1;
+    if (widget.selectedIndex == "1") {
+      selectedCatIndex = 1;
+    } else if (widget.selectedIndex == "2") {
+      selectedCatIndex = 2;
+    } else if (widget.selectedIndex == "3") {
+      selectedCatIndex = items.isNotEmpty ? items[0].id : 3;
+    }else {
+      selectedCatIndex = items.isNotEmpty ? items[0].id : 1;
+    }
+
+    if (kDebugMode) {
+      print("Initial selectedCatIndex: $selectedCatIndex");
+    }
 
   }
   bool isLoading = false;
@@ -43,11 +59,11 @@ class _DepositHistoryState extends State<DepositHistory> with  SingleTickerProvi
 
   int ?responseStatuscode;
 
-
-  int? selectedCatIndex;
   int selectedId = 0;
   String typeName = 'All';
   DateTime? _selectedDate;
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +88,7 @@ class _DepositHistoryState extends State<DepositHistory> with  SingleTickerProvi
           children: [
             Container(
               padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
-              height: 70,
+              height: height*0.1,
               width: width * 0.93,
               child: ListView.builder(
                   shrinkWrap: true,
@@ -83,6 +99,7 @@ class _DepositHistoryState extends State<DepositHistory> with  SingleTickerProvi
                       onTap: () {
                         setState(() {
                           selectedCatIndex = items[index].id;
+
                         });
                         if (kDebugMode) {
                           print(selectedCatIndex);
@@ -110,9 +127,9 @@ class _DepositHistoryState extends State<DepositHistory> with  SingleTickerProvi
                             Image(
                               image: NetworkImage('${items[index].image}'),
                               height: 25,
-
                             ),
                             textWidget(
+                              textAlign: TextAlign.center,
                               text: items[index].name,
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
@@ -179,32 +196,6 @@ class _DepositHistoryState extends State<DepositHistory> with  SingleTickerProvi
                       ),
                     ),
                   ),
-                  // Container(
-                  //   height: height * 0.08,
-                  //   width: width * 0.45,
-                  //   decoration: BoxDecoration(
-                  //     borderRadius: BorderRadius.circular(5),
-                  //     color: Colors.white,
-                  //   ),
-                  //   child: Padding(
-                  //     padding: const EdgeInsets.all(12.0),
-                  //     child: Row(
-                  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //       children: [
-                  //         textWidget(
-                  //           text: 'Choose the date',
-                  //           fontWeight: FontWeight.w900,
-                  //           fontSize: 12,
-                  //
-                  //         ),
-                  //         const Icon(
-                  //           Icons.keyboard_arrow_down,
-                  //           color: Colors.black,
-                  //         ),
-                  //       ],
-                  //     ),
-                  //   ),
-                  // ),
                   Center(
                     child: Container(
                       height: height*0.08,
@@ -260,6 +251,7 @@ class _DepositHistoryState extends State<DepositHistory> with  SingleTickerProvi
                           ),
                           child: Column(
                             children: [
+
                               Container(
                                 decoration: BoxDecoration(
                                   gradient: AppColors.boxGradient,
@@ -310,7 +302,7 @@ class _DepositHistoryState extends State<DepositHistory> with  SingleTickerProvi
                                           fontWeight: FontWeight.w500,
                                           color: AppColors.primaryTextColor),
                                       textWidget(
-                                          text: "₹${depositItems[index].usdt_amount.toString()}",
+                                          text:"₹${depositItems[index].cash}",
                                           fontSize: 13,
                                           fontWeight: FontWeight.w500,
                                           color: AppColors.gradientFirstColor),
@@ -340,6 +332,35 @@ class _DepositHistoryState extends State<DepositHistory> with  SingleTickerProvi
                                           color: AppColors.primaryTextColor),
                                       textWidget(
                                           text: "${depositItems[index].cash}",
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w500,
+                                          color: AppColors.btnColor),
+                                    ],
+                                  ),
+                                ),
+                              ):Container(),
+                              selectedCatIndex==3?
+                              Padding(
+                                padding: const EdgeInsets.only(top: 5,left: 10,right: 10,bottom: 5),
+                                child: Container(
+                                  padding: const EdgeInsets.all(5),
+                                  height: height*0.055,
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(5)
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      textWidget(
+                                          text: "Manual Amount",
+                                          fontSize: width * 0.035,
+                                          fontWeight: FontWeight.w500,
+                                          color: AppColors.primaryTextColor),
+                                      textWidget(
+                                          text: "${depositItems[index].manual_amount}",
                                           fontSize: 13,
                                           fontWeight: FontWeight.w500,
                                           color: AppColors.btnColor),
@@ -459,44 +480,6 @@ class _DepositHistoryState extends State<DepositHistory> with  SingleTickerProvi
 
   UserViewProvider userProvider = UserViewProvider();
 
-  // List<DepositModel> depositItems = [];
-  //
-  // Future<void> depositHistory() async {
-  //   UserModel user = await userProvider.getUser();
-  //   String token = user.id.toString();
-  //
-  //   final response = await http.get(Uri.parse('${ApiUrl.depositHistory}$token&status=$selectedId&type=$selectedCatIndex'),);
-  //   if (kDebugMode) {
-  //     print('${ApiUrl.depositHistory}$token&status=$selectedId&type=$selectedCatIndex');
-  //     print('depositHistory');
-  //   }
-  //
-  //   setState(() {
-  //     responseStatuscode = response.statusCode;
-  //   });
-  //
-  //   if (response.statusCode==200) {
-  //     final List<dynamic> responseData = json.decode(response.body)['data'];
-  //     setState(() {
-  //
-  //       depositItems = responseData.map((item) => DepositModel.fromJson(item)).toList();
-  //       // selectedIndex = items.isNotEmpty ? 0:-1; //
-  //     });
-  //
-  //   }
-  //   else if(response.statusCode==400){
-  //     if (kDebugMode) {
-  //       print('Data not found');
-  //     }
-  //   }
-  //   else {
-  //     setState(() {
-  //       depositItems = [];
-  //     });
-  //     throw Exception('Failed to load data');
-  //   }
-  // }
-
 
   List<DepositModel> depositItems = [];
 
@@ -504,40 +487,37 @@ class _DepositHistoryState extends State<DepositHistory> with  SingleTickerProvi
     UserModel user = await userProvider.getUser();
     String token = user.id.toString();
 
-    final response = await http.get(Uri.parse('${ApiUrl.depositHistory}$token&type=$selectedCatIndex'),);
+    final response = await http.get(Uri.parse('${ApiUrl.depositHistory}$token&type=$selectedCatIndex'));
+    print(token);
+    print("token");
+
     if (kDebugMode) {
       print('${ApiUrl.depositHistory}$token&type=$selectedCatIndex');
-      print('iehfuipeg8pfp');
     }
 
     setState(() {
       responseStatuscode = response.statusCode;
     });
 
-    if (response.statusCode==200) {
+    if (response.statusCode == 200) {
       final List<dynamic> responseData = json.decode(response.body)['data'];
       setState(() {
-
         depositItems = responseData.map((item) => DepositModel.fromJson(item)).toList();
-        // selectedIndex = items.isNotEmpty ? 0:-1; //
       });
-
-    }
-    else if(response.statusCode==400){
+    } else if (response.statusCode == 400) {
       if (kDebugMode) {
         print('Data not found');
       }
-    }
-    else {
+    } else {
+      if (kDebugMode) {
+        print('Error: ${response.body}');
+      }
       setState(() {
         depositItems = [];
       });
-      throw Exception('Failed to load data');
+      throw Exception('Failed to load data: ${response.statusCode}');
     }
   }
-
-
-
 
 
 
@@ -699,34 +679,6 @@ class _DepositHistoryState extends State<DepositHistory> with  SingleTickerProvi
       throw Exception('Failed to load data');
     }
   }
-
-
-  // var nametype;
-  // void _selectLocation() async {
-  //   final selectedLocation = await showModalBottomSheet(
-  //     shape: const RoundedRectangleBorder(
-  //       borderRadius: BorderRadius.only(
-  //         topRight: Radius.circular(10),
-  //         topLeft: Radius.circular(10),
-  //       ),
-  //     ),
-  //     context: context,
-  //     builder: (context) => DepositBottom(
-  //       id: selectedId,
-  //       name: typeName,
-  //     ),
-  //   );
-  //
-  //   print("sseee");
-  //   print(selectedLocation);
-  //
-  //   if (selectedLocation is Map<String, dynamic>) {
-  //     print("aaaaaaa");
-  //     setState(() {
-  //       nametype = selectedLocation['name'];
-  //     });
-  //   }
-  // }
 
 
 }

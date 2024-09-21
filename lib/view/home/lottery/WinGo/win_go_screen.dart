@@ -62,6 +62,8 @@ class _WinGoScreenState extends State<WinGoScreen> with SingleTickerProviderStat
     Audio.audioPlayers;
     startCountdown();
     gameHistoryResult();
+    gameHistoryResultSingle();
+
     BettingHistory();
     invitationRuleApi();
     const ConstantWallet();
@@ -131,6 +133,7 @@ class _WinGoScreenState extends State<WinGoScreen> with SingleTickerProviderStat
         const ConstantWallet();
         context.read<ProfileProvider>().fetchProfileData();
         gameHistoryResult();
+        gameHistoryResultSingle();
         BettingHistory();
 
       }
@@ -386,7 +389,7 @@ class _WinGoScreenState extends State<WinGoScreen> with SingleTickerProviderStat
                                 showDialog(
                                     barrierDismissible: false,
                                     context: context,
-                                    builder: (BuildContext context) => const HowToPlay(type: '8',));
+                                    builder: (BuildContext context) =>  HowToPlay(type: gameid.toString(),));
                               },
                               child: Container(
                                   padding:
@@ -420,7 +423,7 @@ class _WinGoScreenState extends State<WinGoScreen> with SingleTickerProviderStat
                               style: const TextStyle(
                                   color: AppColors.white),
                             ),
-                            gameResult.isEmpty
+                            gameResultSingle.isEmpty
                                 ? Container()
                                 : SizedBox(
                               width: 130,
@@ -431,9 +434,10 @@ class _WinGoScreenState extends State<WinGoScreen> with SingleTickerProviderStat
                                 itemBuilder: (context, index) {
                                   return Padding(
                                     padding: const EdgeInsets.all(2.0),
-                                    child: Image(
+                                    child: gameResultSingle[index].number==null?Container():
+                                    Image(
                                       image: AssetImage(
-                                        betNumbers[int.parse(gameResult[index].number.toString())].photo.toString(),
+                                        betNumbers[int.parse(gameResultSingle[index].number.toString())].photo.toString(),
                                       ),
                                       height: 25,
                                     ),
@@ -831,7 +835,7 @@ class _WinGoScreenState extends State<WinGoScreen> with SingleTickerProviderStat
       children:[
         DefaultTextStyle(
           style: const TextStyle(
-              fontSize: 11,
+              fontSize: 9,
               color: Colors.black
           ),
           child: SizedBox(
@@ -1197,7 +1201,6 @@ class _WinGoScreenState extends State<WinGoScreen> with SingleTickerProviderStat
       final List<dynamic> responseData = json.decode(response.body)['data'];
       setState(() {
         gameResult = responseData.map((item) => ResultGameHistory.fromJson(item)).toList();
-        period=int.parse(responseData[0]['gamesno'].toString()) + 1;
       });
 
     }
@@ -1209,6 +1212,37 @@ class _WinGoScreenState extends State<WinGoScreen> with SingleTickerProviderStat
     else {
       setState(() {
         gameResult = [];
+      });
+      throw Exception('Failed to load data');
+    }
+  }
+
+
+  List<ResultGameHistory> gameResultSingle = [];
+
+  Future<void> gameHistoryResultSingle() async {
+    final response = await http.get(Uri.parse('${ApiUrl.resultList}$gameid&limit=5&offset=$offsetResult'),);
+    if (kDebugMode) {
+      print(ApiUrl.changeAvtarList);
+      print('changeAvtarList');
+
+    }
+    if (response.statusCode==200) {
+      final List<dynamic> responseData = json.decode(response.body)['data'];
+      setState(() {
+        gameResultSingle = responseData.map((item) => ResultGameHistory.fromJson(item)).toList();
+        period=int.parse(responseData[0]['gamesno'].toString()) + 1;
+      });
+
+    }
+    else if(response.statusCode==400){
+      if (kDebugMode) {
+        print('Data not found');
+      }
+    }
+    else {
+      setState(() {
+        gameResultSingle = [];
       });
       throw Exception('Failed to load data');
     }

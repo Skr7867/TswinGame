@@ -37,7 +37,7 @@ class Routers {
       case RoutesName.addBankAccount:
         return (context) => const AddBankAccount();
       case RoutesName.depositHistory:
-        return (context) => const DepositHistory();
+        return (context) =>  DepositHistory();
       case RoutesName.withdrawalHistory:
         return (context) => const WithdrawHistory();
       case RoutesName.aviatorGame:

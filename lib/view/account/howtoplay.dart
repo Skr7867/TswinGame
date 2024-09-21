@@ -98,17 +98,25 @@ class _HowToPlayState extends State<HowToPlay> {
   int? responseStatuscode;
 
   var description;
-  invitationRuleApi() async {
+
+  invitationRuleApi() async                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             {
+    print("fdfuya");
+    print("chla");
     final type = widget.type.toString();
+    print(type);
+    print("dbuvfuyvfu");
     final response = await http.get(
-      Uri.parse("${ApiUrl.aboutus}type=$type"),
+      // Uri.parse("${ApiUrl.aboutus}type=${widget.type}"),
+      Uri.parse("${ApiUrl.gamesRule}$type"),
+
     );
+    print("${ApiUrl.gamesRule}$type");
     setState(() {
       responseStatuscode=response.statusCode;
     });
 
     if (response.statusCode == 200) {
-      final responseData = json.decode(response.body)['data'][0];
+      final responseData = json.decode(response.body)['data'];
       setState(() {
         description = responseData["description"].toString();
       });
@@ -117,4 +125,5 @@ class _HowToPlayState extends State<HowToPlay> {
       print("Failed to load data. Status code: ${response.statusCode}");
     }
   }
+
 }
