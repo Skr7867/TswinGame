@@ -6,11 +6,11 @@ import 'package:tswin/res/components/text_widget.dart';
 
 class WinPopupPage extends StatefulWidget {
 
-  String subtext;
-  String subtext1;
-  String subtext2;
-  String subtext3;
-  String subtext4;
+  dynamic subtext;
+  dynamic subtext1;
+  dynamic subtext2;
+  dynamic subtext3;
+  dynamic subtext4;
 
   WinPopupPage( {super.key,required this.subtext,required this.subtext1, required this.subtext2,required this.subtext3,required this.subtext4, });
 
@@ -23,28 +23,80 @@ class _WinPopupPageState extends State<WinPopupPage> {
   Widget build(BuildContext context) {
     List<Color> colors;
 
-    if (widget.subtext == 0) {
+    // if (widget.subtext == 0) {
+    //   colors = [
+    //     Colors.red,
+    //     Colors.purple,
+    //   ];
+    // } else if (widget.subtext == 5) {
+    //   colors = [
+    //     const Color(0xFF40ad72),
+    //     Colors.purple
+    //
+    //   ];
+    // } else {
+    //   int number = int.parse(
+    //       widget.subtext.toString());
+    //   colors = number.isOdd
+    //       ? [
+    //     const Color(0xFF40ad72),
+    //     const Color(0xFF40ad72),
+    //   ]
+    //       : [
+    //     Colors.red,
+    //     Colors.red,
+    //   ];
+    // }
+
+    if (widget.subtext == "0") {
       colors = [
-        Colors.red,
-        Colors.purple,
+        const Color(0xFFfd565c),
+        const Color(0xFFb659fe),
       ];
-    } else if (widget.subtext == 5) {
+    } else if (widget.subtext == "5") {
       colors = [
         const Color(0xFF40ad72),
-        Colors.purple
+        const Color(0xFFb659fe),
+      ];
+
+    }  else if (widget.subtext == "10") {
+      colors = [
+        const Color(0xFF40ad72),
+        const Color(0xFF40ad72),
+      ];
+    }  else if (widget.subtext == "20") {
+      colors = [
+
+        const Color(0xFFb659fe),
+        const Color(0xFFb659fe),
+      ];
+    }  else if (widget.subtext == "30") {
+      colors = [
+        const Color(0xFFfd565c),
+        const Color(0xFFfd565c),
+      ];
+    }  else if (widget.subtext == "40") {
+      colors = [
+        const Color(0xFF40ad72),
+        const Color(0xFF40ad72),
 
       ];
+    }  else if (widget.subtext == "50") {
+      colors = [
+        //blue
+        const Color(0xFF6da7f4),
+        const Color(0xFF6da7f4)
+      ];
     } else {
-      int number = int.parse(
-          widget.subtext.toString());
+      int number = int.parse(widget.subtext.toString());
       colors = number.isOdd
           ? [
         const Color(0xFF40ad72),
         const Color(0xFF40ad72),
       ]
           : [
-        Colors.red,
-        Colors.red,
+        const Color(0xFFfd565c),
+        const Color(0xFFfd565c),
       ];
     }
 
@@ -106,13 +158,13 @@ class _WinPopupPageState extends State<WinPopupPage> {
                       ),
                       child: Center(
                         child: textWidget(
-                          text: widget.subtext.toString() == '10' ? 'Green' :
-                          widget. subtext.toString() == '20' ? 'Violet' :
-                          widget.subtext.toString() == '30' ? 'Red' :
-                          widget.subtext.toString() == '0' ? 'Red Violet' :
-                          widget.subtext.toString() == '5' ? 'Green Violet' :
-                          (widget.subtext.toString() == '1' || widget.subtext.toString() == '3' || widget.subtext.toString() == '7' || widget.subtext.toString() == '9') ? 'green' :
-                          'White',
+                          text: widget.subtext == "10" ? 'Green' :
+                          widget. subtext== "20" ? 'Violet' :
+                          widget.subtext == "30" ? 'Red' :
+                          widget.subtext == "0" ? 'Violet Red' :
+                          widget.subtext== "5" ? 'Violet Green' :
+                          (widget.subtext == "1" || widget.subtext== "3" || widget.subtext == "7" || widget.subtext == "9") ? 'green' :
+                          'violet',
                           fontSize: 10,
                           color: Colors.black,
                           fontWeight: FontWeight.bold,

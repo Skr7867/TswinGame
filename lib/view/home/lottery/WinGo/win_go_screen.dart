@@ -29,8 +29,6 @@ import 'package:tswin/view/home/lottery/WinGo/win_loss_popup/loss_popup.dart';
 import 'package:tswin/view/home/lottery/WinGo/win_loss_popup/win_popup.dart';
 import 'package:provider/provider.dart';
 
-
-
 class WinGoScreen extends StatefulWidget {
   const WinGoScreen({super.key});
 
@@ -265,6 +263,8 @@ class _WinGoScreenState extends State<WinGoScreen> with SingleTickerProviderStat
                             offsetResult = 0;
                             gameHistoryResult();
                             BettingHistory();
+                            gameHistoryResultSingle();
+                            pageNumber= 1;
                           },
                           child: Container(
                             height: height * 0.28,
@@ -2112,8 +2112,8 @@ class _WinGoScreenState extends State<WinGoScreen> with SingleTickerProviderStat
             subtext:  number.toString(),
             subtext1: totalamount.toString(),
             subtext2: win.toString(),
-            subtext3: gamesno.toString(),
-            subtext4: gameid.toString(),
+            subtext3: gamesno,
+            subtext4: gameid,
           ); // Call the Popup widget
         },
       )
@@ -2122,11 +2122,12 @@ class _WinGoScreenState extends State<WinGoScreen> with SingleTickerProviderStat
         context: context,
         builder: (BuildContext context) {
           return WinPopupPage(
-            subtext:  number!=null? number.toString() :"" ,
-            subtext1: totalamount!=null ? totalamount.toString(): "",
-            subtext2: win.toStringAsFixed(2),
-            subtext3: gamesno.toString(),
-            subtext4: gameid.toString(),
+            // subtext:  number!=null? number.toString() :"" ,
+            subtext:  number.toString(),
+            subtext1: totalamount.toString(),
+            subtext2: win.toString(),
+            subtext3: gamesno,
+            subtext4: gameid,
           ); // Call the Popup widget
         },
       );

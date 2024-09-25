@@ -67,7 +67,7 @@ class _ConstantWalletState extends State<ConstantWallet> {
                     const Icon(Icons.currency_rupee_outlined,
                         size: 20, color: Colors.black),
                     textWidget(
-                      text: userData.totalWallet.toStringAsFixed(2),
+                      text: userData.totalWallet== null?"0":userData.totalWallet.toStringAsFixed(2),
                       fontSize: 20,
                       color: Colors.black,
                       fontWeight: FontWeight.w600,

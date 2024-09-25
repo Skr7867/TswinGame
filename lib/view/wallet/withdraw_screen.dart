@@ -202,7 +202,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                         setState(() {
                           payUsing = currentId;
                           withdrawCon.clear();
-                          UsdtCont.clear();
+                          // UsdtCont.clear();
                           if (kDebugMode) {
                             print(payUsing);
                             print('rrrrrrrrrrrrrrrrr');
@@ -845,6 +845,13 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
         "usdt_amount": usdtAmount,
       }),
     );
+    print({
+      "user_id": token,
+      "account_id": withdrawacid,
+      "type": payUsing.toString(),
+      "amount": money,
+      "usdt_amount": usdtAmount,
+    });
     var data = jsonDecode(response.body);
     if (data["status"] == 200) {
       context.read<ProfileProvider>().fetchProfileData();

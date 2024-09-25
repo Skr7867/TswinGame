@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:provider/provider.dart';
 import 'package:tswin/main.dart';
 import 'package:tswin/model/bettingHistory_Model.dart';
 import 'package:tswin/model/result_game_history.dart';
@@ -45,6 +46,7 @@ class TrxScreenState extends State<TrxScreen>
     Audio.audioPlayers;
     startCountdown();
     gameHistoryResult();
+    gameHistoryResultSingle();
     invitationRuleApi();
     super.initState();
     selectedCatIndex = 0;
@@ -136,11 +138,14 @@ class TrxScreenState extends State<TrxScreen>
         }
       } else if (countdownSeconds == 0) {
         countdownSeconds = gameseconds;
-
+        game_winPopup();
         // partelyRecord(1);
         // gameHistoryTRX(1);
         // bettingHistoryTRX();
-        gameWinPopup(context);
+        gameHistoryResult();
+        gameHistoryResultSingle();
+
+
       }
       countdownSeconds = (countdownSeconds - 1);
     });
@@ -255,6 +260,8 @@ class TrxScreenState extends State<TrxScreen>
                                   offsetResult = 0;
                                   gameHistoryResult();
                                   BettingHistory();
+                                  gameHistoryResultSingle();
+                                  pageNumber= 1;
                                 },
                                 child: Container(
                                   height: height * 0.28,
@@ -507,7 +514,7 @@ class TrxScreenState extends State<TrxScreen>
                           ],
                         ),
                         SizedBox(height: height * 0.05),
-                        gameResult.isNotEmpty
+                        gameResultSingle.isNotEmpty
                             ? Center(
                                 child: Container(
                                   height: height * 0.09,
@@ -521,7 +528,7 @@ class TrxScreenState extends State<TrxScreen>
                                     itemBuilder:
                                         (BuildContext context, int index) {
                                       String text =
-                                          gameResult[index].hash.toString();
+                                      gameResultSingle[index].hash.toString();
                                       List<String> characterList =
                                           text.split('');
                                       return Row(
@@ -537,7 +544,7 @@ class TrxScreenState extends State<TrxScreen>
                                               child: Container(
                                                   height: height * 0.08,
                                                   width: height * 0.08,
-                                                  decoration: gameResult[index]
+                                                  decoration: gameResultSingle[index]
                                                               .number
                                                               .toString() ==
                                                           char
@@ -545,7 +552,7 @@ class TrxScreenState extends State<TrxScreen>
                                                           image:
                                                               DecorationImage(
                                                             image: AssetImage(
-                                                                betNumbers[int.parse(gameResult[
+                                                                betNumbers[int.parse(gameResultSingle[
                                                                             index]
                                                                         .number
                                                                         .toString())]
@@ -559,7 +566,7 @@ class TrxScreenState extends State<TrxScreen>
                                                           border: Border.all(
                                                               color: AppColors
                                                                   .primaryTextColor)),
-                                                  child: gameResult[index]
+                                                  child: gameResultSingle[index]
                                                               .number
                                                               .toString() !=
                                                           char
@@ -992,7 +999,7 @@ class TrxScreenState extends State<TrxScreen>
       Uri.parse('${ApiUrl.resultList}$gameid&limit=10&offset=$offsetResult'),
     );
     if (kDebugMode) {
-      print(ApiUrl.resultList);
+      print('${ApiUrl.resultList}$gameid&limit=10&offset=$offsetResult');
       print('resultList');
     }
 
@@ -1002,7 +1009,6 @@ class TrxScreenState extends State<TrxScreen>
         gameResult = responseData
             .map((item) => ResultGameHistory.fromJson(item))
             .toList();
-        period = int.parse(responseData[0]['gamesno'].toString()) + 1;
       });
     } else if (response.statusCode == 400) {
       if (kDebugMode) {
@@ -1011,6 +1017,36 @@ class TrxScreenState extends State<TrxScreen>
     } else {
       setState(() {
         gameResult = [];
+      });
+      throw Exception('Failed to load data');
+    }
+  }
+
+  List<ResultGameHistory> gameResultSingle = [];
+
+  Future<void> gameHistoryResultSingle() async {
+    final response = await http.get(Uri.parse('${ApiUrl.resultList}$gameid&limit=5&offset=$offsetResult'),);
+    if (kDebugMode) {
+      print(ApiUrl.changeAvtarList);
+      print('changeAvtarList');
+
+    }
+    if (response.statusCode==200) {
+      final List<dynamic> responseData = json.decode(response.body)['data'];
+      setState(() {
+        gameResultSingle = responseData.map((item) => ResultGameHistory.fromJson(item)).toList();
+        period=int.parse(responseData[0]['gamesno'].toString()) + 1;
+      });
+
+    }
+    else if(response.statusCode==400){
+      if (kDebugMode) {
+        print('Data not found');
+      }
+    }
+    else {
+      setState(() {
+        gameResultSingle = [];
       });
       throw Exception('Failed to load data');
     }
@@ -2089,11 +2125,12 @@ class TrxScreenState extends State<TrxScreen>
 
   int limitResult = 10;
   int offsetResult = 0;
-  gameWinPopup(context) async {
+  game_winPopup() async {
     UserModel user = await userProvider.getUser();
     String userid = user.id.toString();
     final response = await http.get(
         Uri.parse('${ApiUrl.game_win}$userid&game_id=$gameid&gamesno=$period'));
+
     var data = jsonDecode(response.body);
     if (kDebugMode) {
       print('${ApiUrl.game_win}$userid&game_id=$gameid&gamesno=$period');
@@ -2104,40 +2141,43 @@ class TrxScreenState extends State<TrxScreen>
     if (data["status"] == 200) {
       context.read<ProfileProvider>().fetchProfileData();
 
-      var totalamount = data["totalamount"];
+      var totalamount = data["totalamount"] ?? 0;
       var win = data["win"];
       var gamesno = data["gamesno"];
       var gameid = data["gameid"];
-      var number = data["number"];
+      var number = data["number"] ?? 0;
       var result = data["result"];
+
       result == "lose"
-          ? showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return LossPopupPage(
-                  subtext: number.toString(),
-                  subtext1: totalamount.toString(),
-                  subtext2: win.toString(),
-                  subtext3: gamesno.toString(),
-                  subtext4: gameid.toString(),
-                ); // Call the Popup widget
-              },
-            )
-          : showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return WinPopupPage(
-                  subtext: number.toString(),
-                  subtext1: totalamount.toString(),
-                  subtext2: win.toString(),
-                  subtext3: gamesno.toString(),
-                  subtext4: gameid.toString(),
-                ); // Call the Popup widget
-              },
-            );
+          ?   showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return LossPopupPage(
+            subtext:  number.toString(),
+            subtext1: totalamount.toString(),
+            subtext2: win.toString(),
+            subtext3: gamesno.toString(),
+            subtext4: gameid.toString(),
+          ); // Call the Popup widget
+        },
+      )
+
+          :  showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return WinPopupPage(
+            subtext:  number!=null? number.toString() :"" ,
+            subtext1: totalamount!=null ? totalamount.toString(): "",
+            subtext2: win.toStringAsFixed(2),
+            subtext3: gamesno.toString(),
+            subtext4: gameid.toString(),
+          ); // Call the Popup widget
+        },
+      );
     } else {
       context.read<ProfileProvider>().fetchProfileData();
-      setState(() {});
+      setState(() {
+      });
     }
   }
 

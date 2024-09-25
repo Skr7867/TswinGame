@@ -282,8 +282,8 @@ class _DepositScreenState extends State<DepositScreen> {
 
               selectedIndex == 0
                   ? Container()
-                  : selectedIndex == 1 ?
-              Container(
+                  : selectedIndex == 1
+                  ? Container(
                 width: width,
                 padding:  const EdgeInsets.only(top: 15, left: 15, right: 15),
                 decoration: BoxDecoration(
@@ -344,9 +344,8 @@ class _DepositScreenState extends State<DepositScreen> {
                   ],
                 ),
               ):
-              selectedIndex == 2
-                ?
-              Container(
+                 selectedIndex == 2
+                  ? Container(
                 width: width,
                 padding:  const EdgeInsets.only(top: 15, left: 15, right: 15),
                 decoration: BoxDecoration(
@@ -417,9 +416,8 @@ class _DepositScreenState extends State<DepositScreen> {
                   ],
                 ),
               )
-
                   : selectedIndex == 3?
-              Column(
+                  Column(
                 children: [
                   const SizedBox(
                     height: 20,
@@ -541,7 +539,6 @@ class _DepositScreenState extends State<DepositScreen> {
                   ),
                 ],
               )
-
                   :Container(),
 
               const SizedBox(height: 20),
