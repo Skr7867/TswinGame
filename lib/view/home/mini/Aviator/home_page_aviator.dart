@@ -1242,7 +1242,10 @@ class _GameAviatorState extends State<GameAviator>
                       itemCount: number.length,
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (BuildContext context, int index) {
-                        final double price = number[index].price;
+                        final price = number[index].price is int
+                            ? number[index].price.toDouble()
+                            : number[index].price;
+
                         Color textColor;
                         if (price > 1 && price < 2) {
                           textColor = Colors.blue;
@@ -1251,6 +1254,15 @@ class _GameAviatorState extends State<GameAviator>
                         } else {
                           textColor = Colors.pink;
                         }
+                        // final double price = number[index].price;
+                        // Color textColor;
+                        // if (price > 1 && price < 2) {
+                        //   textColor = Colors.blue;
+                        // } else if (price >= 2 && price < 10) {
+                        //   textColor = Colors.purple;
+                        // } else {
+                        //   textColor = Colors.pink;
+                        // }
                         return Padding(
                           padding: const EdgeInsets.all(5.0),
                           child: Container(
@@ -1265,7 +1277,8 @@ class _GameAviatorState extends State<GameAviator>
                             ),
                             child: Center(
                               child: Text(
-                                '${number[index].price.toStringAsFixed(2)} X',
+                                  "${number[index].price} X",
+                                // '${number[index].price.toStringAsFixed(2)} X',
                                 style:
                                     TextStyle(fontSize: 14, color: textColor),
                               ),
@@ -1334,8 +1347,12 @@ class _GameAviatorState extends State<GameAviator>
               mainAxisSpacing: 2,
             ),
             itemBuilder: (BuildContext context, int index) {
-              final double price = number[index].price;
+              final price = number[index].price is int
+                  ? number[index].price.toDouble()
+                  : number[index].price;
+
               Color textColor;
+
               if (price > 1 && price < 2) {
                 textColor = Colors.blue;
               } else if (price >= 2 && price < 10) {
@@ -1343,6 +1360,15 @@ class _GameAviatorState extends State<GameAviator>
               } else {
                 textColor = Colors.pink;
               }
+              // final double price = number[index].price;
+              // Color textColor;
+              // if (price > 1 && price < 2) {
+              //   textColor = Colors.blue;
+              // } else if (price >= 2 && price < 10) {
+              //   textColor = Colors.purple;
+              // } else {
+              //   textColor = Colors.pink;
+              // }
               return Padding(
                 padding: const EdgeInsets.all(5.0),
                 child: Container(
@@ -1355,7 +1381,8 @@ class _GameAviatorState extends State<GameAviator>
                   ),
                   child: Center(
                     child: Text(
-                      '${number[index].price.toStringAsFixed(2)} X',
+                      '${number[index].price} X',
+                      // '${number[index].price.toStringAsFixed(2)} X',
                       style: TextStyle(fontSize: 14, color: textColor),
                     ),
                   ),
@@ -2496,7 +2523,8 @@ class _GameAviatorState extends State<GameAviator>
           };
         });
       }
-    } else {
+    }
+    else {
       setState(() {
         perios = (int.parse(period) + 1).toString();
       });

@@ -455,6 +455,7 @@ class Assets {
   static const String imagesNum6 = 'assets/images/num6.png';
   static const String imagesOriginalIcon = 'assets/images/originalIcon.png';
   static const String imagesPlatform = 'assetss/images/platform.png';
+  static const String imagesPlinkoPopup = 'assetss/images/plinko_popup.png';
   static const String imagesPlus = 'assets/images/plus.png';
   static const String imagesPreSaleBg = 'assets/images/PreSaleBg.png';
   static const String imagesProfileBg = 'assets/images/profile_bg.png';

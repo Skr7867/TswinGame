@@ -163,8 +163,9 @@ class _WinPopupPageState extends State<WinPopupPage> {
                           widget.subtext == "30" ? 'Red' :
                           widget.subtext == "0" ? 'Violet Red' :
                           widget.subtext== "5" ? 'Violet Green' :
-                          (widget.subtext == "1" || widget.subtext== "3" || widget.subtext == "7" || widget.subtext == "9") ? 'green' :
-                          'violet',
+                          (widget.subtext == "1" || widget.subtext== "3" || widget.subtext == "7" || widget.subtext == "9")
+                              ? 'green' :
+                          'red',
                           fontSize: 10,
                           color: Colors.black,
                           fontWeight: FontWeight.bold,

@@ -262,6 +262,7 @@ class TrxScreenState extends State<TrxScreen>
                                   BettingHistory();
                                   gameHistoryResultSingle();
                                   pageNumber= 1;
+                                  myHistoryPageNumber =1;
                                 },
                                 child: Container(
                                   height: height * 0.28,
@@ -1051,7 +1052,9 @@ class TrxScreenState extends State<TrxScreen>
       throw Exception('Failed to load data');
     }
   }
-
+  int myHistoryPageNumber = 1;
+  int myHistoryLimitResult = 10;
+  int myHistoryOffsetResult = 0;
   int selectedIndex = 6;
   int? totalBets;
   List<BettingHistoryModel> items = [];
@@ -1060,11 +1063,11 @@ class TrxScreenState extends State<TrxScreen>
     String token = user.id.toString();
     final response = await http.get(
       Uri.parse(
-          '${ApiUrl.betHistory}$token&game_id=$selectedIndex&limit=10&offset=$offsetResult'),
+          '${ApiUrl.betHistory}$token&game_id=$selectedIndex&limit=10&offset=$myHistoryOffsetResult'),
     );
     if (kDebugMode) {
       print(
-          '${ApiUrl.betHistory}$token&game_id=$selectedIndex&limit=10&offset=0');
+          '${ApiUrl.betHistory}$token&game_id=$selectedIndex&limit=10&offset=$myHistoryOffsetResult');
       print('betHistory+token trx');
     }
 
@@ -2052,16 +2055,17 @@ class TrxScreenState extends State<TrxScreen>
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 GestureDetector(
-                                  onTap: pageNumber >
-                                          1 // Check to ensure the pageNumber is greater than 1
+                                  onTap: (myHistoryPageNumber > 1 &&
+                                      myHistoryLimitResult >
+                                          0) // Check that pageNumber is greater than 1 and limitResult is greater than 0
                                       ? () {
-                                          setState(() {
-                                            pageNumber--;
-                                            limitResult -= 10;
-                                            offsetResult -= 10;
-                                          });
-                                          BettingHistory();
-                                        }
+                                    setState(() {
+                                      myHistoryPageNumber--;
+                                      myHistoryLimitResult -= 10;
+                                      myHistoryOffsetResult -= 10;
+                                    });
+                                    BettingHistory();
+                                  }
                                       : null, // Disable tap if the condition is not met
                                   child: Container(
                                     height: height * 0.06,
@@ -2078,7 +2082,7 @@ class TrxScreenState extends State<TrxScreen>
                                 ),
                                 const SizedBox(width: 16),
                                 textWidget(
-                                  text: '$pageNumber/$numberPages',
+                                  text: '$myHistoryPageNumber',
                                   fontSize: 13,
                                   fontWeight: FontWeight.w600,
                                   color: AppColors.primaryTextColor,
@@ -2086,18 +2090,14 @@ class TrxScreenState extends State<TrxScreen>
                                 ),
                                 const SizedBox(width: 16),
                                 GestureDetector(
-                                  onTap: pageNumber <
-                                          (int.parse(count) / itemsPerPage)
-                                              .ceil() // Check if there are more pages available
-                                      ? () {
-                                          setState(() {
-                                            pageNumber++;
-                                            limitResult += 10;
-                                            offsetResult += 10;
-                                          });
-                                          BettingHistory();
-                                        }
-                                      : null, // Disable tap if the condition is not met
+                                  onTap: () {
+                                    setState(() {
+                                      myHistoryLimitResult += 10;
+                                      myHistoryOffsetResult += 10;
+                                      myHistoryPageNumber++;
+                                    });
+                                    BettingHistory();
+                                  },
                                   child: Container(
                                     height: height * 0.06,
                                     width: width * 0.10,

@@ -17,10 +17,11 @@ import 'package:tswin/model/plinko_list_model.dart';
 import 'package:tswin/model/plinko_result.dart';
 import 'package:tswin/model/user_model.dart';
 import 'package:tswin/plinko/lesson_02/objects/ball_dynamic.dart';
+import 'package:tswin/plinko/plinko_popup.dart';
 import 'package:tswin/plinko/routes.dart';
 import 'package:tswin/plinko/utils/Plinko_Pop_up.dart';
+import 'package:tswin/res/aap_colors.dart';
 import 'package:tswin/res/api_urls.dart';
-import 'package:tswin/res/components/app_btn.dart';
 import 'package:tswin/res/components/text_widget.dart';
 import 'package:tswin/res/provider/profile_provider.dart';
 import 'package:tswin/res/provider/user_view_provider.dart';
@@ -208,606 +209,626 @@ class _MyGameWidgetState extends State<MyGameWidget> {
 
   int? responseStatuscode;
 
+  int exitIndex = 1;
+
+  Future<bool> _onWillPop() async {
+    if (exitIndex == 0) {
+      return false;
+    } else {
+      return true;
+     }
+  }
 
   @override
   Widget build(BuildContext context) {
     context.read<ProfileProvider>().fetchProfileData();
     final userData =context.read<ProfileProvider>();
 
-    return Scaffold(
-      backgroundColor: const Color(0xFF107baa),
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        shadowColor: Colors.transparent,
-        leading:  const AppBackBtn(),
-         title: const Text(
-           'PLINKO',
-           style: TextStyle(
-             fontWeight: FontWeight.bold,
-             fontSize: 17,
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child:Scaffold(
+        backgroundColor: const Color(0xFF107baa),
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          shadowColor: Colors.transparent,
+          leading: exitIndex==0? IconButton(
+            onPressed: (){
+             Utils.flushBarSuccessMessage("Please complete your bet otherwise money will be deducted! ", context, AppColors.primaryTextColor);
+            },
+            icon: const Icon(Icons.arrow_back_ios,color: AppColors.white,size: 15,),
+          ): IconButton(
+            onPressed: (){
+             Navigator.pop(context);
+            },
+            icon: const Icon(Icons.arrow_back_ios,color: AppColors.white,size: 15,),
+          ),
+           title: const Text(
+             'PLINKO',
+             style: TextStyle(
+               fontWeight: FontWeight.bold,
+               fontSize: 17,
+             ),
            ),
-         ),
-         centerTitle: true,
-        actions: [
-          Row(
-            children: [
-              // Text(  context.read<ProfileProvider>().mainWallet.toStringAsFixed(2)+'₹',
-              //   style: TextStyle(
-              //        fontSize: 12,
-              //     fontWeight: FontWeight.w800,
-              //   ),),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                   const Icon(Icons.currency_rupee_outlined,
-                      size: 15, color: Colors.white),
-                  textWidget(
-                      text:
-                      userData.totalWallet.toStringAsFixed(2),
-                      fontSize: 15,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600),
-                   const SizedBox(
-                    width: 10,
-                  ),
-                  InkWell(
-                      onTap: () {
-                        setState(() {
-                          context.read<ProfileProvider>().fetchProfileData();
-                          Utils.flushBarSuccessMessage('Wallet refresh ✔', context, Colors.white);
-                        });
-
-                      },
-                      child: Image.asset(Assets.iconsTotalBal,
-                          height: 20))
-                ],
-              ),
-              InkWell(
-                onTap: (){
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return const PlinkoPopUpPage();
-                    },
-                  );
-                },
-                child: Container(
-                    margin: EdgeInsets.zero,
-                    alignment: Alignment.center,
-                    height: height*0.03,
-                    width: width*0.10,
-                    decoration: BoxDecoration(
-                        // color: Colors.teal,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.3),
-                            blurRadius: 5,
-                            spreadRadius: 2,
-                            offset: const Offset(0,
-                                3), // Adjust the shadow's position here
-                          ),
-                        ],
-                        borderRadius: BorderRadius.circular(20),
-                        ),
-                    child: Image.asset(Assets.iconsBetHistory),
-                ),
-              ),
-              const SizedBox(
-                width: 10,
-              ),
-            ],
-          ),
-        ],
-      ),
-      bottomNavigationBar: Padding
-
-        (
-        padding: const EdgeInsets.fromLTRB(10, 0, 10, 30),
-        child: Container(
-          height: height * 0.2,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            gradient: const LinearGradient(
-              colors: [
-                Color(0xFF095273),
-                Color(0xFF117e67),
-                Color(0xFF095273),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-          // Colors.transparent,
-          child: Column(
-            children: [
-              SizedBox(
-                height: height * 0.02,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Container(
-                    width: width * 0.8,
-                    height: height * 0.07,
-                    decoration: BoxDecoration(
-                        color: const Color(0xFF097c7f),
-                        // Colors.greenAccent,
-                        borderRadius: BorderRadius.circular(35)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            const Text(
-                              '                 Bet',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 12),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Container(
-                                    height: height * 0.03,
-                                    alignment: Alignment.center,
-                                    padding: const EdgeInsets.all(4),
-                                    width: width * 0.3,
-                                    decoration: BoxDecoration(
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey.withOpacity(0.3),
-                                          blurRadius: 5,
-                                          spreadRadius: 2,
-                                          offset: const Offset(0, 3),
-                                        ),
-                                      ],
-                                      color: const Color(0xFF015759),
-                                      borderRadius: BorderRadius.circular(20),
-                                      border: Border.all(
-                                          width: 1, color: Colors.black),
-                                    ),
-                                    child: Text(
-                                      '$selectedIndex ₹',
-                                      style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 12),
-                                    )),
-                              ],
-                            ),
-                            const SizedBox()
-                          ],
-                        ),
-                        InkWell(
-                          onTap: decrementCounter,
-                          child: Container(
-                              margin: EdgeInsets.zero,
-                              alignment: Alignment.center,
-                              height: 35,
-                              width: 35,
-                              decoration: BoxDecoration(
-                                  color: Colors.teal,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.3),
-                                      blurRadius: 5,
-                                      spreadRadius: 2,
-                                      offset: const Offset(0,
-                                          3), // Adjust the shadow's position here
-                                    ),
-                                  ],
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(color: Colors.black)),
-                              child: const Icon(
-                                Icons.remove,
-                                size: 20,
-                                color: Colors.white,
-                              )),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            showDialog(
-                                context: context,
-                                builder: (context) => betPopUp());
-                          },
-                          child: Container(
-                              margin: EdgeInsets.zero,
-                              alignment: Alignment.center,
-                              height: 35,
-                              width: 35,
-                              decoration: BoxDecoration(
-                                  color: Colors.teal,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.3),
-                                      blurRadius: 5,
-                                      spreadRadius: 2,
-                                      offset: const Offset(0,
-                                          3), // Adjust the shadow's position here
-                                    ),
-                                  ],
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(color: Colors.black)),
-                              child: Image.asset(
-                                'assetss/images/coin/stack.png',
-                                height: 20,
-                              )),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            incrementCounter();
-                          },
-                          child: Container(
-                              margin: EdgeInsets.zero,
-                              alignment: Alignment.center,
-                              height: 35,
-                              width: 35,
-                              decoration: BoxDecoration(
-                                  color: Colors.teal,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.3),
-                                      blurRadius: 5,
-                                      spreadRadius: 2,
-                                      offset: const Offset(0,
-                                          3), // Adjust the shadow's position here
-                                    ),
-                                  ],
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(color: Colors.black)),
-                              child: const Text(
-                                '+',
-                                style: TextStyle(
-                                    fontSize: 20, color: Colors.white),
-                              )),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                ],
-              ),
-              SizedBox(
-                height: height * 0.02,
-              ),
-              SizedBox(
-                width: width * 0.9,
-                height: height * 0.07,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+           centerTitle: true,
+          actions: [
+            Row(
+              children: [
+                // Text(  context.read<ProfileProvider>().mainWallet.toStringAsFixed(2)+'₹',
+                //   style: TextStyle(
+                //        fontSize: 12,
+                //     fontWeight: FontWeight.w800,
+                //   ),),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    loaderOne == false
-                        ? InkWell(
-                            onTap: () async {
+                     const Icon(Icons.currency_rupee_outlined,
+                        size: 15, color: Colors.white),
+                    textWidget(
+                        text:
+                        userData.totalWallet.toStringAsFixed(2),
+                        fontSize: 15,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600),
+                     const SizedBox(
+                      width: 10,
+                    ),
+                    InkWell(
+                        onTap: () {
+                          setState(() {
+                            context.read<ProfileProvider>().fetchProfileData();
+                            Utils.flushBarSuccessMessage('Wallet refresh ✔', context, Colors.white);
+                          });
 
-                              setState(() {
-                                tapValue = !tapValue;
-                                _selectedIndexxx = 1;
-                              });
-                              plinkoBet(
-                                  amount.text, _selectedIndexxx.toString());
-                              if (kDebugMode) {
-                                print(_selectedIndexxx);
-                                print("_selectedIndexxx");
-                              }
-
-                            },
-                            child: Container(
-                              alignment: Alignment.center,
-                              height: height * 0.05,
-                              width: width * 0.2,
-                              decoration: BoxDecoration(
-                                gradient: const LinearGradient(
-                                  colors: [
-                                    Color(0xff337a04),
-                                    Color(0xff52960c),
-                                    Color(0xff337a04),
-                                  ],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.topRight,
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.3),
-                                    blurRadius: 5,
-                                    spreadRadius: 2,
-                                    offset: const Offset(0,
-                                        3), // Adjust the shadow's position here
-                                  ),
-                                ],
-                                color: Colors.green,
-                                borderRadius: BorderRadius.circular(20),
-                                border: Border.all(
-                                  color: _selectedIndexxx == 0
-                                      ? Colors.teal
-                                      : Colors.black,
-                                ),
-                              ),
-                              child: const Text(
-                                'GREEN',
-                                style: TextStyle(
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.w900,
-                                    color: Colors.white),
-                              ),
-                            ),
-                          )
-                        : const Center(child: CircularProgressIndicator()),
-                    loaderTwo == false
-                        ? InkWell(
-                            onTap: () async {
-                              // for (int i = 0; i < selectedBalls; i++) {
-                              //   await Future.delayed(
-                              //       const Duration(seconds: 1));
-                              //   widget.game.onTapDown();
-                              // }
-                              setState(() {
-                                tapValue = !tapValue;
-                                _selectedIndexxx = 2;
-                                plinkoBet(
-                                    amount.text, _selectedIndexxx.toString());
-                              });
-                            },
-                            child: Container(
-                              alignment: Alignment.center,
-                              height: height * 0.05,
-                              width: width * 0.2,
-                              decoration: BoxDecoration(
-                                gradient: const LinearGradient(
-                                  colors: [
-                                    Color(0xFFc56f00),
-                                    Color(0xFFca8605),
-                                    Color(0xFFc56f00),
-                                  ],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.topRight,
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.3),
-                                    blurRadius: 5,
-                                    spreadRadius: 2,
-                                    offset: const Offset(0,
-                                        3), // Adjust the shadow's position here
-                                  ),
-                                ],
-                                color: Colors.green,
-                                borderRadius: BorderRadius.circular(20),
-                                border: Border.all(
-                                  color: _selectedIndexxx == 1
-                                      ? Colors.teal
-                                      : Colors.black,
-                                ),
-                              ),
-                              child: const Text(
-                                'YELLOW',
-                                style: TextStyle(
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.w900,
-                                    color: Colors.white),
-                              ),
-                            ),
-                          )
-                        : const Center(child: CircularProgressIndicator()),
-                    loaderThree == false
-                        ? InkWell(
-                            onTap: () async {
-                              // for (int i = 0; i < selectedBalls; i++) {
-                              //   await Future.delayed(
-                              //       const Duration(seconds: 1));
-                              //   widget.game.onTapDown();
-                              // }
-                              setState(() {
-                                tapValue = !tapValue;
-                                _selectedIndexxx = 3;
-                                plinkoBet(
-                                    amount.text, _selectedIndexxx.toString());
-                              });
-                            },
-                            child: Container(
-                              alignment: Alignment.center,
-                              height: height * 0.05,
-                              width: width * 0.2,
-                              decoration: BoxDecoration(
-                                gradient: const LinearGradient(
-                                  colors: [
-                                    Color(0xFFb80118),
-                                    Color(0xFFdd0016),
-                                    Color(0xFFb80118),
-                                  ],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.topRight,
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.3),
-                                    blurRadius: 5,
-                                    spreadRadius: 2,
-                                    offset: const Offset(0,
-                                        3), // Adjust the shadow's position here
-                                  ),
-                                ],
-                                color: Colors.green,
-                                borderRadius: BorderRadius.circular(20),
-                                border: Border.all(
-                                  color: _selectedIndexxx == 2
-                                      ? Colors.teal
-                                      : Colors.black,
-                                ),
-                              ),
-                              child: const Text(
-                                'RED',
-                                style: TextStyle(
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.w900,
-                                    color: Colors.white),
-                              ),
-                            ),
-                          )
-                        : const Center(child: CircularProgressIndicator()),
+                        },
+                        child: Image.asset(Assets.iconsTotalBal,
+                            height: 20))
                   ],
                 ),
+                InkWell(
+                  onTap: (){
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return const PlinkoPopUpPage();
+                      },
+                    );
+                  },
+                  child: Container(
+                      margin: EdgeInsets.zero,
+                      alignment: Alignment.center,
+                      height: height*0.03,
+                      width: width*0.10,
+                      decoration: BoxDecoration(
+                          // color: Colors.teal,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.3),
+                              blurRadius: 5,
+                              spreadRadius: 2,
+                              offset: const Offset(0,
+                                  3), // Adjust the shadow's position here
+                            ),
+                          ],
+                          borderRadius: BorderRadius.circular(20),
+                          ),
+                      child: Image.asset(Assets.iconsBetHistory),
+                  ),
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+              ],
+            ),
+          ],
+        ),
+        bottomNavigationBar: Padding(
+          padding: const EdgeInsets.fromLTRB(10, 0, 10, 30),
+          child: Container(
+            height: height * 0.2,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              gradient: const LinearGradient(
+                colors: [
+                  Color(0xFF095273),
+                  Color(0xFF117e67),
+                  Color(0xFF095273),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
-            ],
+            ),
+            // Colors.transparent,
+            child: Column(
+              children: [
+                SizedBox(
+                  height: height * 0.02,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Container(
+                      width: width * 0.8,
+                      height: height * 0.07,
+                      decoration: BoxDecoration(
+                          color: const Color(0xFF097c7f),
+                          // Colors.greenAccent,
+                          borderRadius: BorderRadius.circular(35)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              const Text(
+                                '                 Bet',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 12),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Container(
+                                      height: height * 0.03,
+                                      alignment: Alignment.center,
+                                      padding: const EdgeInsets.all(4),
+                                      width: width * 0.3,
+                                      decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(0.3),
+                                            blurRadius: 5,
+                                            spreadRadius: 2,
+                                            offset: const Offset(0, 3),
+                                          ),
+                                        ],
+                                        color: const Color(0xFF015759),
+                                        borderRadius: BorderRadius.circular(20),
+                                        border: Border.all(
+                                            width: 1, color: Colors.black),
+                                      ),
+                                      child: Text(
+                                        '$selectedIndex ₹',
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 12),
+                                      )),
+                                ],
+                              ),
+                              const SizedBox()
+                            ],
+                          ),
+                          InkWell(
+                            onTap: decrementCounter,
+                            child: Container(
+                                margin: EdgeInsets.zero,
+                                alignment: Alignment.center,
+                                height: 35,
+                                width: 35,
+                                decoration: BoxDecoration(
+                                    color: Colors.teal,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.3),
+                                        blurRadius: 5,
+                                        spreadRadius: 2,
+                                        offset: const Offset(0,
+                                            3), // Adjust the shadow's position here
+                                      ),
+                                    ],
+                                    borderRadius: BorderRadius.circular(20),
+                                    border: Border.all(color: Colors.black)),
+                                child: const Icon(
+                                  Icons.remove,
+                                  size: 20,
+                                  color: Colors.white,
+                                )),
+                          ),
+                          InkWell(
+                            onTap: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) => betPopUp());
+                            },
+                            child: Container(
+                                margin: EdgeInsets.zero,
+                                alignment: Alignment.center,
+                                height: 35,
+                                width: 35,
+                                decoration: BoxDecoration(
+                                    color: Colors.teal,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.3),
+                                        blurRadius: 5,
+                                        spreadRadius: 2,
+                                        offset: const Offset(0,
+                                            3), // Adjust the shadow's position here
+                                      ),
+                                    ],
+                                    borderRadius: BorderRadius.circular(20),
+                                    border: Border.all(color: Colors.black)),
+                                child: Image.asset(
+                                  'assetss/images/coin/stack.png',
+                                  height: 20,
+                                )),
+                          ),
+                          InkWell(
+                            onTap: () {
+                              incrementCounter();
+                            },
+                            child: Container(
+                                margin: EdgeInsets.zero,
+                                alignment: Alignment.center,
+                                height: 35,
+                                width: 35,
+                                decoration: BoxDecoration(
+                                    color: Colors.teal,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.3),
+                                        blurRadius: 5,
+                                        spreadRadius: 2,
+                                        offset: const Offset(0,
+                                            3), // Adjust the shadow's position here
+                                      ),
+                                    ],
+                                    borderRadius: BorderRadius.circular(20),
+                                    border: Border.all(color: Colors.black)),
+                                child: const Text(
+                                  '+',
+                                  style: TextStyle(
+                                      fontSize: 20, color: Colors.white),
+                                )),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                  ],
+                ),
+                SizedBox(
+                  height: height * 0.02,
+                ),
+                SizedBox(
+                  width: width * 0.9,
+                  height: height * 0.07,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      loaderOne == false
+                          ? InkWell(
+                              onTap: () async {
+
+                                setState(() {
+                                  tapValue = !tapValue;
+                                  _selectedIndexxx = 1;
+                                });
+                                plinkoBet(
+                                    amount.text, _selectedIndexxx.toString());
+                                if (kDebugMode) {
+                                  print(_selectedIndexxx);
+                                  print("_selectedIndexxx");
+                                }
+
+                              },
+                              child: Container(
+                                alignment: Alignment.center,
+                                height: height * 0.05,
+                                width: width * 0.2,
+                                decoration: BoxDecoration(
+                                  gradient: const LinearGradient(
+                                    colors: [
+                                      Color(0xff337a04),
+                                      Color(0xff52960c),
+                                      Color(0xff337a04),
+                                    ],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.topRight,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.3),
+                                      blurRadius: 5,
+                                      spreadRadius: 2,
+                                      offset: const Offset(0,
+                                          3), // Adjust the shadow's position here
+                                    ),
+                                  ],
+                                  color: Colors.green,
+                                  borderRadius: BorderRadius.circular(20),
+                                  border: Border.all(
+                                    color: _selectedIndexxx == 0
+                                        ? Colors.teal
+                                        : Colors.black,
+                                  ),
+                                ),
+                                child: const Text(
+                                  'GREEN',
+                                  style: TextStyle(
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w900,
+                                      color: Colors.white),
+                                ),
+                              ),
+                            )
+                          : const Center(child: CircularProgressIndicator()),
+                      loaderTwo == false
+                          ? InkWell(
+                              onTap: () async {
+                                // for (int i = 0; i < selectedBalls; i++) {
+                                //   await Future.delayed(
+                                //       const Duration(seconds: 1));
+                                //   widget.game.onTapDown();
+                                // }
+                                setState(() {
+                                  tapValue = !tapValue;
+                                  _selectedIndexxx = 2;
+                                  plinkoBet(
+                                      amount.text, _selectedIndexxx.toString());
+                                });
+                              },
+                              child: Container(
+                                alignment: Alignment.center,
+                                height: height * 0.05,
+                                width: width * 0.2,
+                                decoration: BoxDecoration(
+                                  gradient: const LinearGradient(
+                                    colors: [
+                                      Color(0xFFc56f00),
+                                      Color(0xFFca8605),
+                                      Color(0xFFc56f00),
+                                    ],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.topRight,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.3),
+                                      blurRadius: 5,
+                                      spreadRadius: 2,
+                                      offset: const Offset(0,
+                                          3), // Adjust the shadow's position here
+                                    ),
+                                  ],
+                                  color: Colors.green,
+                                  borderRadius: BorderRadius.circular(20),
+                                  border: Border.all(
+                                    color: _selectedIndexxx == 1
+                                        ? Colors.teal
+                                        : Colors.black,
+                                  ),
+                                ),
+                                child: const Text(
+                                  'YELLOW',
+                                  style: TextStyle(
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w900,
+                                      color: Colors.white),
+                                ),
+                              ),
+                            )
+                          : const Center(child: CircularProgressIndicator()),
+                      loaderThree == false
+                          ? InkWell(
+                              onTap: () async {
+                                // for (int i = 0; i < selectedBalls; i++) {
+                                //   await Future.delayed(
+                                //       const Duration(seconds: 1));
+                                //   widget.game.onTapDown();
+                                // }
+                                setState(() {
+                                  tapValue = !tapValue;
+                                  _selectedIndexxx = 3;
+                                  plinkoBet(
+                                      amount.text, _selectedIndexxx.toString());
+                                });
+                              },
+                              child: Container(
+                                alignment: Alignment.center,
+                                height: height * 0.05,
+                                width: width * 0.2,
+                                decoration: BoxDecoration(
+                                  gradient: const LinearGradient(
+                                    colors: [
+                                      Color(0xFFb80118),
+                                      Color(0xFFdd0016),
+                                      Color(0xFFb80118),
+                                    ],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.topRight,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.3),
+                                      blurRadius: 5,
+                                      spreadRadius: 2,
+                                      offset: const Offset(0,
+                                          3), // Adjust the shadow's position here
+                                    ),
+                                  ],
+                                  color: Colors.green,
+                                  borderRadius: BorderRadius.circular(20),
+                                  border: Border.all(
+                                    color: _selectedIndexxx == 2
+                                        ? Colors.teal
+                                        : Colors.black,
+                                  ),
+                                ),
+                                child: const Text(
+                                  'RED',
+                                  style: TextStyle(
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w900,
+                                      color: Colors.white),
+                                ),
+                              ),
+                            )
+                          : const Center(child: CircularProgressIndicator()),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-      body: Stack(
-        children: [
-          GameWidget(
-            // addRepaintBoundary: true,
-            game: widget.game,
-          ),
-          // Text('${contact.bodyB.position}'),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(15, 70, 0, 0),
-            child: expansionWidget(),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: height * 0.7, left: width*0.02),
-            child: Center(
-              child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  shrinkWrap: true,
-                  itemCount: plinkoRedItem.length,
-                  itemBuilder: (context, index) {
-                    return Center(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 1),
-                        child: Container(
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              colors: [
-                                Color(0xFFb80118),
-                                Color(0xFFdd0016),
-                                Color(0xFFb80118),
-                              ],
-                              begin: Alignment.topLeft,
-                              end: Alignment.topRight,
+        body: Stack(
+          children: [
+            GameWidget(
+              // addRepaintBoundary: true,
+              game: widget.game,
+            ),
+            // Text('${contact.bodyB.position}'),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(15, 70, 0, 0),
+              child: expansionWidget(),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: height * 0.7, left: width*0.02),
+              child: Center(
+                child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    shrinkWrap: true,
+                    itemCount: plinkoRedItem.length,
+                    itemBuilder: (context, index) {
+                      return Center(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 1),
+                          child: Container(
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              gradient: const LinearGradient(
+                                colors: [
+                                  Color(0xFFb80118),
+                                  Color(0xFFdd0016),
+                                  Color(0xFFb80118),
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.topRight,
+                              ),
+                              borderRadius: BorderRadius.circular(5),
+                              border: Border.all(
+                                width: 2,
+                                color: _selectedIndexxx== 3?const Color(0xffff1f1f):Colors.transparent,
+                              ),
                             ),
-                            borderRadius: BorderRadius.circular(5),
-                            border: Border.all(
-                              width: 2,
-                              color: _selectedIndexxx== 3?const Color(0xffff1f1f):Colors.transparent,
-                            ),
-                          ),
-                          margin: const EdgeInsets.all(1),
-                          width: width * 0.11,
-                          height: height * 0.02,
-                          child: Text(
-                            plinkoRedItem[index].multiplier.toString(),
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white,
-                              fontSize: 7,
+                            margin: const EdgeInsets.all(1),
+                            width: width * 0.11,
+                            height: height * 0.02,
+                            child: Text(
+                              plinkoRedItem[index].multiplier.toString(),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white,
+                                fontSize: 7,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    );
-                  }),
+                      );
+                    }),
+              ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: height * 0.65, left: width*0.02),
-            child: Center(
-              child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  shrinkWrap: true,
-                  itemCount: plinkoYellowItem.length,
-                  itemBuilder: (context, index) {
-                    return Center(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 1),
-                        child: Container(
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              colors: [
-                                Color(0xFFc56f00),
-                                Color(0xFFca8605),
-                                Color(0xFFc56f00),
-                              ],
-                              begin: Alignment.topLeft,
-                              end: Alignment.topRight,
+            Padding(
+              padding: EdgeInsets.only(top: height * 0.65, left: width*0.02),
+              child: Center(
+                child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    shrinkWrap: true,
+                    itemCount: plinkoYellowItem.length,
+                    itemBuilder: (context, index) {
+                      return Center(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 1),
+                          child: Container(
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              gradient: const LinearGradient(
+                                colors: [
+                                  Color(0xFFc56f00),
+                                  Color(0xFFca8605),
+                                  Color(0xFFc56f00),
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.topRight,
+                              ),
+                              borderRadius: BorderRadius.circular(5),
+                              border: Border.all(
+                                width: 2,
+                                color: _selectedIndexxx== 2?const Color(0xfffff026):Colors.transparent,
+                              ),
                             ),
-                            borderRadius: BorderRadius.circular(5),
-                            border: Border.all(
-                              width: 2,
-                              color: _selectedIndexxx== 2?const Color(0xfffff026):Colors.transparent,
-                            ),
-                          ),
-                          // color:const Color(0xFFc56f00),
-                          margin: const EdgeInsets.all(1),
-                          width: width * 0.11,
-                          height: height * 0.02,
-                          child: Text(
-                            plinkoYellowItem[index].multiplier.toString(),
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white,
-                              fontSize: 7,
+                            // color:const Color(0xFFc56f00),
+                            margin: const EdgeInsets.all(1),
+                            width: width * 0.11,
+                            height: height * 0.02,
+                            child: Text(
+                              plinkoYellowItem[index].multiplier.toString(),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white,
+                                fontSize: 7,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    );
-                  }),
+                      );
+                    }),
+              ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: height * 0.6, left: width*0.02),
-            child: Center(
-              child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  shrinkWrap: true,
-                  itemCount: plinkoGreenItem.length,
-                  itemBuilder: (context, index) {
-                    return Center(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 1),
-                        child: Container(
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              colors: [
-                                Color(0xff337a04),
-                                Color(0xff52960c),
-                                Color(0xff337a04),
-                              ],
-                              begin: Alignment.topLeft,
-                              end: Alignment.topRight,
+            Padding(
+              padding: EdgeInsets.only(top: height * 0.6, left: width*0.02),
+              child: Center(
+                child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    shrinkWrap: true,
+                    itemCount: plinkoGreenItem.length,
+                    itemBuilder: (context, index) {
+                      return Center(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 1),
+                          child: Container(
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              gradient: const LinearGradient(
+                                colors: [
+                                  Color(0xff337a04),
+                                  Color(0xff52960c),
+                                  Color(0xff337a04),
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.topRight,
+                              ),
+                              borderRadius: BorderRadius.circular(5),
+                              border: Border.all(
+                                width: 2,
+                                color: _selectedIndexxx== 1?const Color(0xff80ff00):Colors.transparent,
+                              ),
                             ),
-                            borderRadius: BorderRadius.circular(5),
-                            border: Border.all(
-                              width: 2,
-                              color: _selectedIndexxx== 1?const Color(0xff80ff00):Colors.transparent,
-                            ),
-                          ),
-                          // color:const Color(0xFFc56f00),
-                          margin: const EdgeInsets.all(1),
-                          width: width * 0.11,
-                          height: height * 0.02,
-                          child: Text(
-                            plinkoGreenItem[index].multiplier.toString(),
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white,
-                              fontSize: 7,
+                            // color:const Color(0xFFc56f00),
+                            margin: const EdgeInsets.all(1),
+                            width: width * 0.11,
+                            height: height * 0.02,
+                            child: Text(
+                              plinkoGreenItem[index].multiplier.toString(),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white,
+                                fontSize: 7,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    );
-                  }),
+                      );
+                    }),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -1072,12 +1093,17 @@ class _MyGameWidgetState extends State<MyGameWidget> {
     setState(() {
       if (type == '1') {
         loaderOne = true;
+        exitIndex=1;
       } else if (type == '2') {
         loaderTwo = true;
+        exitIndex=1;
       } else {
         loaderThree = true;
+        exitIndex=1;
       }
     });
+
+
     UserModel user = await userProvider.getUser();
     String token = user.id.toString();
 
@@ -1103,14 +1129,18 @@ class _MyGameWidgetState extends State<MyGameWidget> {
         widget.game.onTapDown();
       }
       setState(() {
+        exitIndex = responseData['data']['status'];
       //  context.read<ProfileProvider>().fetchProfileData();
 
         if (type == '1') {
           loaderOne = false;
+          exitIndex=0;
         } else if (type == '2') {
           loaderTwo = false;
+          exitIndex=0;
         } else {
           loaderThree = false;
+          exitIndex=0;
         }
       });
 
@@ -1119,8 +1149,8 @@ class _MyGameWidgetState extends State<MyGameWidget> {
       await Future.delayed(const Duration(seconds: 15),(){
         fetchPlinkoBethistory();
         setState(() {
+          exitIndex=1;
           context.read<ProfileProvider>().fetchProfileData();
-
         });
 
       });
@@ -1132,10 +1162,13 @@ class _MyGameWidgetState extends State<MyGameWidget> {
       setState(() {
         if (type == '1') {
           loaderOne = false;
+          exitIndex=0;
         } else if (type == '2') {
           loaderTwo = false;
+          exitIndex=0;
         } else {
           loaderThree = false;
+          exitIndex=0;
         }
       });
       return Fluttertoast.showToast(msg: responseData['message']);

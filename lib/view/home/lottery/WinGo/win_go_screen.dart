@@ -36,8 +36,8 @@ class WinGoScreen extends StatefulWidget {
   _WinGoScreenState createState() => _WinGoScreenState();
 }
 
-class _WinGoScreenState extends State<WinGoScreen> with SingleTickerProviderStateMixin {
-
+class _WinGoScreenState extends State<WinGoScreen>
+    with SingleTickerProviderStateMixin {
   late int selectedCatIndex;
   int selectedContainerIndex = -1;
   int countdownSeconds = 60;
@@ -54,7 +54,6 @@ class _WinGoScreenState extends State<WinGoScreen> with SingleTickerProviderStat
   bool open = false;
   bool create = false;
 
-
   @override
   void initState() {
     Audio.audioPlayers;
@@ -62,7 +61,7 @@ class _WinGoScreenState extends State<WinGoScreen> with SingleTickerProviderStat
     gameHistoryResult();
     gameHistoryResultSingle();
 
-    BettingHistory();
+    // BettingHistory();
     invitationRuleApi();
     const ConstantWallet();
     super.initState();
@@ -80,10 +79,9 @@ class _WinGoScreenState extends State<WinGoScreen> with SingleTickerProviderStat
       for (var i = 0; i < 20; i++) {
         if (minsec >= 180) {
           minsec = minsec - 180;
+        } else {
+          initialSeconds = gameseconds - minsec - now.second;
         }
-        else {
-            initialSeconds = gameseconds - minsec - now.second;
-          }
         if (kDebugMode) {
           print(initialSeconds);
         }
@@ -101,9 +99,7 @@ class _WinGoScreenState extends State<WinGoScreen> with SingleTickerProviderStat
         if (minsec >= 600) {
           minsec = minsec - 600;
         } else {
-          initialSeconds = gameseconds -
-              minsec -
-              now.second;
+          initialSeconds = gameseconds - minsec - now.second;
         }
       }
     }
@@ -116,12 +112,10 @@ class _WinGoScreenState extends State<WinGoScreen> with SingleTickerProviderStat
     });
   }
 
-
-
   void updateUI(Timer timer) {
     setState(() {
       if (countdownSeconds == 6) {
-        if(open == true){
+        if (open == true) {
           print('countdowwnnn');
           Navigator.pop(context);
         }
@@ -132,8 +126,7 @@ class _WinGoScreenState extends State<WinGoScreen> with SingleTickerProviderStat
         context.read<ProfileProvider>().fetchProfileData();
         gameHistoryResult();
         gameHistoryResultSingle();
-        BettingHistory();
-
+        // BettingHistory();
       }
       countdownSeconds = (countdownSeconds - 1);
     });
@@ -159,7 +152,6 @@ class _WinGoScreenState extends State<WinGoScreen> with SingleTickerProviderStat
     Winlist(4, "Win Go", "10 Min", 600),
   ];
 
-
   @override
   void dispose() {
     countdownSeconds.toString();
@@ -168,7 +160,6 @@ class _WinGoScreenState extends State<WinGoScreen> with SingleTickerProviderStat
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -176,17 +167,20 @@ class _WinGoScreenState extends State<WinGoScreen> with SingleTickerProviderStat
         resizeToAvoidBottomInset: true,
         appBar: GradientAppBar(
           leading: const AppBackBtn(),
-          title: const Text("Tswin",style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 35,
-              color: Colors.white
-          ),),
+          title: const Text(
+            "Tswin",
+            style: TextStyle(
+                fontWeight: FontWeight.bold, fontSize: 35, color: Colors.white),
+          ),
           actions: [
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: InkWell(
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>const CustomerCareService()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const CustomerCareService()));
                 },
                 child: SizedBox(
                   height: 30,
@@ -217,158 +211,167 @@ class _WinGoScreenState extends State<WinGoScreen> with SingleTickerProviderStat
               Column(
                 children: [
                   const ConstantWallet(),
-                  SizedBox(height: height*0.02,),
+                  SizedBox(
+                    height: height * 0.02,
+                  ),
                   Container(
                     height: height * 0.055,
-                    margin: const EdgeInsets.only(right: 10, left: 10,top: 5,bottom: 5),
-                    decoration: BoxDecoration( color:AppColors.white,borderRadius: BorderRadius.circular(20)),
+                    margin: const EdgeInsets.only(
+                        right: 10, left: 10, top: 5, bottom: 5),
+                    decoration: BoxDecoration(
+                        color: AppColors.white,
+                        borderRadius: BorderRadius.circular(20)),
                     child: Row(
                       children: [
                         Image.asset(
                           Assets.iconsMicphone,
                           height: 30,
                         ),
-                        SizedBox(width: width*0.01),
+                        SizedBox(width: width * 0.01),
                         _rotate(),
                         Image.asset(
                           Assets.iconsNotification,
                           height: 30,
                         ),
-
                       ],
                     ),
                   ),
-                  SizedBox(height: height*0.02,),
-                  create == false?
-                  Container(
-                    height: height * 0.16,
-                    margin: const EdgeInsets.only(left: 10, right: 10),
-                    decoration: BoxDecoration(
-                      color: AppColors.white,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: List.generate(list.length, (index) {
-                        return GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              selectedCatIndex = index;
-                              subtitle = list[index].subtitle;
-                              gameseconds = list[index].time;
-                              gameid = list[index].gameid;
-                            });
-                            countdownTimer!.cancel();
-                            startCountdown();
-                            offsetResult = 0;
-                            gameHistoryResult();
-                            BettingHistory();
-                            gameHistoryResultSingle();
-                            pageNumber= 1;
-                          },
-                          child: Container(
-                            height: height * 0.28,
-                            width: width * 0.23,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                  width: 1.5,
-                                  color: selectedCatIndex == index
-                                      ? Colors.grey.withOpacity(0.2)
-                                      : Colors.transparent),
-                              gradient: selectedCatIndex == index
-                                  ? AppColors.boxGradient
-                                  : const LinearGradient(
-                                colors: [
-                                  Colors.transparent,
-                                  Colors.transparent
-                                ],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                              ),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Column(
-                              children: [
-                                selectedCatIndex == index
-                                    ? Image.asset(Assets.iconsTimeColor,
-                                    height: 70)
-                                    : Image.asset(Assets.iconsTime, height: 70),
-                                textWidget(
-                                    text: list[index].title,
-                                    color: selectedCatIndex == index
-                                        ? AppColors.white
-                                        : AppColors.gradientFirstColor,
-                                    fontSize: 14),
-                                textWidget(
-                                    text: list[index].subtitle,
-                                    color: selectedCatIndex == index
-                                        ? AppColors.white
-                                        : AppColors.gradientFirstColor,
-                                    fontSize: 14),
-                              ],
-                            ),
-                          ),
-                        );
-                      }),
-                    ),
-                  )
-                      :Container(
-                    height: height * 0.16,
-                    margin: const EdgeInsets.only(left: 10, right: 10),
-                    decoration: BoxDecoration(
-                      color: AppColors.white,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: List.generate(list.length, (index) {
-                        return GestureDetector(
-                          child: Container(
-                            height: height * 0.28,
-                            width: width * 0.23,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                  width: 1.5,
-                                  color: selectedCatIndex == index
-                                      ? Colors.grey.withOpacity(0.2)
-                                      : Colors.transparent),
-                              gradient: selectedCatIndex == index
-                                  ? AppColors.boxGradient
-                                  : const LinearGradient(
-                                colors: [
-                                  Colors.transparent,
-                                  Colors.transparent
-                                ],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                              ),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Column(
-                              children: [
-                                selectedCatIndex == index
-                                    ? Image.asset(Assets.iconsTimeColor,
-                                    height: 70)
-                                    : Image.asset(Assets.iconsTime, height: 70),
-                                textWidget(
-                                    text: list[index].title,
-                                    color: selectedCatIndex == index
-                                        ? AppColors.white
-                                        : AppColors.gradientFirstColor,
-                                    fontSize: 14),
-                                textWidget(
-                                    text: list[index].subtitle,
-                                    color: selectedCatIndex == index
-                                        ? AppColors.white
-                                        : AppColors.gradientFirstColor,
-                                    fontSize: 14),
-                              ],
-                            ),
-                          ),
-                        );
-                      }),
-                    ),
+                  SizedBox(
+                    height: height * 0.02,
                   ),
+                  create == false
+                      ? Container(
+                          height: height * 0.16,
+                          margin: const EdgeInsets.only(left: 10, right: 10),
+                          decoration: BoxDecoration(
+                            color: AppColors.white,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: List.generate(list.length, (index) {
+                              return GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    selectedCatIndex = index;
+                                    subtitle = list[index].subtitle;
+                                    gameseconds = list[index].time;
+                                    gameid = list[index].gameid;
+                                  });
+                                  countdownTimer!.cancel();
+                                  startCountdown();
+                                  offsetResult = 0;
+                                  gameHistoryResult();
+                                  BettingHistory();
+                                  gameHistoryResultSingle();
+                                  pageNumber = 1;
+                                  myHistoryPageNumber = 1;
+                                },
+                                child: Container(
+                                  height: height * 0.28,
+                                  width: width * 0.23,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        width: 1.5,
+                                        color: selectedCatIndex == index
+                                            ? Colors.grey.withOpacity(0.2)
+                                            : Colors.transparent),
+                                    gradient: selectedCatIndex == index
+                                        ? AppColors.boxGradient
+                                        : const LinearGradient(
+                                            colors: [
+                                              Colors.transparent,
+                                              Colors.transparent
+                                            ],
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                          ),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      selectedCatIndex == index
+                                          ? Image.asset(Assets.iconsTimeColor,
+                                              height: 70)
+                                          : Image.asset(Assets.iconsTime,
+                                              height: 70),
+                                      textWidget(
+                                          text: list[index].title,
+                                          color: selectedCatIndex == index
+                                              ? AppColors.white
+                                              : AppColors.gradientFirstColor,
+                                          fontSize: 14),
+                                      textWidget(
+                                          text: list[index].subtitle,
+                                          color: selectedCatIndex == index
+                                              ? AppColors.white
+                                              : AppColors.gradientFirstColor,
+                                          fontSize: 14),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }),
+                          ),
+                        )
+                      : Container(
+                          height: height * 0.16,
+                          margin: const EdgeInsets.only(left: 10, right: 10),
+                          decoration: BoxDecoration(
+                            color: AppColors.white,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: List.generate(list.length, (index) {
+                              return GestureDetector(
+                                child: Container(
+                                  height: height * 0.28,
+                                  width: width * 0.23,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        width: 1.5,
+                                        color: selectedCatIndex == index
+                                            ? Colors.grey.withOpacity(0.2)
+                                            : Colors.transparent),
+                                    gradient: selectedCatIndex == index
+                                        ? AppColors.boxGradient
+                                        : const LinearGradient(
+                                            colors: [
+                                              Colors.transparent,
+                                              Colors.transparent
+                                            ],
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                          ),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      selectedCatIndex == index
+                                          ? Image.asset(Assets.iconsTimeColor,
+                                              height: 70)
+                                          : Image.asset(Assets.iconsTime,
+                                              height: 70),
+                                      textWidget(
+                                          text: list[index].title,
+                                          color: selectedCatIndex == index
+                                              ? AppColors.white
+                                              : AppColors.gradientFirstColor,
+                                          fontSize: 14),
+                                      textWidget(
+                                          text: list[index].subtitle,
+                                          color: selectedCatIndex == index
+                                              ? AppColors.white
+                                              : AppColors.gradientFirstColor,
+                                          fontSize: 14),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }),
+                          ),
+                        ),
                   const SizedBox(height: 15),
                   Container(
                     margin: const EdgeInsets.only(left: 10, right: 10),
@@ -389,17 +392,20 @@ class _WinGoScreenState extends State<WinGoScreen> with SingleTickerProviderStat
                                 showDialog(
                                     barrierDismissible: false,
                                     context: context,
-                                    builder: (BuildContext context) =>  HowToPlay(type: gameid.toString(),));
+                                    builder: (BuildContext context) =>
+                                        HowToPlay(
+                                          type: gameid.toString(),
+                                        ));
                               },
                               child: Container(
                                   padding:
-                                  const EdgeInsets.symmetric(horizontal: 8),
+                                      const EdgeInsets.symmetric(horizontal: 8),
                                   height: 26,
                                   width: width * 0.35,
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(30),
-                                      border: Border.all(
-                                          color: AppColors.white)),
+                                      border:
+                                          Border.all(color: AppColors.white)),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
@@ -409,8 +415,8 @@ class _WinGoScreenState extends State<WinGoScreen> with SingleTickerProviderStat
                                       ),
                                       const Text(
                                         ' How to Play',
-                                        style: TextStyle(
-                                            color: AppColors.white),
+                                        style:
+                                            TextStyle(color: AppColors.white),
                                       ),
                                     ],
                                   )),
@@ -420,32 +426,39 @@ class _WinGoScreenState extends State<WinGoScreen> with SingleTickerProviderStat
                             ),
                             Text(
                               'Win Go $subtitle',
-                              style: const TextStyle(
-                                  color: AppColors.white),
+                              style: const TextStyle(color: AppColors.white),
                             ),
                             gameResultSingle.isEmpty
                                 ? Container()
                                 : SizedBox(
-                              width: 130,
-                              height: 25,
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: 5,
-                                itemBuilder: (context, index) {
-                                  return Padding(
-                                    padding: const EdgeInsets.all(2.0),
-                                    child: gameResultSingle[index].number==null?Container():
-                                    Image(
-                                      image: AssetImage(
-                                        betNumbers[int.parse(gameResultSingle[index].number.toString())].photo.toString(),
-                                      ),
-                                      height: 25,
+                                    width: 130,
+                                    height: 25,
+                                    child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: 5,
+                                      itemBuilder: (context, index) {
+                                        return Padding(
+                                          padding: const EdgeInsets.all(2.0),
+                                          child:
+                                              gameResultSingle[index].number ==
+                                                      null
+                                                  ? Container()
+                                                  : Image(
+                                                      image: AssetImage(
+                                                        betNumbers[int.parse(
+                                                                gameResultSingle[
+                                                                        index]
+                                                                    .number
+                                                                    .toString())]
+                                                            .photo
+                                                            .toString(),
+                                                      ),
+                                                      height: 25,
+                                                    ),
+                                        );
+                                      },
                                     ),
-                                  );
-                                },
-                              ),
-                            ),
-
+                                  ),
                           ],
                         ),
                         const Spacer(),
@@ -471,7 +484,6 @@ class _WinGoScreenState extends State<WinGoScreen> with SingleTickerProviderStat
                                   fontWeight: FontWeight.w700,
                                   color: AppColors.white),
                             ),
-
                           ],
                         ),
                       ],
@@ -480,344 +492,336 @@ class _WinGoScreenState extends State<WinGoScreen> with SingleTickerProviderStat
                   const SizedBox(height: 15),
                   create == false
                       ? Container(
-                    padding: const EdgeInsets.symmetric(vertical: 5),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment.spaceEvenly,
-                          children: [
-                            InkWell(
-                              onTap: () async {
-                                showModalBottomSheet(
-                                    isScrollControlled: true,
-                                    shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.only(
-                                            topRight: Radius.circular(25),
-                                            topLeft:
-                                            Radius.circular(25))),
-                                    context: (context),
-                                    builder: (context) {
-                                      return CommonBottomSheet(
-                                          colors: const [
-                                            Colors.green,
-                                            Colors.green,
-                                          ],
-                                          colorName: "Green",
-                                          predictionType: "10",
-                                          gameid: gameid,
-                                          timer: countdownSeconds
-                                      );
-                                    }).whenComplete((){
-                                  setState(() {
-                                    open = false;
-
-                                  });
-                                });
-                                open = true;
-                                await Future.delayed(
-                                    const Duration(seconds: 4));
-                                BettingHistory();
-                              },
-                              child: Container(
-                                alignment: Alignment.center,
-                                height: 40,
-                                width: width * 0.28,
-                                decoration: const BoxDecoration(
-                                    color: Colors.green,
-                                    borderRadius: BorderRadius.only(
-                                        topRight: Radius.circular(10),
-                                        bottomLeft: Radius.circular(10))),
-                                child: textWidget(
-                                    text: 'Green',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white),
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () async{
-                                showModalBottomSheet(
-                                    isScrollControlled: true,
-                                    shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.only(
-                                            topRight: Radius.circular(25),
-                                            topLeft:
-                                            Radius.circular(25))),
-                                    context: (context),
-                                    builder: (context) {
-                                      return CommonBottomSheet(
-                                          colors: const [
-                                            Color(0xffb658fe),
-                                            Color(0xffb658fe),
-                                          ],
-                                          colorName: "Violet",
-                                          predictionType: "20",
-                                          gameid: gameid,
-                                          timer: countdownSeconds
-                                      );
-                                    }).whenComplete((){
-                                  setState(() {
-                                    open = false;
-                                  });
-                                });
-                                open = true;
-                                await Future.delayed(
-                                    const Duration(seconds: 4));
-                                BettingHistory();
-                              },
-                              child: Container(
-                                alignment: Alignment.center,
-                                height: 40,
-                                width: width * 0.28,
-                                decoration: const BoxDecoration(
-                                    color: Color(0xffb658fe),
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(10))),
-                                child: textWidget(
-                                    text: 'Violet',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white),
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () async{
-                                showModalBottomSheet(
-                                    isScrollControlled: true,
-                                    shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.only(
-                                            topRight: Radius.circular(25),
-                                            topLeft:
-                                            Radius.circular(25))),
-                                    context: (context),
-                                    builder: (context) {
-                                      return CommonBottomSheet(
-                                          colors: const [
-                                            Color(0xfffd565c),
-                                            Color(0xfffd565c),
-                                          ],
-                                          colorName: "Red",
-                                          predictionType: "30",
-                                          gameid: gameid,
-                                          timer: countdownSeconds
-                                      );
-                                    }).whenComplete((){
-                                  setState(() {
-                                    open = false;
-                                  });
-                                });
-                                open = true;
-                                await Future.delayed(
-                                    const Duration(seconds: 4));
-                                BettingHistory();
-                              },
-                              child: Container(
-                                alignment: Alignment.center,
-                                height: 40,
-                                width: width * 0.28,
-                                decoration: const BoxDecoration(
-                                    color: Color(0xfffd565c),
-                                    borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(10),
-                                        bottomRight:
-                                        Radius.circular(10))),
-                                child: textWidget(
-                                    text: 'Red',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white),
-                              ),
-                            )
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Container(
-                          margin:
-                          const EdgeInsets.only(left: 10, right: 10),
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10, horizontal: 10),
-                          decoration: const BoxDecoration(
-                              color: AppColors.gamecolor,
-                              borderRadius:
-                              BorderRadius.all(Radius.circular(10))),
-                          child: GridView.builder(
-                            gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 5,
-                              crossAxisSpacing: 8.0,
-                              mainAxisSpacing: 8.0,
-                            ),
-                            shrinkWrap: true,
-                            itemCount: betNumbers.length,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemBuilder:
-                                (BuildContext context, int index) {
-                              return InkWell(
-                                onTap: () async{
-                                  showModalBottomSheet(
-                                      isScrollControlled: true,
-                                      shape: const RoundedRectangleBorder(
+                          padding: const EdgeInsets.symmetric(vertical: 5),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  InkWell(
+                                    onTap: () async {
+                                      showModalBottomSheet(
+                                          isScrollControlled: true,
+                                          shape: const RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.only(
+                                                  topRight: Radius.circular(25),
+                                                  topLeft:
+                                                      Radius.circular(25))),
+                                          context: (context),
+                                          builder: (context) {
+                                            return CommonBottomSheet(
+                                                colors: const [
+                                                  Colors.green,
+                                                  Colors.green,
+                                                ],
+                                                colorName: "Green",
+                                                predictionType: "10",
+                                                gameid: gameid,
+                                                timer: countdownSeconds);
+                                          }).whenComplete(() {
+                                        setState(() {
+                                          open = false;
+                                        });
+                                      });
+                                      open = true;
+                                      await Future.delayed(
+                                          const Duration(seconds: 4));
+                                      BettingHistory();
+                                    },
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      height: 40,
+                                      width: width * 0.28,
+                                      decoration: const BoxDecoration(
+                                          color: Colors.green,
                                           borderRadius: BorderRadius.only(
-                                              topRight:
-                                              Radius.circular(25),
-                                              topLeft:
-                                              Radius.circular(25))),
-                                      context: (context),
-                                      builder: (context) {
-                                        return CommonBottomSheet(
-                                            colors:  [
-                                              betNumbers[index].colorone,
-                                              betNumbers[index].colortwo
-                                            ],
-                                            colorName: betNumbers[index]
-                                                .number
-                                                .toString(),
-                                            predictionType:
-                                            betNumbers[index]
-                                                .number
-                                                .toString(),
-                                            gameid: gameid,
-                                            timer: countdownSeconds
-                                        );
-                                      }).whenComplete((){
-                                    setState(() {
-                                      open = false;
-                                    });
-                                  });
-                                  open = true;
-                                  await Future.delayed(
-                                      const Duration(seconds: 4));
-                                  BettingHistory();
-                                },
-                                child: Image(
-                                  image: AssetImage(
-                                      betNumbers[index].photo.toString()),
-                                  height: height / 15,
+                                              topRight: Radius.circular(10),
+                                              bottomLeft: Radius.circular(10))),
+                                      child: textWidget(
+                                          text: 'Green',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white),
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap: () async {
+                                      showModalBottomSheet(
+                                          isScrollControlled: true,
+                                          shape: const RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.only(
+                                                  topRight: Radius.circular(25),
+                                                  topLeft:
+                                                      Radius.circular(25))),
+                                          context: (context),
+                                          builder: (context) {
+                                            return CommonBottomSheet(
+                                                colors: const [
+                                                  Color(0xffb658fe),
+                                                  Color(0xffb658fe),
+                                                ],
+                                                colorName: "Violet",
+                                                predictionType: "20",
+                                                gameid: gameid,
+                                                timer: countdownSeconds);
+                                          }).whenComplete(() {
+                                        setState(() {
+                                          open = false;
+                                        });
+                                      });
+                                      open = true;
+                                      await Future.delayed(
+                                          const Duration(seconds: 4));
+                                      BettingHistory();
+                                    },
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      height: 40,
+                                      width: width * 0.28,
+                                      decoration: const BoxDecoration(
+                                          color: Color(0xffb658fe),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(10))),
+                                      child: textWidget(
+                                          text: 'Violet',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white),
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap: () async {
+                                      showModalBottomSheet(
+                                          isScrollControlled: true,
+                                          shape: const RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.only(
+                                                  topRight: Radius.circular(25),
+                                                  topLeft:
+                                                      Radius.circular(25))),
+                                          context: (context),
+                                          builder: (context) {
+                                            return CommonBottomSheet(
+                                                colors: const [
+                                                  Color(0xfffd565c),
+                                                  Color(0xfffd565c),
+                                                ],
+                                                colorName: "Red",
+                                                predictionType: "30",
+                                                gameid: gameid,
+                                                timer: countdownSeconds);
+                                          }).whenComplete(() {
+                                        setState(() {
+                                          open = false;
+                                        });
+                                      });
+                                      open = true;
+                                      await Future.delayed(
+                                          const Duration(seconds: 4));
+                                      BettingHistory();
+                                    },
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      height: 40,
+                                      width: width * 0.28,
+                                      decoration: const BoxDecoration(
+                                          color: Color(0xfffd565c),
+                                          borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(10),
+                                              bottomRight:
+                                                  Radius.circular(10))),
+                                      child: textWidget(
+                                          text: 'Red',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 15,
+                              ),
+                              Container(
+                                margin:
+                                    const EdgeInsets.only(left: 10, right: 10),
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 10, horizontal: 10),
+                                decoration: const BoxDecoration(
+                                    color: AppColors.gamecolor,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10))),
+                                child: GridView.builder(
+                                  gridDelegate:
+                                      const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 5,
+                                    crossAxisSpacing: 8.0,
+                                    mainAxisSpacing: 8.0,
+                                  ),
+                                  shrinkWrap: true,
+                                  itemCount: betNumbers.length,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return InkWell(
+                                      onTap: () async {
+                                        showModalBottomSheet(
+                                            isScrollControlled: true,
+                                            shape: const RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.only(
+                                                    topRight:
+                                                        Radius.circular(25),
+                                                    topLeft:
+                                                        Radius.circular(25))),
+                                            context: (context),
+                                            builder: (context) {
+                                              return CommonBottomSheet(
+                                                  colors: [
+                                                    betNumbers[index].colorone,
+                                                    betNumbers[index].colortwo
+                                                  ],
+                                                  colorName: betNumbers[index]
+                                                      .number
+                                                      .toString(),
+                                                  predictionType:
+                                                      betNumbers[index]
+                                                          .number
+                                                          .toString(),
+                                                  gameid: gameid,
+                                                  timer: countdownSeconds);
+                                            }).whenComplete(() {
+                                          setState(() {
+                                            open = false;
+                                          });
+                                        });
+                                        open = true;
+                                        await Future.delayed(
+                                            const Duration(seconds: 4));
+                                        BettingHistory();
+                                      },
+                                      child: Image(
+                                        image: AssetImage(
+                                            betNumbers[index].photo.toString()),
+                                        height: height / 15,
+                                      ),
+                                    );
+                                  },
                                 ),
-                              );
-                            },
+                              ),
+                              const SizedBox(
+                                height: 15,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  InkWell(
+                                    onTap: () async {
+                                      showModalBottomSheet(
+                                          isScrollControlled: true,
+                                          shape: const RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.only(
+                                                  topRight: Radius.circular(25),
+                                                  topLeft:
+                                                      Radius.circular(25))),
+                                          context: (context),
+                                          builder: (context) {
+                                            return CommonBottomSheet(
+                                                colors: const [
+                                                  Color(0xffffa82e),
+                                                  Color(0xffffa82e),
+                                                ],
+                                                colorName: "Big",
+                                                predictionType: "40",
+                                                gameid: gameid,
+                                                timer: countdownSeconds);
+                                          }).whenComplete(() {
+                                        setState(() {
+                                          open = false;
+                                        });
+                                      });
+                                      open = true;
+                                      await Future.delayed(
+                                          const Duration(seconds: 4));
+                                      BettingHistory();
+                                    },
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      height: 40,
+                                      width: width * 0.35,
+                                      decoration: const BoxDecoration(
+                                          gradient: AppColors.btnYellowGradient,
+                                          borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(50),
+                                              bottomLeft: Radius.circular(50))),
+                                      child: textWidget(
+                                          text: 'Big',
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColors.white),
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap: () async {
+                                      showModalBottomSheet(
+                                          isScrollControlled: true,
+                                          shape: const RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.only(
+                                                  topRight: Radius.circular(25),
+                                                  topLeft:
+                                                      Radius.circular(25))),
+                                          context: (context),
+                                          builder: (context) {
+                                            return CommonBottomSheet(
+                                                colors: const [
+                                                  Color(0xff6da7f4),
+                                                  Color(0xff6da7f4)
+                                                ],
+                                                colorName: "Small",
+                                                predictionType: "50",
+                                                gameid: gameid,
+                                                timer: countdownSeconds);
+                                          }).whenComplete(() {
+                                        setState(() {
+                                          open = false;
+                                        });
+                                      });
+                                      open = true;
+                                      await Future.delayed(
+                                          const Duration(seconds: 4));
+                                      BettingHistory();
+                                    },
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      height: 40,
+                                      width: width * 0.35,
+                                      decoration: const BoxDecoration(
+                                          gradient: AppColors.btnBlueGradient,
+                                          borderRadius: BorderRadius.only(
+                                              topRight: Radius.circular(50),
+                                              bottomRight:
+                                                  Radius.circular(50))),
+                                      child: textWidget(
+                                          text: 'Small',
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColors.white),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                        )
+                      : Stack(
                           children: [
-                            InkWell(
-                              onTap: () async{
-                                showModalBottomSheet(
-                                    isScrollControlled: true,
-                                    shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.only(
-                                            topRight: Radius.circular(25),
-                                            topLeft:
-                                            Radius.circular(25))),
-                                    context: (context),
-                                    builder: (context) {
-                                      return CommonBottomSheet(
-                                          colors: const [
-                                            Color(0xffffa82e),
-                                            Color(0xffffa82e),
-                                          ],
-                                          colorName: "Big",
-                                          predictionType: "40",
-                                          gameid: gameid,
-                                          timer: countdownSeconds
-                                      );
-                                    }).whenComplete((){
-                                  setState(() {
-                                    open = false;
-                                  });
-
-                                });
-                                open = true;
-                                await Future.delayed(
-                                    const Duration(seconds: 4));
-                                BettingHistory();
-                              },
-                              child: Container(
-                                alignment: Alignment.center,
-                                height: 40,
-                                width: width * 0.35,
-                                decoration: const BoxDecoration(
-                                    gradient: AppColors.btnYellowGradient,
-                                    borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(50),
-                                        bottomLeft: Radius.circular(50))),
-                                child: textWidget(
-                                    text: 'Big',
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w600,
-                                    color: AppColors.white),
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () async{
-                                showModalBottomSheet(
-                                    isScrollControlled: true,
-                                    shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.only(
-                                            topRight: Radius.circular(25),
-                                            topLeft:
-                                            Radius.circular(25))),
-                                    context: (context),
-                                    builder: (context) {
-                                      return CommonBottomSheet(
-                                          colors: const [
-                                            Color(0xff6da7f4),
-                                            Color(0xff6da7f4)
-                                          ],
-                                          colorName: "Small",
-                                          predictionType: "50",
-                                          gameid: gameid,
-                                          timer: countdownSeconds
-                                      );
-                                    }).whenComplete((){
-                                  setState(() {
-                                    open = false;
-                                  });
-                                });
-                                open = true;
-                                await Future.delayed(
-                                    const Duration(seconds: 4));
-                                BettingHistory();
-                              },
-                              child: Container(
-                                alignment: Alignment.center,
-                                height: 40,
-                                width: width * 0.35,
-                                decoration: const BoxDecoration(
-                                    gradient: AppColors.btnBlueGradient,
-                                    borderRadius: BorderRadius.only(
-                                        topRight: Radius.circular(50),
-                                        bottomRight:
-                                        Radius.circular(50))),
-                                child: textWidget(
-                                    text: 'Small',
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w600,
-                                    color: AppColors.white),
-                              ),
+                            const DummyGrid(),
+                            Container(
+                              height: 250,
+                              color: Colors.black26,
+                              child: buildTime5sec(countdownSeconds),
                             ),
                           ],
                         ),
-                      ],
-                    ),
-                  )
-                      : Stack(
-                        children: [
-                      const DummyGrid(),
-                       Container(
-                        height: 250,
-                        color: Colors.black26,
-                        child: buildTime5sec(countdownSeconds),
-                      ),
-                    ],
-                  ),
                   const SizedBox(height: 15),
                   WinGoResult()
                 ],
@@ -827,30 +831,27 @@ class _WinGoScreenState extends State<WinGoScreen> with SingleTickerProviderStat
         ));
   }
 
-
-
-  Widget _rotate(){
+  Widget _rotate() {
     return Column(
       mainAxisSize: MainAxisSize.max,
-      children:[
+      children: [
         DefaultTextStyle(
-          style: const TextStyle(
-              fontSize: 9,
-              color: Colors.black
-          ),
+          style: const TextStyle(fontSize: 9, color: Colors.black),
           child: SizedBox(
-            width: width*0.75,
+            width: width * 0.75,
             child: AnimatedTextKit(
               repeatForever: true,
               isRepeatingAnimation: true,
-              animatedTexts: invitationRuleList.isEmpty ?[RotateAnimatedText("")]:invitationRuleList.map((rule) => RotateAnimatedText(rule)).toList(),
+              animatedTexts: invitationRuleList.isEmpty
+                  ? [RotateAnimatedText("")]
+                  : invitationRuleList
+                      .map((rule) => RotateAnimatedText(rule))
+                      .toList(),
             ),
           ),
         ),
       ],
     );
-
-
   }
 
   Widget ChartScreen() {
@@ -862,7 +863,7 @@ class _WinGoScreenState extends State<WinGoScreen> with SingleTickerProviderStat
           padding: const EdgeInsets.symmetric(vertical: 15),
           margin: const EdgeInsets.only(left: 10, right: 10),
           decoration: const BoxDecoration(
-              gradient : AppColors.boxGradient,
+              gradient: AppColors.boxGradient,
               borderRadius: BorderRadius.only(
                   topRight: Radius.circular(10), topLeft: Radius.circular(10))),
           child: Row(
@@ -895,12 +896,13 @@ class _WinGoScreenState extends State<WinGoScreen> with SingleTickerProviderStat
         Column(
           children: List.generate(
             gameResult.length,
-                (index) {
+            (index) {
               return Container(
                 margin: const EdgeInsets.only(left: 10, right: 10),
                 height: 30,
                 width: width * 0.97,
-                decoration: const BoxDecoration(color: AppColors.primaryContColor),
+                decoration:
+                    const BoxDecoration(color: AppColors.primaryContColor),
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
@@ -920,14 +922,16 @@ class _WinGoScreenState extends State<WinGoScreen> with SingleTickerProviderStat
                         decoration: BoxDecoration(
                           //border: Border.all(width: 1,color: ),
                           shape: BoxShape.circle,
-                          gradient: int.parse(gameResult[index].number.toString()) < 5
-                              ? AppColors.btnBlueGradient
-                              : AppColors.btnYellowGradient,
+                          gradient:
+                              int.parse(gameResult[index].number.toString()) < 5
+                                  ? AppColors.btnBlueGradient
+                                  : AppColors.btnYellowGradient,
                         ),
                         child: textWidget(
-                          text: int.parse(gameResult[index].number.toString()) < 5
-                              ? 'S'
-                              : 'B',
+                          text:
+                              int.parse(gameResult[index].number.toString()) < 5
+                                  ? 'S'
+                                  : 'B',
                           color: AppColors.primaryTextColor,
                           fontWeight: FontWeight.w600,
                         ),
@@ -946,17 +950,29 @@ class _WinGoScreenState extends State<WinGoScreen> with SingleTickerProviderStat
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             GestureDetector(
-              onTap: limitResult == 0
-                  ? () {}
-                  : () {
-                setState(() {
-                  pageNumber--;
-                  limitResult = limitResult - 10;
-                  offsetResult = offsetResult - 10;
-                });
-                setState(() {});
-                gameHistoryResult();
-              },
+              onTap: (pageNumber > 1 &&
+                      limitResult >
+                          0) // Check that pageNumber is greater than 1 and limitResult is greater than 0
+                  ? () {
+                      setState(() {
+                        pageNumber--;
+                        limitResult -= 10;
+                        offsetResult -= 10;
+                      });
+                      gameHistoryResult();
+                    }
+                  : null,
+              // onTap: limitResult == 0
+              //     ? () {}
+              //     : () {
+              //   setState(() {
+              //     pageNumber--;
+              //     limitResult = limitResult - 10;
+              //     offsetResult = offsetResult - 10;
+              //   });
+              //   setState(() {});
+              //   gameHistoryResult();
+              // },
               child: Container(
                 height: height * 0.06,
                 width: width * 0.10,
@@ -982,11 +998,13 @@ class _WinGoScreenState extends State<WinGoScreen> with SingleTickerProviderStat
             GestureDetector(
               onTap: () {
                 setState(() {
-                  limitResult = limitResult + 10;
-                  offsetResult = offsetResult + 10;
+                  limitResult += 10;
+                  offsetResult += 10;
                   pageNumber++;
+                  // limitResult = limitResult + 10;
+                  // offsetResult = offsetResult + 10;
+                  // pageNumber++;
                 });
-                setState(() {});
                 gameHistoryResult();
               },
               child: Container(
@@ -1005,12 +1023,15 @@ class _WinGoScreenState extends State<WinGoScreen> with SingleTickerProviderStat
     );
   }
 
-  Widget buildTabContainer(String label, int index, double width, Color selectedTextColor) {
+  Widget buildTabContainer(
+      String label, int index, double width, Color selectedTextColor) {
     return InkWell(
       onTap: () {
         setState(() {
           selectedTabIndex = index;
         });
+        gameHistoryResult();
+
         BettingHistory();
       },
       child: Container(
@@ -1027,7 +1048,7 @@ class _WinGoScreenState extends State<WinGoScreen> with SingleTickerProviderStat
           style: TextStyle(
             fontSize: width / 24,
             fontWeight:
-            selectedTabIndex == index ? FontWeight.bold : FontWeight.w500,
+                selectedTabIndex == index ? FontWeight.bold : FontWeight.w500,
             color: selectedTabIndex == index
                 ? AppColors.white
                 : AppColors.primaryTextColor,
@@ -1046,6 +1067,8 @@ class _WinGoScreenState extends State<WinGoScreen> with SingleTickerProviderStat
         print('5 sec left');
       }
     } else if (countdownSeconds == 0) {
+      gameHistoryResult();
+      BettingHistory();
       setState(() {
         create = false;
       });
@@ -1093,7 +1116,8 @@ class _WinGoScreenState extends State<WinGoScreen> with SingleTickerProviderStat
     );
   }
 
-  historyWinDetails(String title, String subtitle, String subtitle1, String subtitle2, Color subColor, Color subColor1, Color subColor2) {
+  historyWinDetails(String title, String subtitle, String subtitle1,
+      String subtitle2, Color subColor, Color subColor1, Color subColor2) {
     return Column(
       children: [
         const SizedBox(height: 8.0),
@@ -1154,62 +1178,65 @@ class _WinGoScreenState extends State<WinGoScreen> with SingleTickerProviderStat
   int pageNumber = 1;
   int selectedTabIndex = 0;
 
+
+  int myHistoryPageNumber = 1;
+
   UserViewProvider userProvider = UserViewProvider();
   BaseApiHelper baseApiHelper = BaseApiHelper();
 
   List<String> invitationRuleList = [];
   Future<void> invitationRuleApi() async {
-
-    final response = await http.get(Uri.parse('${ApiUrl.allRules}6'),);
+    final response = await http.get(
+      Uri.parse('${ApiUrl.allRules}6'),
+    );
     if (kDebugMode) {
       print('${ApiUrl.allRules}6');
       print('allRules');
     }
 
-
-    if (response.statusCode==200) {
+    if (response.statusCode == 200) {
       final List<dynamic> responseData = json.decode(response.body)['data'];
 
       setState(() {
-        invitationRuleList = json.decode(responseData[0]['list']).cast<String>();
+        invitationRuleList =
+            json.decode(responseData[0]['list']).cast<String>();
       });
-
-    }
-    else if(response.statusCode==400){
+    } else if (response.statusCode == 400) {
       if (kDebugMode) {
         print('Data not found');
       }
-    }
-    else {
+    } else {
       setState(() {
         invitationRuleList = [];
       });
       throw Exception('Failed to load data');
     }
   }
+
   /// new api
 
   List<ResultGameHistory> gameResult = [];
-  Future<void> gameHistoryResult() async {
-    final response = await http.get(Uri.parse('${ApiUrl.resultList}$gameid&limit=10&offset=$offsetResult'),);
-    if (kDebugMode) {
-      print(ApiUrl.changeAvtarList);
-      print('changeAvtarList');
 
+  Future<void> gameHistoryResult() async {
+    final response = await http.get(
+      Uri.parse('${ApiUrl.resultList}$gameid&limit=$itemsPerPage&offset=$offsetResult'),
+    );
+    if (kDebugMode) {
+      print('${ApiUrl.resultList}$gameid&limit=10&offset=$offsetResult');
+      print('jkfgwkjhgliqelgiheuiugw');
     }
-    if (response.statusCode==200) {
+    if (response.statusCode == 200) {
       final List<dynamic> responseData = json.decode(response.body)['data'];
       setState(() {
-        gameResult = responseData.map((item) => ResultGameHistory.fromJson(item)).toList();
+        gameResult = responseData
+            .map((item) => ResultGameHistory.fromJson(item))
+            .toList();
       });
-
-    }
-    else if(response.statusCode==400){
+    } else if (response.statusCode == 400) {
       if (kDebugMode) {
         print('Data not found');
       }
-    }
-    else {
+    } else {
       setState(() {
         gameResult = [];
       });
@@ -1217,36 +1244,37 @@ class _WinGoScreenState extends State<WinGoScreen> with SingleTickerProviderStat
     }
   }
 
-
   List<ResultGameHistory> gameResultSingle = [];
 
   Future<void> gameHistoryResultSingle() async {
-    final response = await http.get(Uri.parse('${ApiUrl.resultList}$gameid&limit=5&offset=$offsetResult'),);
+    final response = await http.get(
+      Uri.parse('${ApiUrl.resultList}$gameid&limit=5&offset=$offsetResult'),
+    );
     if (kDebugMode) {
       print(ApiUrl.changeAvtarList);
       print('changeAvtarList');
-
     }
-    if (response.statusCode==200) {
+    if (response.statusCode == 200) {
       final List<dynamic> responseData = json.decode(response.body)['data'];
       setState(() {
-        gameResultSingle = responseData.map((item) => ResultGameHistory.fromJson(item)).toList();
-        period=int.parse(responseData[0]['gamesno'].toString()) + 1;
+        gameResultSingle = responseData
+            .map((item) => ResultGameHistory.fromJson(item))
+            .toList();
+        period = int.parse(responseData[0]['gamesno'].toString()) + 1;
       });
-
-    }
-    else if(response.statusCode==400){
+    } else if (response.statusCode == 400) {
       if (kDebugMode) {
         print('Data not found');
       }
-    }
-    else {
+    } else {
       setState(() {
         gameResultSingle = [];
       });
       throw Exception('Failed to load data');
     }
   }
+
+
   int? totalBets;
   int selectedIndex = 1;
 
@@ -1256,8 +1284,13 @@ class _WinGoScreenState extends State<WinGoScreen> with SingleTickerProviderStat
     String token = user.id.toString();
     final response = await http.get(
       Uri.parse(
-          '${ApiUrl.betHistory}$token&game_id=$gameid&limit=$itemsPerPage&offset=$offsetResult'),
+          '${ApiUrl.betHistory}$token&game_id=$gameid&limit=10&offset=$myHistoryOffsetResult'),
+      // Uri.parse(
+      //     '${ApiUrl.betHistory}$token&game_id=$gameid&limit=$itemsPerPage&offset=$offsetResult'),
     );
+    print(
+        '${ApiUrl.betHistory}$token&game_id=$gameid&limit=10&offset=$myHistoryOffsetResult');
+    print('betHistory+token wingo');
     setState(() {
       responseStatuscode = response.statusCode;
     });
@@ -1267,7 +1300,7 @@ class _WinGoScreenState extends State<WinGoScreen> with SingleTickerProviderStat
       final Map<String, dynamic> Data = json.decode(response.body);
       final int totalBetsCount = Data['total_bets'];
       setState(() {
-        count=totalBetsCount.toString();
+        count = totalBetsCount.toString();
         items = responseData
             .map((item) => BettingHistoryModel.fromJson(item))
             .toList();
@@ -1290,796 +1323,960 @@ class _WinGoScreenState extends State<WinGoScreen> with SingleTickerProviderStat
 
     return gameResult != []
         ? Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            buildTabContainer(
-              'Game History',
-              0,
-              width,
-              Colors.red,
-            ),
-            buildTabContainer('Chart', 1, width, Colors.red),
-            buildTabContainer('My History', 2, width, Colors.red),
-          ],
-        ),
-        const SizedBox(
-          height: 15,
-        ),
-        selectedTabIndex == 0
-            ? Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 15),
-              margin: const EdgeInsets.only(left: 10, right: 10),
-              decoration: const BoxDecoration(
-                  gradient: AppColors.primaryUnselectedGradient,
-                  borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(10),
-                      topLeft: Radius.circular(10))),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Container(
-                    alignment: Alignment.center,
-                    width: width * 0.3,
-                    child: textWidget(
-                        text: 'Period',
-                        fontSize: 14,
-                        fontWeight: FontWeight.w900,
-                        color: AppColors.white),
+                  buildTabContainer(
+                    'Game History',
+                    0,
+                    width,
+                    Colors.red,
                   ),
-                  Container(
-                    alignment: Alignment.center,
-                    width: width * 0.21,
-                    child: textWidget(
-                        text: 'Number',
-                        fontSize: 14,
-                        fontWeight: FontWeight.w900,
-                        color: AppColors.white),
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    width: width * 0.21,
-                    child: textWidget(
-                        text: 'Big Small',
-                        fontSize: 14,
-                        fontWeight: FontWeight.w900,
-                        color: AppColors.white),
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    width: width * 0.21,
-                    child: textWidget(
-                        text: 'Color',
-                        fontSize: 14,
-                        fontWeight: FontWeight.w900,
-                        color: AppColors.white),
-                  ),
+                  buildTabContainer('Chart', 1, width, Colors.red),
+                  buildTabContainer('My History', 2, width, Colors.red),
                 ],
               ),
-            ),
-            ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: gameResult.length,
-              itemBuilder: (context, index) {
-                List<Color> colors;
-
-                if (gameResult[index].number == 0) {
-                  colors = [
-                    Colors.red,
-                    Colors.purple,
-                  ];
-                } else if (gameResult[index].number == 5) {
-                  colors = [
-                    const Color(0xFF40ad72),
-                    Colors.purple
-
-                  ];
-                } else {
-                  int number = int.parse(
-                      gameResult[index].number.toString());
-                  colors = number.isOdd
-                      ? [
-                    const Color(0xFF40ad72),
-                    const Color(0xFF40ad72),
-                  ]
-                      : [
-                    Colors.red,
-                    Colors.red,
-                  ];
-                }
-
-                Color getCircleAvatarColor(int number) {
-                  return number.isOdd
-                      ? const Color(0xFF40ad72)
-                      :   Colors.red;
-                }
-
-                return Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment:
-                      MainAxisAlignment.spaceBetween,
+              const SizedBox(
+                height: 15,
+              ),
+              selectedTabIndex == 0
+                  ? Column(
                       children: [
                         Container(
-                          alignment: Alignment.center,
-                          height: height * 0.06,
-                          width: width * 0.3,
-                          child: textWidget(
-                              text: gameResult[index].gamesno.toString(),
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              maxLines: 1,
-                              color: AppColors.primaryTextColor),
-                        ),
-                        Container(
-                          alignment: Alignment.center,
-                          width: width * 0.21,
-                          height: height * 0.06,
-                          child:
-                          // gameResult[index].number == 5
-                          //     ? Container(
-                          //         height: 25,
-                          //         width: 25,
-                          //         margin: const EdgeInsets.all(2),
-                          //         alignment: Alignment.center,
-                          //
-                          //     child:Text(
-                          //       gameResult[index]
-                          //           .number
-                          //           .toString(),
-                          //       style: TextStyle(
-                          //         fontSize: 12,
-                          //         color: Colors.white,
-                          //         fontWeight: FontWeight.w900,
-                          //       ),
-                          //     )
-                          //       )
-                          //     : gameResult[index].number == 0
-                          //         ? Container(
-                          //             height: 25,
-                          //             width: 25,
-                          //             margin:
-                          //                 const EdgeInsets.all(2),
-                          //             alignment: Alignment.center,
-                          //             decoration:
-                          //                  BoxDecoration(
-                          //                      shape: BoxShape.circle,
-                          //                   gradient:  LinearGradient(
-                          //                       colors: [Colors.red,
-                          //                         Colors.purple,],
-                          //                     )
-                          //                 ),
-                          //   child:Text(
-                          //     gameResult[index]
-                          //         .number
-                          //         .toString(),
-                          //     style:  TextStyle(
-                          //       fontSize: 12,
-                          //       color: Colors.white,
-                          //       fontWeight: FontWeight.w900,
-                          //     ),
-                          //   )
-                          //
-                          //           )
-                          //         :
-                          GradientTextview(
-                            gameResult[index]
-                                .number
-                                .toString(),
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w900,
-                            ),
-                            gradient: LinearGradient(
-                              colors: colors,
-                              stops: const [0.5, 0.5],
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              tileMode: TileMode.mirror,
-                            ),
-                          ),
-                        ),
-                        Container(
-                          alignment: Alignment.center,
-                          width: width * 0.21,
-                          height: height * 0.06,
-                          child: GradientTextview(
-                            int.parse(gameResult[index]
-                                .number
-                                .toString()) <
-                                5
-                                ? 'Small'
-                                : 'Big',
-                            style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w900),
-                            gradient: LinearGradient(
-                              colors: int.parse(
-                                  gameResult[index]
-                                      .number
-                                      .toString()) <
-                                  5
-                                  ? [
-                                AppColors.methodblue,
-                                AppColors.methodblue
-                              ]
-                                  : [
-                                AppColors.goldencolor,
-                                AppColors.goldencolor
-                              ],
-                              stops: const [0.5, 0.5],
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              tileMode: TileMode.mirror,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: height * 0.06,
-                          width: width * 0.21,
+                          padding: const EdgeInsets.symmetric(vertical: 15),
+                          margin: const EdgeInsets.only(left: 10, right: 10),
+                          decoration: const BoxDecoration(
+                              gradient: AppColors.primaryUnselectedGradient,
+                              borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(10),
+                                  topLeft: Radius.circular(10))),
                           child: Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              CircleAvatar(
-                                radius: 6,
-                                backgroundColor: getCircleAvatarColor(int.parse(gameResult[index].number.toString())),
+                              Container(
+                                alignment: Alignment.center,
+                                width: width * 0.3,
+                                child: textWidget(
+                                    text: 'Period',
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w900,
+                                    color: AppColors.white),
                               ),
-                              if (int.parse(gameResult[index].number.toString()) == 5 ||
-                                  int.parse(gameResult[index].number.toString()) == 0)
-                                Container(
-                                    height: 12,
-                                    width: 12,
-                                    margin: const EdgeInsets.all(2),
-                                    alignment: Alignment.center,
-                                    decoration: const BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Color(0xFFb659fe)
-
-                                    )
-                                ),
-
-
-                              // CircleAvatar(
-                              //   radius: 6,
-                              //   backgroundColor:
-                              //  AppColors.primaryTextColor ,
-                              // )
+                              Container(
+                                alignment: Alignment.center,
+                                width: width * 0.21,
+                                child: textWidget(
+                                    text: 'Number',
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w900,
+                                    color: AppColors.white),
+                              ),
+                              Container(
+                                alignment: Alignment.center,
+                                width: width * 0.21,
+                                child: textWidget(
+                                    text: 'Big Small',
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w900,
+                                    color: AppColors.white),
+                              ),
+                              Container(
+                                alignment: Alignment.center,
+                                width: width * 0.21,
+                                child: textWidget(
+                                    text: 'Color',
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w900,
+                                    color: AppColors.white),
+                              ),
                             ],
                           ),
                         ),
-                      ],
-                    ),
-                    Container(
-                        width: width,
-                        color: Colors.grey,
-                        height: 0.5),
-                  ],
-                );
-              },
-            ),
-            SizedBox(height: height * 0.02),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                GestureDetector(
-                  onTap: limitResult == 0
-                      ? () {}
-                      : () {
-                    setState(() {
-                      pageNumber--;
-                      limitResult = limitResult - 10;
-                      offsetResult = offsetResult - 10;
-                    });
-                    setState(() {});
-                    gameHistoryResult();
-                  },
-                  child: Container(
-                    height: height * 0.06,
-                    width: width * 0.10,
-                    decoration: BoxDecoration(
-                      gradient: AppColors.loginSecondryGrad,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: const Icon(
-                      Icons.navigate_before,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                textWidget(
-                  text: '$pageNumber',
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.primaryTextColor,
-                  maxLines: 1,
-                ),
-                const SizedBox(width: 16),
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      limitResult = limitResult + 10;
-                      offsetResult = offsetResult + 10;
-                      pageNumber++;
-                    });
-                    setState(() {});
-                    gameHistoryResult();
-                  },
-                  child: Container(
-                    height: height * 0.06,
-                    width: width * 0.10,
-                    decoration: BoxDecoration(
-                      gradient: AppColors.loginSecondryGrad,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: const Icon(Icons.navigate_next,
-                        color: Colors.white),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10)
-          ],
-        )
-            : selectedTabIndex == 1
-            ? ChartScreen()
-            : Column(
-          children: [
-            responseStatuscode == 400 ? const Notfounddata()
-                : items.isEmpty ? const Center(child: CircularProgressIndicator())
-                : Container(
-              width: width,
-              padding: const EdgeInsets.symmetric(
-                  vertical: 15, horizontal: 15),
-              margin: const EdgeInsets.only(
-                  left: 10, right: 10),
-              decoration: const BoxDecoration(
+                        ListView.builder(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: gameResult.length,
+                          itemBuilder: (context, index) {
+                            List<Color> colors;
 
-                  borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(10),
-                      topLeft: Radius.circular(10))),
-              child: Column(
-                children: [
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: InkWell(
-                      onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>const MyHistoryDetails()));
-                      },
-                      child: Container(
-                        height: height * 0.06,
-                        width: width * 0.25,
-                        decoration: BoxDecoration(
-                            borderRadius:
-                            BorderRadius.circular(15),
-                            border: Border.all(
-                                color: Colors.black)),
-                        child: Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment.spaceEvenly,
-                          children: [
-                            const Text(
-                              'Detail',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            SizedBox(
-                                height: height * 0.04,
-                                width: width * 0.09,
-                                child: const Image(
-                                    image: AssetImage(Assets
-                                        .iconsMoreBtn))),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  ListView.builder(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 10),
-                    physics:
-                    const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: items.length,
-                    itemBuilder: (context, index) {
-                      List<Color> colors;
+                            if (gameResult[index].number == 0) {
+                              colors = [
+                                Colors.red,
+                                Colors.purple,
+                              ];
+                            } else if (gameResult[index].number == 5) {
+                              colors = [const Color(0xFF40ad72), Colors.purple];
+                            } else {
+                              int number = int.parse(
+                                  gameResult[index].number.toString());
+                              colors = number.isOdd
+                                  ? [
+                                      const Color(0xFF40ad72),
+                                      const Color(0xFF40ad72),
+                                    ]
+                                  : [
+                                      Colors.red,
+                                      Colors.red,
+                                    ];
+                            }
 
-                      if (items[index].number ==
-                          0) {
-                        colors = [
-                          Colors.red,
-                          Colors.purple,
-                        ];
-                      } else if (items[index]
-                          .number ==
-                          5) {
-                        colors = [
-                          const Color(0xFF40ad72),
-                          Colors.purple
-                        ];
-                      } else if (items[index]
-                          .number ==
-                          10) {
-                        colors = [
-                          const Color(0xFF40ad72),
-                          const Color(0xFF40ad72),
-                        ];
-                      }
-                      else if (items[index]
-                          .number ==
-                          20) {
-                        colors = [
-                          Colors.purple,
-                          Colors.purple,
-                        ];
-                      }
-                      else if (items[index]
-                          .number ==
-                          30) {
-                        colors = [
-                          Colors.red,
-                          Colors.red,
-                        ];
-                      }
+                            Color getCircleAvatarColor(int number) {
+                              return number.isOdd
+                                  ? const Color(0xFF40ad72)
+                                  : Colors.red;
+                            }
 
-                      else if (items[index].number ==
-                          40) {
-                        colors = [
-                          AppColors.goldencolor,
-                          AppColors.goldencolor,
-                        ];
-                      } else if (items[index]
-                          .number ==
-                          50) {
-                        colors = [
-                          const Color(0xff6eb4ff),
-                          const Color(0xff6eb4ff)
-                        ];
-                      }
-                      else {
-                        int number = int.parse(
-                            items[index]
-                                .number
-                                .toString());
-                        colors = number.isOdd
-                            ? [
-                          const Color(0xFF40ad72),
-                          const Color(0xFF40ad72),
-                        ]
-                            : [
-
-                          Colors.red,
-                          Colors.red,
-                        ];
-                      }
-
-
-
-                      return ExpansionTile(
-                        leading: Container(
-                            height: height * 0.06,
-                            width: width * 0.12,
-                            decoration: BoxDecoration(
-                                borderRadius:
-                                BorderRadius.circular(10),
-                                // color: Colors.grey
-                                gradient: LinearGradient(
-                                    stops: const [
-                                      0.5,
-                                      0.5
-                                    ],
-                                    colors:colors,
-                                    begin: Alignment.topLeft,
-                                    end: Alignment
-                                        .bottomRight)),
-                            child:  Center(
-                              child: Text(items[index]
-                                  .number==40?'Big':items[index]
-                                  .number==50?'Small':
-                              items[index]
-                                  .number==10?'G':
-                              items[index]
-                                  .number==20?'V':
-                              items[index]
-                                  .number==30?'R':
-                              items[index]
-                                  .number
-                                  .toString(),
-                                style: TextStyle(
-                                    fontSize: items[index]
-                                        .number==40?10:items[index]
-                                        .number==50?10:20,
-                                    fontWeight: FontWeight.w800,
-                                    color: Colors.black),
-                              ),
-                            )
-                        ),
-                        title:  Text(
-                          items[index].gamesno.toString(),
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w800,
-                          ),
-                        ),
-                        subtitle:  Text(
-                            items[index].createdAt.toString(),
-                            style: const TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.grey)),
-                        trailing: Column(
-                          mainAxisAlignment:
-                          MainAxisAlignment.end,
-                          children: [
-                            Container(
-                              height: height * 0.042,
-                              width: width * 0.2,
-                              decoration: BoxDecoration(
-                                  borderRadius:
-                                  BorderRadius.circular(
-                                      10),
-                                  border: Border.all(
-                                      color: items[index].status==0? Colors.orange:items[index].status==2?
-                                      Colors.red: Colors.green)),
-                              child: Center(
-                                child:  Text(
-                                  items[index].status==2?'Failed':items[index].status==0?'Pending':'Succeed',
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight:
-                                      FontWeight.w700,
-                                      color:
-                                      items[index].status==0?Colors.orange:
-                                      items[index].status==2?
-                                      Colors.red: Colors.green),
-                                ),
-                              ),
-                            ),
-                            Text(
-                              items[index].status==0?'--':
-                              items[index].status==2?'- ₹${items[index].amount.toStringAsFixed(2)}':'+ ₹${items[index].winAmount.toStringAsFixed(2)}',
-                              style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight:
-                                  FontWeight.w700,
-                                  color: items[index].status==0?Colors.white:items[index].status==2?
-                                  Colors.red: Colors.green),
-                            ),
-                          ],
-                        ),
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16.0),
-                            child: Column(
-                              mainAxisAlignment:
-                              MainAxisAlignment.start,
-                              crossAxisAlignment:
-                              CrossAxisAlignment.start,
+                            return Column(
                               children: [
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                                const Align(
-                                    alignment:
-                                    Alignment.topLeft,
-                                    child: Text(
-                                      'Details',
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight:
-                                        FontWeight
-                                            .w900,
-                                      ),
-                                    )),
-                                const SizedBox(height: 8.0),
-                                Container(
-                                  height: height * 0.08,
-                                  width: width,
-                                  decoration: BoxDecoration(
-                                      borderRadius:
-                                      BorderRadius
-                                          .circular(10),
-                                      color: AppColors
-                                          .FirstColor),
-                                  child: Padding(
-                                    padding:
-                                    const EdgeInsets
-                                        .all(8.0),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment
-                                          .start,
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment
-                                          .start,
-                                      children: [
-                                        const Text(
-                                          'order number',
-                                          style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight:
-                                              FontWeight
-                                                  .w700,
-                                              color: Colors
-                                                  .white),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      alignment: Alignment.center,
+                                      height: height * 0.06,
+                                      width: width * 0.3,
+                                      child: textWidget(
+                                          text: gameResult[index]
+                                              .gamesno
+                                              .toString(),
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600,
+                                          maxLines: 1,
+                                          color: AppColors.primaryTextColor),
+                                    ),
+                                    Container(
+                                      alignment: Alignment.center,
+                                      width: width * 0.21,
+                                      height: height * 0.06,
+                                      child:
+                                          // gameResult[index].number == 5
+                                          //     ? Container(
+                                          //         height: 25,
+                                          //         width: 25,
+                                          //         margin: const EdgeInsets.all(2),
+                                          //         alignment: Alignment.center,
+                                          //
+                                          //     child:Text(
+                                          //       gameResult[index]
+                                          //           .number
+                                          //           .toString(),
+                                          //       style: TextStyle(
+                                          //         fontSize: 12,
+                                          //         color: Colors.white,
+                                          //         fontWeight: FontWeight.w900,
+                                          //       ),
+                                          //     )
+                                          //       )
+                                          //     : gameResult[index].number == 0
+                                          //         ? Container(
+                                          //             height: 25,
+                                          //             width: 25,
+                                          //             margin:
+                                          //                 const EdgeInsets.all(2),
+                                          //             alignment: Alignment.center,
+                                          //             decoration:
+                                          //                  BoxDecoration(
+                                          //                      shape: BoxShape.circle,
+                                          //                   gradient:  LinearGradient(
+                                          //                       colors: [Colors.red,
+                                          //                         Colors.purple,],
+                                          //                     )
+                                          //                 ),
+                                          //   child:Text(
+                                          //     gameResult[index]
+                                          //         .number
+                                          //         .toString(),
+                                          //     style:  TextStyle(
+                                          //       fontSize: 12,
+                                          //       color: Colors.white,
+                                          //       fontWeight: FontWeight.w900,
+                                          //     ),
+                                          //   )
+                                          //
+                                          //           )
+                                          //         :
+                                          GradientTextview(
+                                        gameResult[index].number.toString(),
+                                        style: const TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w900,
                                         ),
-                                        const SizedBox(
-                                            height: 4.0),
-                                        Text(
-                                          items[index].orderId.toString(),
-                                          style: const TextStyle(
-                                              fontSize: 12,
-                                              fontWeight:
-                                              FontWeight
-                                                  .w700,
-                                              color: Colors
-                                                  .white),
-                                        )
-                                      ],
+                                        gradient: LinearGradient(
+                                          colors: colors,
+                                          stops: const [0.5, 0.5],
+                                          begin: Alignment.topCenter,
+                                          end: Alignment.bottomCenter,
+                                          tileMode: TileMode.mirror,
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      alignment: Alignment.center,
+                                      width: width * 0.21,
+                                      height: height * 0.06,
+                                      child: GradientTextview(
+                                        int.parse(gameResult[index]
+                                                    .number
+                                                    .toString()) <
+                                                5
+                                            ? 'Small'
+                                            : 'Big',
+                                        style: const TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w900),
+                                        gradient: LinearGradient(
+                                          colors: int.parse(gameResult[index]
+                                                      .number
+                                                      .toString()) <
+                                                  5
+                                              ? [
+                                                  AppColors.methodblue,
+                                                  AppColors.methodblue
+                                                ]
+                                              : [
+                                                  AppColors.goldencolor,
+                                                  AppColors.goldencolor
+                                                ],
+                                          stops: const [0.5, 0.5],
+                                          begin: Alignment.topCenter,
+                                          end: Alignment.bottomCenter,
+                                          tileMode: TileMode.mirror,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: height * 0.06,
+                                      width: width * 0.21,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          CircleAvatar(
+                                            radius: 6,
+                                            backgroundColor:
+                                                getCircleAvatarColor(int.parse(
+                                                    gameResult[index]
+                                                        .number
+                                                        .toString())),
+                                          ),
+                                          if (int.parse(gameResult[index]
+                                                      .number
+                                                      .toString()) ==
+                                                  5 ||
+                                              int.parse(gameResult[index]
+                                                      .number
+                                                      .toString()) ==
+                                                  0)
+                                            Container(
+                                                height: 12,
+                                                width: 12,
+                                                margin: const EdgeInsets.all(2),
+                                                alignment: Alignment.center,
+                                                decoration: const BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    color: Color(0xFFb659fe))),
+
+                                          // CircleAvatar(
+                                          //   radius: 6,
+                                          //   backgroundColor:
+                                          //  AppColors.primaryTextColor ,
+                                          // )
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Container(
+                                    width: width,
+                                    color: Colors.grey,
+                                    height: 0.5),
+                              ],
+                            );
+                          },
+                        ),
+                        SizedBox(height: height * 0.02),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            GestureDetector(
+                              onTap:(pageNumber > 1 &&
+                                  limitResult >
+                                      0) // Check that pageNumber is greater than 1 and limitResult is greater than 0
+                                  ? () {
+                                setState(() {
+                                  pageNumber--;
+                                  limitResult -= 10;
+                                  offsetResult -= 10;
+                                });
+                                      gameHistoryResult();
+                                    }
+                                  : null,
+                              // onTap: limitResult == 0
+                              //     ? () {}
+                              //     : () {
+                              //         setState(() {
+                              //           pageNumber--;
+                              //           limitResult = limitResult - 10;
+                              //           offsetResult = offsetResult - 10;
+                              //         });
+                              //         setState(() {});
+                              //         gameHistoryResult();
+                              //       },
+                              child: Container(
+                                height: height * 0.06,
+                                width: width * 0.10,
+                                decoration: BoxDecoration(
+                                  gradient: AppColors.loginSecondryGrad,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: const Icon(
+                                  Icons.navigate_before,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            textWidget(
+                              text: '$pageNumber',
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.primaryTextColor,
+                              maxLines: 1,
+                            ),
+                            const SizedBox(width: 16),
+                            GestureDetector(
+                              // onTap: pageNumber <
+                              //         (int.parse(count) / itemsPerPage)
+                              //             .ceil() // Check if there are more pages available
+                              //     ? () {
+                              //         setState(() {
+                              //           pageNumber++;
+                              //           limitResult += 10;
+                              //           offsetResult += 10;
+                              //         });
+                              //         gameHistoryResult();
+                              //       }
+                              //     : null,
+                              onTap: () {
+                                setState(() {
+                                  limitResult += 10;
+                                  offsetResult += 10;
+                                  pageNumber++;
+                                });
+                                gameHistoryResult();
+                              },
+                              child: Container(
+                                height: height * 0.06,
+                                width: width * 0.10,
+                                decoration: BoxDecoration(
+                                  gradient: AppColors.loginSecondryGrad,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: const Icon(Icons.navigate_next,
+                                    color: Colors.white),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10)
+                      ],
+                    )
+                  : selectedTabIndex == 1
+                      ? ChartScreen()
+                      : Column(
+                          children: [
+                            responseStatuscode == 400
+                                ? const Notfounddata()
+                                : items.isEmpty
+                                    ? const Center(
+                                        child: CircularProgressIndicator())
+                                    : Container(
+                                        width: width,
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 15, horizontal: 15),
+                                        margin: const EdgeInsets.only(
+                                            left: 10, right: 10),
+                                        decoration: const BoxDecoration(
+                                            borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(10),
+                                                topLeft: Radius.circular(10))),
+                                        child: Column(
+                                          children: [
+                                            Align(
+                                              alignment: Alignment.bottomRight,
+                                              child: InkWell(
+                                                onTap: () {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              const MyHistoryDetails()));
+                                                },
+                                                child: Container(
+                                                  height: height * 0.06,
+                                                  width: width * 0.25,
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              15),
+                                                      border: Border.all(
+                                                          color: Colors.black)),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceEvenly,
+                                                    children: [
+                                                      const Text(
+                                                        'Detail',
+                                                        style: TextStyle(
+                                                          fontSize: 14,
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                          height: height * 0.04,
+                                                          width: width * 0.09,
+                                                          child: const Image(
+                                                              image: AssetImage(
+                                                                  Assets
+                                                                      .iconsMoreBtn))),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            ListView.builder(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 10),
+                                              physics:
+                                                  const NeverScrollableScrollPhysics(),
+                                              shrinkWrap: true,
+                                              itemCount: items.length,
+                                              itemBuilder: (context, index) {
+                                                List<Color> colors;
+
+                                                if (items[index].number == 0) {
+                                                  colors = [
+                                                    Colors.red,
+                                                    Colors.purple,
+                                                  ];
+                                                } else if (items[index]
+                                                        .number ==
+                                                    5) {
+                                                  colors = [
+                                                    const Color(0xFF40ad72),
+                                                    Colors.purple
+                                                  ];
+                                                } else if (items[index]
+                                                        .number ==
+                                                    10) {
+                                                  colors = [
+                                                    const Color(0xFF40ad72),
+                                                    const Color(0xFF40ad72),
+                                                  ];
+                                                } else if (items[index]
+                                                        .number ==
+                                                    20) {
+                                                  colors = [
+                                                    Colors.purple,
+                                                    Colors.purple,
+                                                  ];
+                                                } else if (items[index]
+                                                        .number ==
+                                                    30) {
+                                                  colors = [
+                                                    Colors.red,
+                                                    Colors.red,
+                                                  ];
+                                                } else if (items[index]
+                                                        .number ==
+                                                    40) {
+                                                  colors = [
+                                                    AppColors.goldencolor,
+                                                    AppColors.goldencolor,
+                                                  ];
+                                                } else if (items[index]
+                                                        .number ==
+                                                    50) {
+                                                  colors = [
+                                                    const Color(0xff6eb4ff),
+                                                    const Color(0xff6eb4ff)
+                                                  ];
+                                                } else {
+                                                  int number = int.parse(
+                                                      items[index]
+                                                          .number
+                                                          .toString());
+                                                  colors = number.isOdd
+                                                      ? [
+                                                          const Color(
+                                                              0xFF40ad72),
+                                                          const Color(
+                                                              0xFF40ad72),
+                                                        ]
+                                                      : [
+                                                          Colors.red,
+                                                          Colors.red,
+                                                        ];
+                                                }
+
+                                                return ExpansionTile(
+                                                  leading: Container(
+                                                      height: height * 0.06,
+                                                      width: width * 0.12,
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(10),
+                                                          // color: Colors.grey
+                                                          gradient: LinearGradient(
+                                                              stops: const [
+                                                                0.5,
+                                                                0.5
+                                                              ],
+                                                              colors: colors,
+                                                              begin: Alignment
+                                                                  .topLeft,
+                                                              end: Alignment
+                                                                  .bottomRight)),
+                                                      child: Center(
+                                                        child: Text(
+                                                          items[index].number ==
+                                                                  40
+                                                              ? 'Big'
+                                                              : items[index]
+                                                                          .number ==
+                                                                      50
+                                                                  ? 'Small'
+                                                                  : items[index]
+                                                                              .number ==
+                                                                          10
+                                                                      ? 'G'
+                                                                      : items[index].number ==
+                                                                              20
+                                                                          ? 'V'
+                                                                          : items[index].number == 30
+                                                                              ? 'R'
+                                                                              : items[index].number.toString(),
+                                                          style: TextStyle(
+                                                              fontSize: items[index]
+                                                                          .number ==
+                                                                      40
+                                                                  ? 10
+                                                                  : items[index]
+                                                                              .number ==
+                                                                          50
+                                                                      ? 10
+                                                                      : 20,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w800,
+                                                              color:
+                                                                  Colors.black),
+                                                        ),
+                                                      )),
+                                                  title: Text(
+                                                    items[index]
+                                                        .gamesno
+                                                        .toString(),
+                                                    style: const TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.w800,
+                                                    ),
+                                                  ),
+                                                  subtitle: Text(
+                                                      items[index]
+                                                          .createdAt
+                                                          .toString(),
+                                                      style: const TextStyle(
+                                                          fontSize: 10,
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                          color: Colors.grey)),
+                                                  trailing: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.end,
+                                                    children: [
+                                                      Container(
+                                                        height: height * 0.042,
+                                                        width: width * 0.2,
+                                                        decoration: BoxDecoration(
+                                                            borderRadius: BorderRadius.circular(10),
+                                                            border: Border.all(
+                                                                color: items[index].status == 0
+                                                                    ? Colors.orange
+                                                                    : items[index].status == 2
+                                                                        ? Colors.red
+                                                                        : Colors.green)),
+                                                        child: Center(
+                                                          child: Text(
+                                                            items[index].status ==
+                                                                    2
+                                                                ? 'Failed'
+                                                                : items[index]
+                                                                            .status ==
+                                                                        0
+                                                                    ? 'Pending'
+                                                                    : 'Succeed',
+                                                            style: TextStyle(
+                                                                fontSize: 12,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w700,
+                                                                color: items[index]
+                                                                            .status ==
+                                                                        0
+                                                                    ? Colors
+                                                                        .orange
+                                                                    : items[index].status ==
+                                                                            2
+                                                                        ? Colors
+                                                                            .red
+                                                                        : Colors
+                                                                            .green),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        items[index].status == 0
+                                                            ? '--'
+                                                            : items[index]
+                                                                        .status ==
+                                                                    2
+                                                                ? '- ₹${items[index].amount.toStringAsFixed(2)}'
+                                                                : '+ ₹${items[index].winAmount.toStringAsFixed(2)}',
+                                                        style: TextStyle(
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                                FontWeight.w700,
+                                                            color: items[index]
+                                                                        .status ==
+                                                                    0
+                                                                ? Colors.white
+                                                                : items[index]
+                                                                            .status ==
+                                                                        2
+                                                                    ? Colors.red
+                                                                    : Colors
+                                                                        .green),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  children: [
+                                                    Padding(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          horizontal: 16.0),
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          const SizedBox(
+                                                            height: 15,
+                                                          ),
+                                                          const Align(
+                                                              alignment:
+                                                                  Alignment
+                                                                      .topLeft,
+                                                              child: Text(
+                                                                'Details',
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize: 15,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w900,
+                                                                ),
+                                                              )),
+                                                          const SizedBox(
+                                                              height: 8.0),
+                                                          Container(
+                                                            height:
+                                                                height * 0.08,
+                                                            width: width,
+                                                            decoration: BoxDecoration(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10),
+                                                                color: AppColors
+                                                                    .FirstColor),
+                                                            child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(8.0),
+                                                              child: Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .start,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  const Text(
+                                                                    'order number',
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            12,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .w700,
+                                                                        color: Colors
+                                                                            .white),
+                                                                  ),
+                                                                  const SizedBox(
+                                                                      height:
+                                                                          4.0),
+                                                                  Text(
+                                                                    items[index]
+                                                                        .orderId
+                                                                        .toString(),
+                                                                    style: const TextStyle(
+                                                                        fontSize:
+                                                                            12,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .w700,
+                                                                        color: Colors
+                                                                            .white),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          historyDetails(
+                                                              'Period',
+                                                              items[index]
+                                                                  .gamesno
+                                                                  .toString(),
+                                                              Colors.white),
+                                                          historyDetails(
+                                                              'Purchase amount',
+                                                              items[index]
+                                                                  .amount
+                                                                  .toString(),
+                                                              Colors.white),
+                                                          historyDetails(
+                                                              'Amount after tax',
+                                                              items[index]
+                                                                  .tradeAmount
+                                                                  .toString(),
+                                                              Colors.red),
+                                                          historyDetails(
+                                                              'Tax',
+                                                              items[index]
+                                                                  .commission
+                                                                  .toString(),
+                                                              Colors.white),
+                                                          historyWinDetails(
+                                                              'Result',
+                                                              items[index].winNumber == null
+                                                                  ? '--'
+                                                                  : '${items[index].winNumber}, ',
+                                                              items[index].winNumber ==
+                                                                      5
+                                                                  ? 'Green Violet,'
+                                                                  : items[index]
+                                                                              .winNumber ==
+                                                                          0
+                                                                      ? 'Red Violet,'
+                                                                      : items[index].winNumber ==
+                                                                              null
+                                                                          ? ''
+                                                                          : items[index]
+                                                                                  .winNumber
+                                                                                  .isOdd
+                                                                              ? 'green,'
+                                                                              : 'red,',
+                                                              items[index].winNumber ==
+                                                                      null
+                                                                  ? ''
+                                                                  : items[index]
+                                                                              .winNumber <
+                                                                          5
+                                                                      ? 'small'
+                                                                      : 'Big',
+                                                              Colors.white,
+                                                              items[index].winNumber ==
+                                                                      null
+                                                                  ? Colors
+                                                                      .orange
+                                                                  : items[index]
+                                                                          .winNumber
+                                                                          .isOdd
+                                                                      ? Colors
+                                                                          .green
+                                                                      : Colors
+                                                                          .orange,
+                                                              items[index].winNumber ==
+                                                                      null
+                                                                  ? Colors
+                                                                      .orange
+                                                                  : items[index]
+                                                                              .winNumber <
+                                                                          5
+                                                                      ? Colors
+                                                                          .yellow
+                                                                      : Colors
+                                                                          .blue),
+                                                          historyDetails(
+                                                              'Select',
+                                                              items[index].number ==
+                                                                      50
+                                                                  ? 'small'
+                                                                  : items[index]
+                                                                              .number ==
+                                                                          40
+                                                                      ? 'big'
+                                                                      : items[index].number ==
+                                                                              10
+                                                                          ? 'Green'
+                                                                          : items[index].number == 20
+                                                                              ? 'Violet'
+                                                                              : items[index].number == 30
+                                                                                  ? 'Red'
+                                                                                  : items[index].number.toString(),
+                                                              Colors.white),
+                                                          historyDetails(
+                                                              'Status',
+                                                              items[index].status ==
+                                                                      0
+                                                                  ? 'Unpaid'
+                                                                  : items[index]
+                                                                              .status ==
+                                                                          2
+                                                                      ? 'Failed'
+                                                                      : 'Succeed',
+                                                              items[index].status ==
+                                                                      0
+                                                                  ? Colors.white
+                                                                  : items[index]
+                                                                              .status ==
+                                                                          2
+                                                                      ? Colors
+                                                                          .red
+                                                                      : Colors
+                                                                          .green),
+                                                          historyDetails(
+                                                              'Win/Loss',
+                                                              items[index].status ==
+                                                                      0
+                                                                  ? '--'
+                                                                  : '₹${items[index].winAmount.toStringAsFixed(2)}',
+                                                              items[index].status ==
+                                                                      0
+                                                                  ? Colors.white
+                                                                  : items[index]
+                                                                              .status ==
+                                                                          2
+                                                                      ? Colors
+                                                                          .red
+                                                                      : Colors
+                                                                          .green),
+                                                          historyDetails(
+                                                              'Order time',
+                                                              items[index]
+                                                                  .createdAt
+                                                                  .toString(),
+                                                              Colors.white),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                GestureDetector(
+                                  onTap: (myHistoryPageNumber > 1 &&
+                                      myHistoryLimitResult >
+                                          0) // Check that pageNumber is greater than 1 and limitResult is greater than 0
+                                      ? () {
+                                    setState(() {
+                                      myHistoryPageNumber--;
+                                      myHistoryLimitResult -= 10;
+                                      myHistoryOffsetResult -= 10;
+                                    });
+                                    BettingHistory();
+                                  }
+                                      : null, // Disable tap if the condition is not met
+                                  child: Container(
+                                    height: height * 0.06,
+                                    width: width * 0.10,
+                                    decoration: BoxDecoration(
+                                      gradient: AppColors.loginSecondryGrad,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: const Icon(
+                                      Icons.navigate_before,
+                                      color: Colors.white,
                                     ),
                                   ),
                                 ),
-                                historyDetails(
-                                    'Period',
-                                    items[index].gamesno.toString(),
-                                    Colors.white),
-                                historyDetails(
-                                    'Purchase amount',
-                                    items[index].amount.toString(),
-                                    Colors.white),
-                                historyDetails(
-                                    'Amount after tax',
-                                    items[index].tradeAmount.toString(),
-                                    Colors.red),
-                                historyDetails('Tax',
-                                    items[index].commission.toString(), Colors.white),
-                                historyWinDetails(
-                                    'Result',
-                                    items[index].winNumber==null? '--':
-                                    '${items[index].winNumber}, ',
-                                    items[index].winNumber==5?'Green Violet,':
-                                    items[index].winNumber==0?'Red Violet,':
-                                    items[index].winNumber==null? '':
-                                    items[index].winNumber.isOdd?
-                                    'green,':'red,',
-                                    items[index].winNumber==null? '':
-                                    items[index].winNumber<5?
-                                    'small':'Big',
-                                    Colors.white,
-                                    items[index].winNumber==null?Colors.orange:
-                                    items[index].winNumber.isOdd?
-                                    Colors.green:Colors.orange,
-                                    items[index].winNumber==null?Colors.orange:
-                                    items[index].winNumber<5?
-                                    Colors.yellow:Colors.blue),
-                                historyDetails('Select',
-                                    items[index].number==50?'small':items[index].number==40?'big':
-                                    items[index].number==10?'Green':items[index].number==20?'Violet':
-                                    items[index].number==30?'Red':
-                                    items[index].number.toString(), Colors.white),
-                                historyDetails('Status',
-                                    items[index].status==0?'Unpaid':
-                                    items[index].status==2? 'Failed':'Succeed',
-                                    items[index].status==0?Colors.white:items[index].status==2?Colors.red:Colors.green),
-                                historyDetails('Win/Loss',
-                                    items[index].status==0?'--': '₹${items[index].winAmount.toStringAsFixed(2)}', items[index].status==0?Colors.white:items[index].status==2? Colors.red:Colors.green),
-                                historyDetails(
-                                    'Order time',
-                                    items[index].createdAt.toString(),
-                                    Colors.white),
+                                const SizedBox(width: 16),
+                                textWidget(
+                                  text: '$myHistoryPageNumber',
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.primaryTextColor,
+                                  maxLines: 1,
+                                ),
+                                const SizedBox(width: 16),
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      myHistoryLimitResult += 10;
+                                      myHistoryOffsetResult += 10;
+                                      myHistoryPageNumber++;
+                                    });
+                                    BettingHistory();
+                                  },
+                                  child: Container(
+                                    height: height * 0.06,
+                                    width: width * 0.10,
+                                    decoration: BoxDecoration(
+                                      gradient: AppColors.loginSecondryGrad,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: const Icon(
+                                      Icons.navigate_next,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
-                          ),
-                        ],
-                      );
-                    },
-                  ),
 
-
-
-                ],
-              ),
-            ),
-            Row(
-              mainAxisAlignment:
-              MainAxisAlignment.center,
-              children: [
-                GestureDetector(
-                  onTap: pageNumber > 1
-                      ? () {
-                    setState(() {
-                      pageNumber--;
-                      limitResult =
-                          limitResult -
-                              10;
-                      offsetResult =
-                          offsetResult -
-                              10;
-                    });
-                    BettingHistory();
-                  }
-                      : null,
-                  child: Container(
-                    height: height * 0.06,
-                    width: width * 0.10,
-                    decoration: BoxDecoration(
-                      gradient: AppColors
-                          .loginSecondryGrad,
-                      borderRadius:
-                      BorderRadius.circular(
-                          10),
-                    ),
-                    child: const Icon(
-                      Icons.navigate_before,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                textWidget(
-                  text:
-                  '$pageNumber/$numberPages',
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors
-                      .primaryTextColor,
-                  maxLines: 1,
-                ),
-                const SizedBox(width: 16),
-                GestureDetector(
-                  onTap: pageNumber <
-                      (int.parse(count) /
-                          itemsPerPage)
-                          .ceil()
-                      ? () {
-                    setState(() {
-                      pageNumber++;
-                      limitResult =
-                          limitResult +
-                              10;
-                      offsetResult =
-                          offsetResult +
-                              10;
-                    });
-                    BettingHistory();
-                  }
-                      : null,
-                  child: Container(
-                    height: height * 0.06,
-                    width: width * 0.10,
-                    decoration: BoxDecoration(
-                      gradient: AppColors
-                          .loginSecondryGrad,
-                      borderRadius:
-                      BorderRadius.circular(
-                          10),
-                    ),
-                    child: const Icon(
-                        Icons.navigate_next,
-                        color: Colors.white),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: height*0.04,)
-          ],
-        )
-      ],
-    )
+                            SizedBox(
+                              height: height * 0.04,
+                            )
+                          ],
+                        )
+            ],
+          )
         : Container();
   }
 
-  int limitResult = 0;
+  int limitResult = 10;
   int offsetResult = 0;
+  int myHistoryLimitResult = 10;
+  int myHistoryOffsetResult = 0;
+  // myHistoryPageNumber
 
   game_winPopup() async {
     UserModel user = await userProvider.getUser();
@@ -2105,36 +2302,34 @@ class _WinGoScreenState extends State<WinGoScreen> with SingleTickerProviderStat
       var result = data["result"];
 
       result == "lose"
-          ?   showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return LossPopupPage(
-            subtext:  number.toString(),
-            subtext1: totalamount.toString(),
-            subtext2: win.toString(),
-            subtext3: gamesno,
-            subtext4: gameid,
-          ); // Call the Popup widget
-        },
-      )
-
-          :  showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return WinPopupPage(
-            // subtext:  number!=null? number.toString() :"" ,
-            subtext:  number.toString(),
-            subtext1: totalamount.toString(),
-            subtext2: win.toString(),
-            subtext3: gamesno,
-            subtext4: gameid,
-          ); // Call the Popup widget
-        },
-      );
+          ? showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return LossPopupPage(
+                  subtext: number.toString(),
+                  subtext1: totalamount.toString(),
+                  subtext2: win.toString(),
+                  subtext3: gamesno,
+                  subtext4: gameid,
+                ); // Call the Popup widget
+              },
+            )
+          : showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return WinPopupPage(
+                  // subtext:  number!=null? number.toString() :"" ,
+                  subtext: number.toString(),
+                  subtext1: totalamount.toString(),
+                  subtext2: win.toString(),
+                  subtext3: gamesno,
+                  subtext4: gameid,
+                ); // Call the Popup widget
+              },
+            );
     } else {
       context.read<ProfileProvider>().fetchProfileData();
-      setState(() {
-      });
+      setState(() {});
     }
   }
 }
@@ -2164,85 +2359,85 @@ Widget buildTime1(int time) {
 }
 
 Widget buildTimeCard3({required String time, required String header}) => Column(
-  mainAxisAlignment: MainAxisAlignment.center,
-  children: [
-    Container(
-      padding: const EdgeInsets.all(8),
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin:
-          Alignment.bottomRight, // Adjusted to start from bottom right
-          end: Alignment.topLeft, // Adjusted to end at top left
-          colors: [
-            Colors.transparent,
-            Color(0xFF759FDE), // Hex color equivalent to #759FDE
-          ],
-          stops: [
-            0.12,
-            0.13333
-          ], // Adjust these stops according to your design
-        ),
-      ),
-      child: Text(
-        time,
-        style: const TextStyle(
-          fontWeight: FontWeight.bold,
-          color: Colors.black,
-          fontSize: 15,
-        ),
-      ),
-    )
-  ],
-);
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin:
+                  Alignment.bottomRight, // Adjusted to start from bottom right
+              end: Alignment.topLeft, // Adjusted to end at top left
+              colors: [
+                Colors.transparent,
+                Color(0xFF759FDE), // Hex color equivalent to #759FDE
+              ],
+              stops: [
+                0.12,
+                0.13333
+              ], // Adjust these stops according to your design
+            ),
+          ),
+          child: Text(
+            time,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+              fontSize: 15,
+            ),
+          ),
+        )
+      ],
+    );
 
 Widget buildTimeCard2({required String time, required String header}) => Column(
-  mainAxisAlignment: MainAxisAlignment.center,
-  children: [
-    Container(
-      padding: const EdgeInsets.all(8),
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            AppColors.containerBgColor,
-            Color(0xFF759FDE), // Hex color equivalent to #759FDE
-          ],
-          stops: [
-            0.1333,
-            0.12,
-          ], // Adjust these stops according to your design
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                AppColors.containerBgColor,
+                Color(0xFF759FDE), // Hex color equivalent to #759FDE
+              ],
+              stops: [
+                0.1333,
+                0.12,
+              ], // Adjust these stops according to your design
+            ),
+          ),
+          child: Text(
+            time,
+            style: const TextStyle(
+                fontWeight: FontWeight.bold, color: Colors.black, fontSize: 15),
+          ),
         ),
-      ),
-      child: Text(
-        time,
-        style: const TextStyle(
-            fontWeight: FontWeight.bold, color: Colors.black, fontSize: 15),
-      ),
-    ),
-  ],
-);
+      ],
+    );
 
 Widget buildTimeCard1({required String time, required String header}) => Column(
-  mainAxisAlignment: MainAxisAlignment.center,
-  children: [
-    Container(
-      padding: const EdgeInsets.all(8),
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xFF759FDE), Color(0xFF759FDE)],
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [Color(0xFF759FDE), Color(0xFF759FDE)],
+            ),
+          ),
+          child: Text(
+            time,
+            style: const TextStyle(
+                fontWeight: FontWeight.bold, color: Colors.black, fontSize: 15),
+          ),
         ),
-      ),
-      child: Text(
-        time,
-        style: const TextStyle(
-            fontWeight: FontWeight.bold, color: Colors.black, fontSize: 15),
-      ),
-    ),
-  ],
-);
+      ],
+    );
 
 Widget buildTime5sec(int time) {
   Duration myDuration = Duration(seconds: time);
@@ -2296,13 +2491,13 @@ List<Widget> generateNumberWidgets(int parse) {
       } else {
         colors = parse % 2 == 0
             ? [
-          const Color(0xFFfd565c),
-          const Color(0xFFfd565c),
-        ]
+                const Color(0xFFfd565c),
+                const Color(0xFFfd565c),
+              ]
             : [
-          const Color(0xFF40ad72),
-          const Color(0xFF40ad72),
-        ];
+                const Color(0xFF40ad72),
+                const Color(0xFF40ad72),
+              ];
       }
     }
 
@@ -2387,11 +2582,11 @@ class Notfounddata extends StatelessWidget {
 
 class GradientTextview extends StatelessWidget {
   const GradientTextview(
-      this.text, {
-        super.key,
-        required this.gradient,
-        this.style,
-      });
+    this.text, {
+    super.key,
+    required this.gradient,
+    this.style,
+  });
 
   final String text;
   final TextStyle? style;
@@ -2415,5 +2610,5 @@ class Winlist {
   String subtitle;
   int time;
 
-  Winlist(this.gameid,this.title, this.subtitle,this.time);
+  Winlist(this.gameid, this.title, this.subtitle, this.time);
 }

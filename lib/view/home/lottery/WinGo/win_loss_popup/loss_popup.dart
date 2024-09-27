@@ -167,19 +167,19 @@ class _LossPopupPageState extends State<LossPopupPage> {
                       ),
                       child: Center(
                         child: Text(
-                          widget.subtext == 10
+                          widget.subtext == "10"
                               ? 'Green'
-                              : widget.subtext == 20
+                              : widget.subtext == "20"
                               ? 'Violet'
-                              : widget.subtext == 30
+                              : widget.subtext == "30"
                               ? 'Red'
-                              : widget.subtext== 0
+                              : widget.subtext== "0"
                               ? 'Violet Red'
-                              : widget.subtext== 5
+                              : widget.subtext== "5"
                               ? 'Violet Green'
-                              : (widget.subtext == 1 || widget.subtext == 3 || widget.subtext == 7|| widget.subtext == 9)
+                              : (widget.subtext == "1" || widget.subtext == "3" || widget.subtext == "7"|| widget.subtext == "9")
                               ? 'green'
-                              : 'violet',
+                              : 'red',
                           style: const TextStyle(
                             fontSize: 10,
                             color: Colors.black,

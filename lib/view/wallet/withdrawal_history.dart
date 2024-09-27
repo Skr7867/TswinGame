@@ -605,8 +605,7 @@ class _WithdrawHistoryState extends State<WithdrawHistory> with SingleTickerProv
   Future<void> withdrawHistory() async {
     UserModel user = await userProvider.getUser();
     String token = user.id.toString();
-    final response = await http.get(
-      Uri.parse(_selectedDate==null?
+    final response = await http.get(Uri.parse(_selectedDate==null?
       "${ApiUrl.withdrawHistory}$token&type=$selectedCatIndex&status=$selectedId":
       '${ApiUrl.withdrawHistory}$token&type=$selectedCatIndex&status=$selectedId&created_at=$_selectedDate'),);
     if (kDebugMode) {

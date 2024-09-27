@@ -486,8 +486,12 @@ class _DepositHistoryState extends State<DepositHistory> with  SingleTickerProvi
   Future<void> depositHistory() async {
     UserModel user = await userProvider.getUser();
     String token = user.id.toString();
+    final response = await http.get(Uri.parse(_selectedDate==null?
+    "${ApiUrl.depositHistory}$token&type=$selectedCatIndex&status=$selectedId":
+    '${ApiUrl.depositHistory}$token&type=$selectedCatIndex&status=$selectedId&created_at=$_selectedDate'),);
 
-    final response = await http.get(Uri.parse('${ApiUrl.depositHistory}$token&type=$selectedCatIndex'));
+    // final response = await http.get(Uri.parse(
+    //     '${ApiUrl.depositHistory}$token&type=$selectedCatIndex&status=$selectedId'));
     print(token);
     print("token");
 
