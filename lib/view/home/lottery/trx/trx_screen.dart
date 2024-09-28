@@ -144,8 +144,6 @@ class TrxScreenState extends State<TrxScreen>
         // bettingHistoryTRX();
         gameHistoryResult();
         gameHistoryResultSingle();
-
-
       }
       countdownSeconds = (countdownSeconds - 1);
     });
@@ -261,8 +259,8 @@ class TrxScreenState extends State<TrxScreen>
                                   gameHistoryResult();
                                   BettingHistory();
                                   gameHistoryResultSingle();
-                                  pageNumber= 1;
-                                  myHistoryPageNumber =1;
+                                  pageNumber = 1;
+                                  myHistoryPageNumber = 1;
                                 },
                                 child: Container(
                                   height: height * 0.28,
@@ -422,8 +420,8 @@ class TrxScreenState extends State<TrxScreen>
                                             barrierDismissible: false,
                                             context: context,
                                             builder: (BuildContext context) =>
-                                                 HowToPlay(
-                                                  type:  gameid.toString(),
+                                                HowToPlay(
+                                                  type: gameid.toString(),
                                                 ));
 
                                         // Navigator.push(context, MaterialPageRoute(builder: (context)=> HowtoplayScreen()));
@@ -528,8 +526,9 @@ class TrxScreenState extends State<TrxScreen>
                                     scrollDirection: Axis.horizontal,
                                     itemBuilder:
                                         (BuildContext context, int index) {
-                                      String text =
-                                      gameResultSingle[index].hash.toString();
+                                      String text = gameResultSingle[index]
+                                          .hash
+                                          .toString();
                                       List<String> characterList =
                                           text.split('');
                                       return Row(
@@ -545,7 +544,8 @@ class TrxScreenState extends State<TrxScreen>
                                               child: Container(
                                                   height: height * 0.08,
                                                   width: height * 0.08,
-                                                  decoration: gameResultSingle[index]
+                                                  decoration: gameResultSingle[
+                                                                  index]
                                                               .number
                                                               .toString() ==
                                                           char
@@ -997,7 +997,7 @@ class TrxScreenState extends State<TrxScreen>
   List<ResultGameHistory> gameResult = [];
   Future<void> gameHistoryResult() async {
     final response = await http.get(
-      Uri.parse('${ApiUrl.resultList}$gameid&limit=10&offset=$offsetResult'),
+      Uri.parse('${ApiUrl.resultList}$gameid&limit=$itemsPerPage&offset=$offsetResult'),
     );
     if (kDebugMode) {
       print('${ApiUrl.resultList}$gameid&limit=10&offset=$offsetResult');
@@ -1026,51 +1026,53 @@ class TrxScreenState extends State<TrxScreen>
   List<ResultGameHistory> gameResultSingle = [];
 
   Future<void> gameHistoryResultSingle() async {
-    final response = await http.get(Uri.parse('${ApiUrl.resultList}$gameid&limit=5&offset=$offsetResult'),);
+    final response = await http.get(
+      Uri.parse('${ApiUrl.resultList}$gameid&limit=5&offset=$offsetResult'),
+    );
     if (kDebugMode) {
-      print(ApiUrl.changeAvtarList);
-      print('changeAvtarList');
-
+      print(ApiUrl.resultList);
+      print('resultList');
     }
-    if (response.statusCode==200) {
+    if (response.statusCode == 200) {
       final List<dynamic> responseData = json.decode(response.body)['data'];
       setState(() {
-        gameResultSingle = responseData.map((item) => ResultGameHistory.fromJson(item)).toList();
-        period=int.parse(responseData[0]['gamesno'].toString()) + 1;
+        gameResultSingle = responseData
+            .map((item) => ResultGameHistory.fromJson(item))
+            .toList();
+        period = int.parse(responseData[0]['gamesno'].toString()) + 1;
       });
-
-    }
-    else if(response.statusCode==400){
+    } else if (response.statusCode == 400) {
       if (kDebugMode) {
         print('Data not found');
       }
-    }
-    else {
+    } else {
       setState(() {
         gameResultSingle = [];
       });
       throw Exception('Failed to load data');
     }
   }
+
   int myHistoryPageNumber = 1;
   int myHistoryLimitResult = 10;
   int myHistoryOffsetResult = 0;
   int selectedIndex = 6;
   int? totalBets;
+
+
   List<BettingHistoryModel> items = [];
   Future<void> BettingHistory() async {
     UserModel user = await userProvider.getUser();
     String token = user.id.toString();
     final response = await http.get(
       Uri.parse(
-          '${ApiUrl.betHistory}$token&game_id=$selectedIndex&limit=10&offset=$myHistoryOffsetResult'),
+          '${ApiUrl.betHistory}$token&game_id=$gameid&limit=10&offset=$myHistoryOffsetResult'),
+      // Uri.parse(
+      //     '${ApiUrl.betHistory}$token&game_id=$gameid&limit=$itemsPerPage&offset=$offsetResult'),
     );
-    if (kDebugMode) {
-      print(
-          '${ApiUrl.betHistory}$token&game_id=$selectedIndex&limit=10&offset=$myHistoryOffsetResult');
-      print('betHistory+token trx');
-    }
-
+    print(
+        '${ApiUrl.betHistory}$token&game_id=$gameid&limit=10&offset=$myHistoryOffsetResult');
+    print('betHistory+token wingo');
     setState(() {
       responseStatuscode = response.statusCode;
     });
@@ -1079,12 +1081,11 @@ class TrxScreenState extends State<TrxScreen>
       final List<dynamic> responseData = json.decode(response.body)['data'];
       final Map<String, dynamic> Data = json.decode(response.body);
       final int totalBetsCount = Data['total_bets'];
-
       setState(() {
+        count = totalBetsCount.toString();
         items = responseData
             .map((item) => BettingHistoryModel.fromJson(item))
             .toList();
-        totalBets = totalBetsCount;
       });
     } else if (response.statusCode == 400) {
       if (kDebugMode) {
@@ -1475,17 +1476,17 @@ class TrxScreenState extends State<TrxScreen>
                           children: [
                             GestureDetector(
                               onTap: (pageNumber > 1 &&
-                                      limitResult >
-                                          0) // Check that pageNumber is greater than 1 and limitResult is greater than 0
+                                  limitResult >
+                                      0) // Check that pageNumber is greater than 1 and limitResult is greater than 0
                                   ? () {
-                                      setState(() {
-                                        pageNumber--;
-                                        limitResult -= 10;
-                                        offsetResult -= 10;
-                                      });
-                                      gameHistoryResult();
-                                    }
-                                  : null, // Disable tap if the condition is not met
+                                setState(() {
+                                  pageNumber--;
+                                  limitResult -= 10;
+                                  offsetResult -= 10;
+                                });
+                                gameHistoryResult();
+                              }
+                                  : null,
                               child: Container(
                                 height: height * 0.06,
                                 width: width * 0.10,
@@ -2056,16 +2057,16 @@ class TrxScreenState extends State<TrxScreen>
                               children: [
                                 GestureDetector(
                                   onTap: (myHistoryPageNumber > 1 &&
-                                      myHistoryLimitResult >
-                                          0) // Check that pageNumber is greater than 1 and limitResult is greater than 0
+                                          myHistoryLimitResult >
+                                              0) // Check that pageNumber is greater than 1 and limitResult is greater than 0
                                       ? () {
-                                    setState(() {
-                                      myHistoryPageNumber--;
-                                      myHistoryLimitResult -= 10;
-                                      myHistoryOffsetResult -= 10;
-                                    });
-                                    BettingHistory();
-                                  }
+                                          setState(() {
+                                            myHistoryPageNumber--;
+                                            myHistoryLimitResult -= 10;
+                                            myHistoryOffsetResult -= 10;
+                                          });
+                                          BettingHistory();
+                                        }
                                       : null, // Disable tap if the condition is not met
                                   child: Container(
                                     height: height * 0.06,
@@ -2149,35 +2150,33 @@ class TrxScreenState extends State<TrxScreen>
       var result = data["result"];
 
       result == "lose"
-          ?   showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return LossPopupPage(
-            subtext:  number.toString(),
-            subtext1: totalamount.toString(),
-            subtext2: win.toString(),
-            subtext3: gamesno.toString(),
-            subtext4: gameid.toString(),
-          ); // Call the Popup widget
-        },
-      )
-
-          :  showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return WinPopupPage(
-            subtext:  number!=null? number.toString() :"" ,
-            subtext1: totalamount!=null ? totalamount.toString(): "",
-            subtext2: win.toStringAsFixed(2),
-            subtext3: gamesno.toString(),
-            subtext4: gameid.toString(),
-          ); // Call the Popup widget
-        },
-      );
+          ? showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return LossPopupPage(
+                  subtext: number.toString(),
+                  subtext1: totalamount.toString(),
+                  subtext2: win.toString(),
+                  subtext3: gamesno.toString(),
+                  subtext4: gameid.toString(),
+                ); // Call the Popup widget
+              },
+            )
+          : showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return WinPopupPage(
+                  subtext: number != null ? number.toString() : "",
+                  subtext1: totalamount != null ? totalamount.toString() : "",
+                  subtext2: win.toStringAsFixed(2),
+                  subtext3: gamesno.toString(),
+                  subtext4: gameid.toString(),
+                ); // Call the Popup widget
+              },
+            );
     } else {
       context.read<ProfileProvider>().fetchProfileData();
-      setState(() {
-      });
+      setState(() {});
     }
   }
 
@@ -2194,7 +2193,7 @@ class TrxScreenState extends State<TrxScreen>
               borderRadius: BorderRadius.only(
                   topRight: Radius.circular(10), topLeft: Radius.circular(10))),
           child: Row(
-             // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
                 alignment: Alignment.center,
@@ -2254,9 +2253,10 @@ class TrxScreenState extends State<TrxScreen>
                                   : AppColors.btnYellowGradient,
                         ),
                         child: textWidget(
-                          text: int.parse(gameResult[index].number.toString()) < 5
-                              ? 'S'
-                              : 'B',
+                          text:
+                              int.parse(gameResult[index].number.toString()) < 5
+                                  ? 'S'
+                                  : 'B',
                           color: AppColors.primaryTextColor,
                           fontWeight: FontWeight.w600,
                         ),
@@ -2276,17 +2276,17 @@ class TrxScreenState extends State<TrxScreen>
           children: [
             GestureDetector(
               onTap: (pageNumber > 1 &&
-                      limitResult >
-                          0) // Check to ensure pageNumber > 1 and limitResult > 0
+                  limitResult >
+                      0) // Check that pageNumber is greater than 1 and limitResult is greater than 0
                   ? () {
-                      setState(() {
-                        pageNumber--;
-                        limitResult -= 10;
-                        offsetResult -= 10;
-                      });
-                      gameHistoryResult();
-                    }
-                  : null, // Disable tap if condition is not met
+                setState(() {
+                  pageNumber--;
+                  limitResult -= 10;
+                  offsetResult -= 10;
+                });
+                gameHistoryResult();
+              }
+                  : null,
               child: Container(
                 height: height * 0.06,
                 width: width * 0.10,

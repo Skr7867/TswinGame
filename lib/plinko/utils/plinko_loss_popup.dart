@@ -8,7 +8,7 @@ class ToastLostHelper {
     String? subtext1,
     String? subtext2,
   }) {
-    ToastWidget.showToast(
+    ToastWidgetLoss.showToast(
       subtext: subtext,
       subtext1: subtext1,
       subtext2: subtext2,
@@ -16,12 +16,12 @@ class ToastLostHelper {
   }
 }
 
-class ToastWidget extends StatefulWidget {
+class ToastWidgetLoss extends StatefulWidget {
   final String? subtext;
   final String? subtext1;
   final String? subtext2;
 
-  const ToastWidget({
+  const ToastWidgetLoss({
     Key? key,
     this.subtext,
     this.subtext1,
@@ -37,12 +37,10 @@ class ToastWidget extends StatefulWidget {
     if (overlay == null) return;
 
     final entry = OverlayEntry(
-      builder: (context) => Positioned(
-        top: MediaQuery.of(context).size.height * 0.4,
-        right: MediaQuery.of(context).size.width * 0.15,
+      builder: (context) => Center(
         child: Material(
           color: Colors.transparent,
-          child: ToastWidget(
+          child: ToastWidgetLoss(
             subtext: subtext,
             subtext1: subtext1,
             subtext2: subtext2,
@@ -56,15 +54,18 @@ class ToastWidget extends StatefulWidget {
   }
 
   @override
-  _ToastWidgetState createState() => _ToastWidgetState();
+  _ToastWidgetLossState createState() => _ToastWidgetLossState();
 }
 
-class _ToastWidgetState extends State<ToastWidget> {
+class _ToastWidgetLossState extends State<ToastWidgetLoss> {
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
+
     return Container(
-      width: width*18,
-      height: height*0.2,
+      width: width * 0.45, // Adjusted width for better scaling
+      height: height * 0.25, // Adjusted height for better scaling
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
@@ -76,19 +77,22 @@ class _ToastWidgetState extends State<ToastWidget> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(height: height*0.08),
+          SizedBox(height: height * 0.08),
           Text(
-            widget.subtext1 =="1"?"Green":widget.subtext1 =="2"?"Yellow":"Red",
+            widget.subtext1 == "1" ? "Green" : widget.subtext1 == "2" ? "Yellow" : "Red",
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w900,
-              color: widget.subtext1 =="1"?Colors.green:
-              widget.subtext1 =="2"?Colors.yellow:Colors.red,
+              color: widget.subtext1 == "1"
+                  ? Colors.green
+                  : widget.subtext1 == "2"
+                  ? Colors.yellow
+                  : Colors.red,
             ),
           ),
-          SizedBox(height: height*0.03),
+          SizedBox(height: height * 0.03),
           Text(
-            widget.subtext2==""?"":"₹${widget.subtext2}",
+            widget.subtext2 == "" ? "" : "₹${widget.subtext2}",
             style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w900,

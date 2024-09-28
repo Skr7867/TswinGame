@@ -216,41 +216,54 @@ class _MyGameWidgetState extends State<MyGameWidget> {
       return false;
     } else {
       return true;
-     }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     context.read<ProfileProvider>().fetchProfileData();
-    final userData =context.read<ProfileProvider>();
+    final userData = context.read<ProfileProvider>();
 
     return WillPopScope(
       onWillPop: _onWillPop,
-      child:Scaffold(
+      child: Scaffold(
         backgroundColor: const Color(0xFF107baa),
         extendBodyBehindAppBar: true,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
-          leading: exitIndex==0? IconButton(
-            onPressed: (){
-             Utils.flushBarSuccessMessage("Please complete your bet otherwise money will be deducted! ", context, AppColors.primaryTextColor);
-            },
-            icon: const Icon(Icons.arrow_back_ios,color: AppColors.white,size: 15,),
-          ): IconButton(
-            onPressed: (){
-             Navigator.pop(context);
-            },
-            icon: const Icon(Icons.arrow_back_ios,color: AppColors.white,size: 15,),
+          leading: exitIndex == 0
+              ? IconButton(
+                  onPressed: () {
+                    Utils.flushBarSuccessMessage(
+                        "Please complete your bet otherwise money will be deducted! ",
+                        context,
+                        AppColors.primaryTextColor);
+                  },
+                  icon: const Icon(
+                    Icons.arrow_back_ios,
+                    color: AppColors.white,
+                    size: 15,
+                  ),
+                )
+              : IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(
+                    Icons.arrow_back_ios,
+                    color: AppColors.white,
+                    size: 15,
+                  ),
+                ),
+          title: const Text(
+            'PLINKO',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 17,
+            ),
           ),
-           title: const Text(
-             'PLINKO',
-             style: TextStyle(
-               fontWeight: FontWeight.bold,
-               fontSize: 17,
-             ),
-           ),
-           centerTitle: true,
+          centerTitle: true,
           actions: [
             Row(
               children: [
@@ -262,31 +275,29 @@ class _MyGameWidgetState extends State<MyGameWidget> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                     const Icon(Icons.currency_rupee_outlined,
+                    const Icon(Icons.currency_rupee_outlined,
                         size: 15, color: Colors.white),
                     textWidget(
-                        text:
-                        userData.totalWallet.toStringAsFixed(2),
+                        text: userData.totalWallet.toStringAsFixed(2),
                         fontSize: 15,
                         color: Colors.white,
                         fontWeight: FontWeight.w600),
-                     const SizedBox(
+                    const SizedBox(
                       width: 10,
                     ),
                     InkWell(
                         onTap: () {
                           setState(() {
                             context.read<ProfileProvider>().fetchProfileData();
-                            Utils.flushBarSuccessMessage('Wallet refresh ✔', context, Colors.white);
+                            Utils.flushBarSuccessMessage(
+                                'Wallet refresh ✔', context, Colors.white);
                           });
-
                         },
-                        child: Image.asset(Assets.iconsTotalBal,
-                            height: 20))
+                        child: Image.asset(Assets.iconsTotalBal, height: 20))
                   ],
                 ),
                 InkWell(
-                  onTap: (){
+                  onTap: () {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -295,24 +306,24 @@ class _MyGameWidgetState extends State<MyGameWidget> {
                     );
                   },
                   child: Container(
-                      margin: EdgeInsets.zero,
-                      alignment: Alignment.center,
-                      height: height*0.03,
-                      width: width*0.10,
-                      decoration: BoxDecoration(
-                          // color: Colors.teal,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.3),
-                              blurRadius: 5,
-                              spreadRadius: 2,
-                              offset: const Offset(0,
-                                  3), // Adjust the shadow's position here
-                            ),
-                          ],
-                          borderRadius: BorderRadius.circular(20),
-                          ),
-                      child: Image.asset(Assets.iconsBetHistory),
+                    margin: EdgeInsets.zero,
+                    alignment: Alignment.center,
+                    height: height * 0.03,
+                    width: width * 0.10,
+                    decoration: BoxDecoration(
+                      // color: Colors.teal,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.3),
+                          blurRadius: 5,
+                          spreadRadius: 2,
+                          offset: const Offset(
+                              0, 3), // Adjust the shadow's position here
+                        ),
+                      ],
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Image.asset(Assets.iconsBetHistory),
                   ),
                 ),
                 const SizedBox(
@@ -369,7 +380,8 @@ class _MyGameWidgetState extends State<MyGameWidget> {
                                     fontSize: 12),
                               ),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
                                   Container(
                                       height: height * 0.03,
@@ -488,7 +500,6 @@ class _MyGameWidgetState extends State<MyGameWidget> {
                         ],
                       ),
                     ),
-
                   ],
                 ),
                 SizedBox(
@@ -500,175 +511,182 @@ class _MyGameWidgetState extends State<MyGameWidget> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      loaderOne == false
-                          ? InkWell(
-                              onTap: () async {
-
-                                setState(() {
-                                  tapValue = !tapValue;
-                                  _selectedIndexxx = 1;
-                                });
-                                plinkoBet(
-                                    amount.text, _selectedIndexxx.toString());
-                                if (kDebugMode) {
-                                  print(_selectedIndexxx);
-                                  print("_selectedIndexxx");
-                                }
-
-                              },
-                              child: Container(
-                                alignment: Alignment.center,
-                                height: height * 0.05,
-                                width: width * 0.2,
-                                decoration: BoxDecoration(
-                                  gradient: const LinearGradient(
-                                    colors: [
-                                      Color(0xff337a04),
-                                      Color(0xff52960c),
-                                      Color(0xff337a04),
-                                    ],
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.topRight,
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.3),
-                                      blurRadius: 5,
-                                      spreadRadius: 2,
-                                      offset: const Offset(0,
-                                          3), // Adjust the shadow's position here
+                      exitIndex == 1
+                          ? loaderOne == false
+                              ? InkWell(
+                                  onTap: () async {
+                                    setState(() {
+                                      tapValue = !tapValue;
+                                      _selectedIndexxx = 1;
+                                    });
+                                    plinkoBet(amount.text,
+                                        _selectedIndexxx.toString());
+                                    if (kDebugMode) {
+                                      print(_selectedIndexxx);
+                                      print("_selectedIndexxx");
+                                    }
+                                  },
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    height: height * 0.05,
+                                    width: width * 0.2,
+                                    decoration: BoxDecoration(
+                                      gradient: const LinearGradient(
+                                        colors: [
+                                          Color(0xff337a04),
+                                          Color(0xff52960c),
+                                          Color(0xff337a04),
+                                        ],
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.topRight,
+                                      ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.3),
+                                          blurRadius: 5,
+                                          spreadRadius: 2,
+                                          offset: const Offset(0,
+                                              3), // Adjust the shadow's position here
+                                        ),
+                                      ],
+                                      color: Colors.green,
+                                      borderRadius: BorderRadius.circular(20),
+                                      border: Border.all(
+                                        color: _selectedIndexxx == 0
+                                            ? Colors.teal
+                                            : Colors.black,
+                                      ),
                                     ),
-                                  ],
-                                  color: Colors.green,
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(
-                                    color: _selectedIndexxx == 0
-                                        ? Colors.teal
-                                        : Colors.black,
-                                  ),
-                                ),
-                                child: const Text(
-                                  'GREEN',
-                                  style: TextStyle(
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.w900,
-                                      color: Colors.white),
-                                ),
-                              ),
-                            )
-                          : const Center(child: CircularProgressIndicator()),
-                      loaderTwo == false
-                          ? InkWell(
-                              onTap: () async {
-                                // for (int i = 0; i < selectedBalls; i++) {
-                                //   await Future.delayed(
-                                //       const Duration(seconds: 1));
-                                //   widget.game.onTapDown();
-                                // }
-                                setState(() {
-                                  tapValue = !tapValue;
-                                  _selectedIndexxx = 2;
-                                  plinkoBet(
-                                      amount.text, _selectedIndexxx.toString());
-                                });
-                              },
-                              child: Container(
-                                alignment: Alignment.center,
-                                height: height * 0.05,
-                                width: width * 0.2,
-                                decoration: BoxDecoration(
-                                  gradient: const LinearGradient(
-                                    colors: [
-                                      Color(0xFFc56f00),
-                                      Color(0xFFca8605),
-                                      Color(0xFFc56f00),
-                                    ],
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.topRight,
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.3),
-                                      blurRadius: 5,
-                                      spreadRadius: 2,
-                                      offset: const Offset(0,
-                                          3), // Adjust the shadow's position here
+                                    child: const Text(
+                                      'GREEN',
+                                      style: TextStyle(
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.w900,
+                                          color: Colors.white),
                                     ),
-                                  ],
-                                  color: Colors.green,
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(
-                                    color: _selectedIndexxx == 1
-                                        ? Colors.teal
-                                        : Colors.black,
                                   ),
-                                ),
-                                child: const Text(
-                                  'YELLOW',
-                                  style: TextStyle(
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.w900,
-                                      color: Colors.white),
-                                ),
-                              ),
-                            )
-                          : const Center(child: CircularProgressIndicator()),
-                      loaderThree == false
-                          ? InkWell(
-                              onTap: () async {
-                                // for (int i = 0; i < selectedBalls; i++) {
-                                //   await Future.delayed(
-                                //       const Duration(seconds: 1));
-                                //   widget.game.onTapDown();
-                                // }
-                                setState(() {
-                                  tapValue = !tapValue;
-                                  _selectedIndexxx = 3;
-                                  plinkoBet(
-                                      amount.text, _selectedIndexxx.toString());
-                                });
-                              },
-                              child: Container(
-                                alignment: Alignment.center,
-                                height: height * 0.05,
-                                width: width * 0.2,
-                                decoration: BoxDecoration(
-                                  gradient: const LinearGradient(
-                                    colors: [
-                                      Color(0xFFb80118),
-                                      Color(0xFFdd0016),
-                                      Color(0xFFb80118),
-                                    ],
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.topRight,
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.3),
-                                      blurRadius: 5,
-                                      spreadRadius: 2,
-                                      offset: const Offset(0,
-                                          3), // Adjust the shadow's position here
+                                )
+                              : const Center(child: CircularProgressIndicator())
+                          : Icon(
+                              Icons.lock,
+                              color: AppColors.white,
+                            ),
+                      exitIndex == 1
+                          ? loaderTwo == false
+                              ? InkWell(
+                                  onTap: () async {
+                                    // for (int i = 0; i < selectedBalls; i++) {
+                                    //   await Future.delayed(
+                                    //       const Duration(seconds: 1));
+                                    //   widget.game.onTapDown();
+                                    // }
+                                    setState(() {
+                                      tapValue = !tapValue;
+                                      _selectedIndexxx = 2;
+                                      plinkoBet(amount.text,
+                                          _selectedIndexxx.toString());
+                                    });
+                                  },
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    height: height * 0.05,
+                                    width: width * 0.2,
+                                    decoration: BoxDecoration(
+                                      gradient: const LinearGradient(
+                                        colors: [
+                                          Color(0xFFc56f00),
+                                          Color(0xFFca8605),
+                                          Color(0xFFc56f00),
+                                        ],
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.topRight,
+                                      ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.3),
+                                          blurRadius: 5,
+                                          spreadRadius: 2,
+                                          offset: const Offset(0,
+                                              3), // Adjust the shadow's position here
+                                        ),
+                                      ],
+                                      color: Colors.green,
+                                      borderRadius: BorderRadius.circular(20),
+                                      border: Border.all(
+                                        color: _selectedIndexxx == 1
+                                            ? Colors.teal
+                                            : Colors.black,
+                                      ),
                                     ),
-                                  ],
-                                  color: Colors.green,
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(
-                                    color: _selectedIndexxx == 2
-                                        ? Colors.teal
-                                        : Colors.black,
+                                    child: const Text(
+                                      'YELLOW',
+                                      style: TextStyle(
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.w900,
+                                          color: Colors.white),
+                                    ),
                                   ),
-                                ),
-                                child: const Text(
-                                  'RED',
-                                  style: TextStyle(
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.w900,
-                                      color: Colors.white),
-                                ),
-                              ),
-                            )
-                          : const Center(child: CircularProgressIndicator()),
+                                )
+                              : const Center(child: CircularProgressIndicator())
+                          : Icon(Icons.lock, color: AppColors.white),
+                      exitIndex == 1
+                          ? loaderThree == false
+                              ? InkWell(
+                                  onTap: () async {
+                                    // for (int i = 0; i < selectedBalls; i++) {
+                                    //   await Future.delayed(
+                                    //       const Duration(seconds: 1));
+                                    //   widget.game.onTapDown();
+                                    // }
+                                    setState(() {
+                                      tapValue = !tapValue;
+                                      _selectedIndexxx = 3;
+                                      plinkoBet(amount.text,
+                                          _selectedIndexxx.toString());
+                                    });
+                                  },
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    height: height * 0.05,
+                                    width: width * 0.2,
+                                    decoration: BoxDecoration(
+                                      gradient: const LinearGradient(
+                                        colors: [
+                                          Color(0xFFb80118),
+                                          Color(0xFFdd0016),
+                                          Color(0xFFb80118),
+                                        ],
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.topRight,
+                                      ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.3),
+                                          blurRadius: 5,
+                                          spreadRadius: 2,
+                                          offset: const Offset(0,
+                                              3), // Adjust the shadow's position here
+                                        ),
+                                      ],
+                                      color: Colors.green,
+                                      borderRadius: BorderRadius.circular(20),
+                                      border: Border.all(
+                                        color: _selectedIndexxx == 2
+                                            ? Colors.teal
+                                            : Colors.black,
+                                      ),
+                                    ),
+                                    child: const Text(
+                                      'RED',
+                                      style: TextStyle(
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.w900,
+                                          color: Colors.white),
+                                    ),
+                                  ),
+                                )
+                              : const Center(child: CircularProgressIndicator())
+                          : Icon(Icons.lock, color: AppColors.white),
                     ],
                   ),
                 ),
@@ -688,7 +706,7 @@ class _MyGameWidgetState extends State<MyGameWidget> {
               child: expansionWidget(),
             ),
             Padding(
-              padding: EdgeInsets.only(top: height * 0.7, left: width*0.02),
+              padding: EdgeInsets.only(top: height * 0.7, left: width * 0.02),
               child: Center(
                 child: ListView.builder(
                     scrollDirection: Axis.horizontal,
@@ -713,7 +731,9 @@ class _MyGameWidgetState extends State<MyGameWidget> {
                               borderRadius: BorderRadius.circular(5),
                               border: Border.all(
                                 width: 2,
-                                color: _selectedIndexxx== 3?const Color(0xffff1f1f):Colors.transparent,
+                                color: _selectedIndexxx == 3
+                                    ? const Color(0xffff1f1f)
+                                    : Colors.transparent,
                               ),
                             ),
                             margin: const EdgeInsets.all(1),
@@ -734,7 +754,7 @@ class _MyGameWidgetState extends State<MyGameWidget> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: height * 0.65, left: width*0.02),
+              padding: EdgeInsets.only(top: height * 0.65, left: width * 0.02),
               child: Center(
                 child: ListView.builder(
                     scrollDirection: Axis.horizontal,
@@ -759,7 +779,9 @@ class _MyGameWidgetState extends State<MyGameWidget> {
                               borderRadius: BorderRadius.circular(5),
                               border: Border.all(
                                 width: 2,
-                                color: _selectedIndexxx== 2?const Color(0xfffff026):Colors.transparent,
+                                color: _selectedIndexxx == 2
+                                    ? const Color(0xfffff026)
+                                    : Colors.transparent,
                               ),
                             ),
                             // color:const Color(0xFFc56f00),
@@ -781,7 +803,7 @@ class _MyGameWidgetState extends State<MyGameWidget> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: height * 0.6, left: width*0.02),
+              padding: EdgeInsets.only(top: height * 0.6, left: width * 0.02),
               child: Center(
                 child: ListView.builder(
                     scrollDirection: Axis.horizontal,
@@ -806,7 +828,9 @@ class _MyGameWidgetState extends State<MyGameWidget> {
                               borderRadius: BorderRadius.circular(5),
                               border: Border.all(
                                 width: 2,
-                                color: _selectedIndexxx== 1?const Color(0xff80ff00):Colors.transparent,
+                                color: _selectedIndexxx == 1
+                                    ? const Color(0xff80ff00)
+                                    : Colors.transparent,
                               ),
                             ),
                             // color:const Color(0xFFc56f00),
@@ -890,7 +914,7 @@ class _MyGameWidgetState extends State<MyGameWidget> {
                             selectedIndex = initValue;
                             amount.text = initValue.toString();
                           });
-                         Navigator.pop(context);
+                          Navigator.pop(context);
                         },
                         child: Container(
                             alignment: Alignment.center,
@@ -922,133 +946,144 @@ class _MyGameWidgetState extends State<MyGameWidget> {
           borderRadius: BorderRadius.circular(25)),
       child: ExpansionTile(
         title: isExpanded
-            ?Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text("Last Results:",
-                style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500)),
-            GridView.builder(
-              padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
-              shrinkWrap: true,
-              itemCount: fetchPlinkoBetTwo.length,
-              gridDelegate:
-              const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 5,
-                crossAxisSpacing: 2,
-                childAspectRatio: 2,
-                mainAxisSpacing: 2,
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text("Last Results:",
+                      style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500)),
+                  GridView.builder(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
+                    shrinkWrap: true,
+                    itemCount: fetchPlinkoBetTwo.length,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 5,
+                      crossAxisSpacing: 2,
+                      childAspectRatio: 2,
+                      mainAxisSpacing: 2,
+                    ),
+                    itemBuilder: (BuildContext context, int index) {
+                      const double price = 2; //number[index].price
+                      Color textColor;
+                      if (price > 1 && price < 2) {
+                        textColor = Colors.blue;
+                      } else if (price >= 2 && price < 10) {
+                        textColor = Colors.purple;
+                      } else {
+                        textColor = Colors.pink;
+                      }
+                      return Container(
+                        height: height * 0.02,
+                        padding: const EdgeInsets.only(left: 8, right: 8),
+                        decoration: BoxDecoration(
+                          gradient: fetchPlinkoBetTwo[index].type == 1
+                              ? const LinearGradient(
+                                  colors: [
+                                    Colors.green,
+                                    Colors.green,
+                                    Colors.green,
+                                  ],
+                                )
+                              : fetchPlinkoBetTwo[index].type == 2
+                                  ? const LinearGradient(
+                                      colors: [
+                                        Color(0xFFc56f00),
+                                        Color(0xFFca8605),
+                                        Color(0xFFc56f00),
+                                      ],
+                                    )
+                                  : const LinearGradient(
+                                      colors: [
+                                        Color(0xFFb80118),
+                                        Color(0xFFdd0016),
+                                        Color(0xFFb80118),
+                                      ],
+                                    ),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10)),
+                        ),
+                        child: Center(
+                          child: Text(
+                            fetchPlinkoBetTwo[index]
+                                .multipler
+                                .toString(), //${number[index].price.toStringAsFixed(2)}
+                            style: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              )
+            : SizedBox(
+                height: height * 0.038,
+                width: width,
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: fetchPlinkoBet.length,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (BuildContext context, int index) {
+                      const double price = 1; //number[index].price
+                      Color textColor;
+                      if (price > 1 && price < 2) {
+                        textColor = Colors.blue;
+                      } else if (price >= 2 && price < 10) {
+                        textColor = Colors.purple;
+                      } else {
+                        textColor = Colors.pink;
+                      }
+                      return Padding(
+                        padding: const EdgeInsets.fromLTRB(3, 5, 3, 5),
+                        child: Container(
+                          width: width * 0.08, //529f05 //479103
+                          decoration: BoxDecoration(
+                            gradient: fetchPlinkoBet[index].type == 1
+                                ? const LinearGradient(
+                                    colors: [
+                                      Colors.green,
+                                      Colors.green,
+                                      Colors.green,
+                                    ],
+                                  )
+                                : fetchPlinkoBet[index].type == 2
+                                    ? const LinearGradient(
+                                        colors: [
+                                          Color(0xFFc56f00),
+                                          Color(0xFFca8605),
+                                          Color(0xFFc56f00),
+                                        ],
+                                      )
+                                    : const LinearGradient(
+                                        colors: [
+                                          Color(0xFFb80118),
+                                          Color(0xFFdd0016),
+                                          Color(0xFFb80118),
+                                        ],
+                                      ),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(10)),
+                          ),
+                          child: Center(
+                            child: Text(
+                              fetchPlinkoBet[index]
+                                  .multipler
+                                  .toString(), //${number[index].price.toStringAsFixed(2)}
+                              style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                      );
+                    }),
               ),
-              itemBuilder: (BuildContext context, int index) {
-                const double price = 2; //number[index].price
-                Color textColor;
-                if (price > 1 && price < 2) {
-                  textColor = Colors.blue;
-                } else if (price >= 2 && price < 10) {
-                  textColor = Colors.purple;
-                } else {
-                  textColor = Colors.pink;
-                }
-                return Container(
-                  height: height * 0.02,
-                  padding: const EdgeInsets.only(left: 8, right: 8),
-                  decoration:  BoxDecoration(
-                    gradient: fetchPlinkoBetTwo[index].type==1
-                        ? const LinearGradient(
-                      colors: [
-                        Colors.green,
-                        Colors.green,
-                        Colors.green,
-                      ],
-                    ):
-                    fetchPlinkoBetTwo[index].type==2 ? const LinearGradient(
-                      colors: [
-                        Color(0xFFc56f00),
-                        Color(0xFFca8605),
-                        Color(0xFFc56f00),
-                      ],
-                    ): const LinearGradient(
-                      colors: [
-                        Color(0xFFb80118),
-                        Color(0xFFdd0016),
-                        Color(0xFFb80118),
-                      ],
-                    ),
-                    borderRadius:
-                    const BorderRadius.all(Radius.circular(10)),
-                  ),
-                  child:  Center(
-                    child: Text(
-                      fetchPlinkoBetTwo[index].multipler.toString(), //${number[index].price.toStringAsFixed(2)}
-                      style: const TextStyle(
-                          fontSize: 14, color: Colors.white,fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ],
-        )
-
-            :SizedBox(
-          height: height * 0.038,
-          width: width,
-          child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: fetchPlinkoBet.length,
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (BuildContext context, int index) {
-                const double price = 1; //number[index].price
-                Color textColor;
-                if (price > 1 && price < 2) {
-                  textColor = Colors.blue;
-                } else if (price >= 2 && price < 10) {
-                  textColor = Colors.purple;
-                } else {
-                  textColor = Colors.pink;
-                }
-                return Padding(
-                  padding: const EdgeInsets.fromLTRB(3, 5, 3, 5),
-                  child: Container(
-                    width: width * 0.08, //529f05 //479103
-                    decoration:  BoxDecoration(
-                      gradient: fetchPlinkoBet[index].type==1
-                          ? const LinearGradient(
-                        colors: [
-                          Colors.green,
-                          Colors.green,
-                          Colors.green,
-                        ],
-                      ):
-                      fetchPlinkoBet[index].type==2 ? const LinearGradient(
-                        colors: [
-                          Color(0xFFc56f00),
-                          Color(0xFFca8605),
-                          Color(0xFFc56f00),
-                        ],
-                      ): const LinearGradient(
-                        colors: [
-                          Color(0xFFb80118),
-                          Color(0xFFdd0016),
-                          Color(0xFFb80118),
-                        ],
-                      ),
-                      borderRadius:
-                      const BorderRadius.all(Radius.circular(10)),
-                    ),
-                    child:  Center(
-                      child: Text(
-                        fetchPlinkoBet[index].multipler.toString(), //${number[index].price.toStringAsFixed(2)}
-                        style: const TextStyle(
-                            fontSize: 14, color: Colors.white,fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
-                );
-              }),
-        ),
         onExpansionChanged: (value) {
           setState(() {
             fetchPlinkoBethistoryTwo();
@@ -1087,22 +1122,20 @@ class _MyGameWidgetState extends State<MyGameWidget> {
     );
   }
 
-
   UserViewProvider userProvider = UserViewProvider();
   plinkoBet(String amount, String type) async {
     setState(() {
       if (type == '1') {
         loaderOne = true;
-        exitIndex=1;
+        exitIndex = 1;
       } else if (type == '2') {
         loaderTwo = true;
-        exitIndex=1;
+        exitIndex = 1;
       } else {
         loaderThree = true;
-        exitIndex=1;
+        exitIndex = 1;
       }
     });
-
 
     UserModel user = await userProvider.getUser();
     String token = user.id.toString();
@@ -1121,60 +1154,53 @@ class _MyGameWidgetState extends State<MyGameWidget> {
     );
 
     if (response.statusCode == 200) {
-
       final Map<String, dynamic> responseData = jsonDecode(response.body);
       for (int i = 0; i < selectedBalls; i++) {
-        await Future.delayed(
-            const Duration(seconds: 1));
+        await Future.delayed(const Duration(seconds: 1));
         widget.game.onTapDown();
       }
       setState(() {
         exitIndex = responseData['data']['status'];
-      //  context.read<ProfileProvider>().fetchProfileData();
+        //  context.read<ProfileProvider>().fetchProfileData();
 
         if (type == '1') {
           loaderOne = false;
-          exitIndex=0;
+          exitIndex = 0;
         } else if (type == '2') {
           loaderTwo = false;
-          exitIndex=0;
+          exitIndex = 0;
         } else {
           loaderThree = false;
-          exitIndex=0;
+          exitIndex = 0;
         }
       });
 
-
       Fluttertoast.showToast(msg: responseData['message']);
-      await Future.delayed(const Duration(seconds: 15),(){
+      await Future.delayed(const Duration(seconds: 15), () {
         fetchPlinkoBethistory();
         setState(() {
-          exitIndex=1;
+          exitIndex = 1;
           context.read<ProfileProvider>().fetchProfileData();
         });
-
       });
-
-
     } else {
       //setRegLoading(false);
       final Map<String, dynamic> responseData = jsonDecode(response.body);
       setState(() {
         if (type == '1') {
           loaderOne = false;
-          exitIndex=0;
+          exitIndex = 0;
         } else if (type == '2') {
           loaderTwo = false;
-          exitIndex=0;
+          exitIndex = 0;
         } else {
           loaderThree = false;
-          exitIndex=0;
+          exitIndex = 0;
         }
       });
       return Fluttertoast.showToast(msg: responseData['message']);
     }
   }
-
 
   List<PlinkoIndexModal> plinkoRedItem = [];
   Future<void> plinkoRedList() async {
@@ -1210,7 +1236,6 @@ class _MyGameWidgetState extends State<MyGameWidget> {
     }
   }
 
-
   List<PlinkoIndexModal> plinkoYellowItem = [];
   Future<void> plinkoYellowList() async {
     final response = await http.get(
@@ -1244,7 +1269,6 @@ class _MyGameWidgetState extends State<MyGameWidget> {
       throw Exception('Failed to load data');
     }
   }
-
 
   List<PlinkoIndexModal> plinkoGreenItem = [];
   Future<void> plinkoGreenList() async {
@@ -1280,7 +1304,6 @@ class _MyGameWidgetState extends State<MyGameWidget> {
     }
   }
 
-
   List<PlinkoBetHistory> fetchPlinkoBet = [];
   Future<void> fetchPlinkoBethistory() async {
     UserModel user = await userProvider.getUser();
@@ -1288,7 +1311,6 @@ class _MyGameWidgetState extends State<MyGameWidget> {
     final response = await http.get(
       Uri.parse("${ApiUrl.plinkoBetHistory}userid=$token&limit=7"),
     );
-
 
     setState(() {
       responseStatuscode = response.statusCode;
@@ -1301,7 +1323,6 @@ class _MyGameWidgetState extends State<MyGameWidget> {
         fetchPlinkoBet = responseData
             .map((item) => PlinkoBetHistory.fromJson(item))
             .toList();
-
       });
     } else if (response.statusCode == 400) {
       if (kDebugMode) {
@@ -1315,7 +1336,6 @@ class _MyGameWidgetState extends State<MyGameWidget> {
     }
   }
 
-
   List<PlinkoBetHistory> fetchPlinkoBetTwo = [];
   Future<void> fetchPlinkoBethistoryTwo() async {
     UserModel user = await userProvider.getUser();
@@ -1323,7 +1343,6 @@ class _MyGameWidgetState extends State<MyGameWidget> {
     final response = await http.get(
       Uri.parse("${ApiUrl.plinkoBetHistory}userid=$token&limit=15"),
     );
-
 
     setState(() {
       responseStatuscode = response.statusCode;
@@ -1347,5 +1366,4 @@ class _MyGameWidgetState extends State<MyGameWidget> {
       throw Exception('Failed to load data');
     }
   }
-
 }

@@ -962,17 +962,6 @@ class _WinGoScreenState extends State<WinGoScreen>
                       gameHistoryResult();
                     }
                   : null,
-              // onTap: limitResult == 0
-              //     ? () {}
-              //     : () {
-              //   setState(() {
-              //     pageNumber--;
-              //     limitResult = limitResult - 10;
-              //     offsetResult = offsetResult - 10;
-              //   });
-              //   setState(() {});
-              //   gameHistoryResult();
-              // },
               child: Container(
                 height: height * 0.06,
                 width: width * 0.10,
@@ -1001,9 +990,6 @@ class _WinGoScreenState extends State<WinGoScreen>
                   limitResult += 10;
                   offsetResult += 10;
                   pageNumber++;
-                  // limitResult = limitResult + 10;
-                  // offsetResult = offsetResult + 10;
-                  // pageNumber++;
                 });
                 gameHistoryResult();
               },
@@ -1614,17 +1600,6 @@ class _WinGoScreenState extends State<WinGoScreen>
                                       gameHistoryResult();
                                     }
                                   : null,
-                              // onTap: limitResult == 0
-                              //     ? () {}
-                              //     : () {
-                              //         setState(() {
-                              //           pageNumber--;
-                              //           limitResult = limitResult - 10;
-                              //           offsetResult = offsetResult - 10;
-                              //         });
-                              //         setState(() {});
-                              //         gameHistoryResult();
-                              //       },
                               child: Container(
                                 height: height * 0.06,
                                 width: width * 0.10,
@@ -1648,18 +1623,6 @@ class _WinGoScreenState extends State<WinGoScreen>
                             ),
                             const SizedBox(width: 16),
                             GestureDetector(
-                              // onTap: pageNumber <
-                              //         (int.parse(count) / itemsPerPage)
-                              //             .ceil() // Check if there are more pages available
-                              //     ? () {
-                              //         setState(() {
-                              //           pageNumber++;
-                              //           limitResult += 10;
-                              //           offsetResult += 10;
-                              //         });
-                              //         gameHistoryResult();
-                              //       }
-                              //     : null,
                               onTap: () {
                                 setState(() {
                                   limitResult += 10;
@@ -2276,7 +2239,7 @@ class _WinGoScreenState extends State<WinGoScreen>
   int offsetResult = 0;
   int myHistoryLimitResult = 10;
   int myHistoryOffsetResult = 0;
-  // myHistoryPageNumber
+
 
   game_winPopup() async {
     UserModel user = await userProvider.getUser();
@@ -2310,7 +2273,7 @@ class _WinGoScreenState extends State<WinGoScreen>
                   subtext1: totalamount.toString(),
                   subtext2: win.toString(),
                   subtext3: gamesno,
-                  subtext4: gameid,
+                  subtext4: gameid.toString(),
                 ); // Call the Popup widget
               },
             )
@@ -2323,7 +2286,7 @@ class _WinGoScreenState extends State<WinGoScreen>
                   subtext1: totalamount.toString(),
                   subtext2: win.toString(),
                   subtext3: gamesno,
-                  subtext4: gameid,
+                  subtext4: gameid.toString(),
                 ); // Call the Popup widget
               },
             );

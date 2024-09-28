@@ -37,9 +37,7 @@ class ToastWidget extends StatefulWidget {
     if (overlay == null) return;
 
     final entry = OverlayEntry(
-      builder: (context) => Positioned(
-        top: MediaQuery.of(context).size.height * 0.4,
-        left: MediaQuery.of(context).size.width * 0.25,
+      builder: (context) => Center(
         child: Material(
           color: Colors.transparent,
           child: ToastWidget(
@@ -78,17 +76,16 @@ class _ToastWidgetState extends State<ToastWidget> {
         children: [
           const SizedBox(height: 80),
           Text(
-            widget.subtext1 =="1"?"Green":widget.subtext1 =="2"?"Yellow":"Red",
+            widget.subtext1 == "1" ? "Green" : widget.subtext1 == "2" ? "Yellow" : "Red",
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w900,
-              color: widget.subtext1 =="1"?Colors.green:
-              widget.subtext1 =="2"?Colors.yellow:Colors.red,
+              color: widget.subtext1 == "1" ? Colors.green : widget.subtext1 == "2" ? Colors.yellow : Colors.red,
             ),
           ),
           const SizedBox(height: 32),
           Text(
-            widget.subtext2==""?"":"₹${widget.subtext2}",
+            widget.subtext2 == "" ? "" : "₹${widget.subtext2}",
             style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w900,
